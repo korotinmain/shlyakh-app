@@ -33,10 +33,12 @@ dart run build_runner build --delete-conflicting-outputs
 flutter gen-l10n
 flutter analyze
 flutter test
+flutter test --coverage
 flutter run
 ```
 
 Run `flutter analyze` and `flutter test` before considering a task done.
+Testing rules and coverage thresholds: `docs/AGENT_RULES.md`, section 8.
 
 ## Project structure
 

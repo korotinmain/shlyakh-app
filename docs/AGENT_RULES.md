@@ -72,12 +72,103 @@ convenience. If a task seems to require breaking one, stop and ask.
 ## 7. Code quality
 
 - `flutter analyze` must report no issues.
-- `flutter test` must pass before a task is considered done.
-- Domain logic (XP, levels, date handling) requires unit tests.
 - No hardcoded user-facing strings (use l10n), no magic design values
   (use tokens).
 
-## 8. Git
+## 8. Testing
+
+Current scope: unit tests. Widget, golden and integration tests are added
+later, when screens stabilize.
+
+### 8.1 Definition of done
+
+- Every change that adds or changes behavior ships with unit tests in the
+  same commit. "Tests later" is not done.
+- `flutter test` passes and coverage thresholds (8.5) hold.
+- Every bug fix starts with a failing test that reproduces the bug.
+
+### 8.2 What must be tested
+
+- **Domain (highest priority):** XP formula, level curve, date/day logic,
+  entities with behavior, validation. Every rule in `docs/PRODUCT.md` that
+  the domain implements has a test that would fail if the rule changed.
+- **Data:** repository implementations against fake data sources: mapping
+  between DTOs, Drift rows and entities; sync decisions (upsert, idempotency,
+  conflict handling); error translation into domain failures.
+- **Presentation logic:** Riverpod notifiers and providers that hold state
+  or derive values, tested through `ProviderContainer` with overridden
+  dependencies. State transitions: loading, data, error.
+- For each unit, cover: the happy path, boundaries (0, 1, max, exact
+  threshold, threshold ± 1), invalid input, and the error path.
+
+### 8.3 What not to test (no filler)
+
+- Generated code (`*.g.dart`, `*.freezed.dart`, l10n output).
+- Framework or package behavior: that Riverpod caches, that freezed
+  implements `==`, that go_router navigates.
+- Trivial code without logic: constructors, plain getters, constants,
+  re-exports, pure widget composition.
+- Private methods directly. Test them through the public API; if that is
+  awkward, the code likely needs a separate unit.
+- Implementation details: which private helper was called, how many times
+  a mock was touched, when the order does not matter to the outcome.
+- A test must be able to fail for a reason a product owner would care
+  about. If it cannot, delete the idea before writing it.
+
+### 8.4 How tests are written
+
+- **Structure:** `test/` mirrors `lib/`: `lib/features/x/domain/foo.dart`
+  → `test/features/x/domain/foo_test.dart`. Shared fakes and builders live
+  in `test/helpers/`.
+- **Naming:** `group` per unit or method, `test` names describe behavior:
+  `'returns level 3 when XP equals the level 3 threshold'`, not
+  `'test calculate'`.
+- **Shape:** Arrange / Act / Assert, one behavior per test. Several
+  `expect` calls are fine when they check one outcome.
+- **Table-driven** tests for formulas and thresholds: a list of
+  `(input, expected)` cases iterated in a loop, each with a readable name.
+- **Test doubles:** prefer hand-written fakes for repositories and data
+  sources (in-memory implementations of the domain interface). Use
+  `mocktail` only for platform boundaries and for verifying that a side
+  effect happened (a sync call was made). Never mock the unit under test
+  or pure domain classes; use the real ones.
+- **Test data:** use builders/factories with sensible defaults
+  (`aDailySteps(steps: 10000)`), so each test states only what matters.
+  No copy-pasted fixtures.
+- **Determinism:** no real `DateTime.now()`, time zone, network,
+  HealthKit, Supabase, file system or random numbers in unit tests. Time
+  and randomness are injected. Drift uses an in-memory database. No
+  `Future.delayed` or sleeps to wait for results.
+- **Independence:** tests do not share mutable state and pass in any order
+  and in isolation (`flutter test --name`).
+- **Speed:** the whole unit suite runs in seconds. A slow unit test is a
+  sign of a missing fake.
+- **Readability over DRY:** some duplication in tests is acceptable;
+  hidden setup that forces reading three files to understand a test is not.
+
+### 8.5 Coverage
+
+Coverage is a floor that catches untested code, not a goal. A covered line
+without a meaningful assertion does not count.
+
+- Measure with `flutter test --coverage` (writes `coverage/lcov.info`).
+- Excluded from the numbers: generated files, `lib/main.dart`, app
+  bootstrap wiring, l10n output and pure widget files.
+- Thresholds on line coverage:
+  - `domain/`: **100%** (pure logic, no excuses).
+  - `data/` and presentation logic (notifiers, providers): **≥ 85%**.
+  - Whole measured codebase: **≥ 85%**.
+- Coverage must not decrease in a change. If a line truly cannot be
+  tested, say why in the final report instead of writing a hollow test.
+
+### 8.6 Required edge cases for this product
+
+- Dates and XP: see section 4 (DST, time zone change, midnight).
+- Steps: zero steps, a partial day (today), a missing day, a very large
+  value, a day whose step count changes after a later HealthKit sync.
+- Sync: the same day sent twice, offline then online, a partial failure.
+
+## 9. Git
 
 - Small, focused commits with Conventional Commits messages
   (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`).
