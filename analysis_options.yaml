@@ -14,3 +14,7 @@ linter:
     # This is an app, not a published package: doc comments on every public
     # member add noise. Document non-obvious domain logic by hand instead.
     public_member_api_docs: false
+
+# Riverpod lints run as an analyzer plugin (no pubspec entry needed).
+plugins:
+  riverpod_lint: ^3.1.9
