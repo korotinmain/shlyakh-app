@@ -8,8 +8,8 @@ validated first, visual polish comes last. No deadlines.
 ## 0. Foundation
 - [x] `flutter create` with bundle id and iOS-only target
 - [x] Strict lints (very_good_analysis)
-- [ ] Folder structure per CLAUDE.md
-- [ ] Core dependencies added (Riverpod, go_router, freezed)
+- [x] Folder structure per CLAUDE.md
+- [x] Core dependencies added (Riverpod, go_router, freezed)
 - [x] Git repo, first commit
 - [ ] Apple Developer account
 
