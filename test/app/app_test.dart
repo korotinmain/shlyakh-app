@@ -6,7 +6,7 @@ import '../helpers/pump_app.dart';
 void main() {
   group('App locale resolution', () {
     final cases = <(String, List<Locale>, String)>[
-      ('shows English title for en', [const Locale('en')], 'Shlyakh'),
+      ('shows English title for en', [const Locale('en')], 'BROKEN'),
       ('shows Ukrainian title for uk', [const Locale('uk')], 'Шлях'),
       (
         'shows Ukrainian title for regional uk_UA',
