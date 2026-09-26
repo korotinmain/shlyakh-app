@@ -41,13 +41,17 @@ API. If an API looks different from what you expect, trust the source.
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 flutter gen-l10n
-flutter analyze
+dart analyze --fatal-infos
 flutter test
 flutter test --coverage
 flutter run
 ```
 
-Run `flutter analyze` and `flutter test` before considering a task done.
+Run `dart analyze --fatal-infos` and `flutter test` before considering a
+task done. `dart analyze` includes the `riverpod_lint` analyzer plugin
+(`flutter analyze` silently skips plugin lints), and `--fatal-infos` makes
+its info-level lints fail the exit code. `flutter pub get` regenerates l10n
+files; `flutter test` does not.
 Testing rules and coverage thresholds: `docs/AGENT_RULES.md`, section 8.
 
 ## Dart MCP server
