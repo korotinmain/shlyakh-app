@@ -23,8 +23,9 @@ Generated files are not committed: `*.g.dart`, `*.freezed.dart` and
   drift from their sources and cannot conflict in merges.
 - After a clone or a branch switch, run build_runner before analyzing or
   testing. Forgetting it fails loudly: the code does not compile.
-- CI must run build_runner before `flutter analyze` and `flutter test`,
-  which makes it slightly slower.
+- CI must run `flutter pub get` (regenerates l10n) and build_runner
+  before `dart analyze --fatal-infos` and `flutter test`, which makes it
+  slightly slower.
 - Pigeon (native bridge) splits: its Dart output is `*.g.dart` and follows
   this rule (regenerate with `dart run pigeon --input <file>`), but its
   Swift output (`*.g.swift`) is committed, because Xcode compiles it

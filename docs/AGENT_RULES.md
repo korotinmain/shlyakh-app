@@ -71,8 +71,9 @@ convenience. If a task seems to require breaking one, stop and ask.
 
 ## 7. Code quality
 
-- `dart analyze` must report no issues (it includes analyzer-plugin lints
-  such as `riverpod_lint`, which `flutter analyze` skips).
+- `dart analyze --fatal-infos` must pass (exit code 0). It includes
+  analyzer-plugin lints such as `riverpod_lint`, which `flutter analyze`
+  skips; `--fatal-infos` is needed because those lints are info-level.
 - No hardcoded user-facing strings (use l10n), no magic design values
   (use tokens).
 
