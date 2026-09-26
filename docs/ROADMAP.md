@@ -6,11 +6,11 @@ Stages are ordered by risk: the riskiest technical part (HealthKit) is
 validated first, visual polish comes last. No deadlines.
 
 ## 0. Foundation
-- [ ] `flutter create` with bundle id and iOS-only target
-- [ ] Strict lints (very_good_analysis)
+- [x] `flutter create` with bundle id and iOS-only target
+- [x] Strict lints (very_good_analysis)
 - [ ] Folder structure per CLAUDE.md
 - [ ] Core dependencies added (Riverpod, go_router, freezed)
-- [ ] Git repo, first commit
+- [x] Git repo, first commit
 - [ ] Apple Developer account
 
 ## 1. HealthKit spike (throwaway code allowed)
