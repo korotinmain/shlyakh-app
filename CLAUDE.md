@@ -25,6 +25,16 @@ making any change. They override convenience.**
 - i18n: gen-l10n with ARB files (uk, en)
 - Tests: flutter_test + mocktail
 
+## Library versions
+
+Dependencies are newer than most model training data: Riverpod 3,
+go_router 18, freezed 3, health 13, pigeon 29, Dart 3.13 (e.g. the
+`new(...)` constructor syntax that `very_good_analysis` enforces). Do not
+write API calls from memory. Check the exact version in `pubspec.lock`,
+then read the signatures in the package source (`~/.pub-cache/hosted/pub.dev/`
+or the Dart MCP `read_package_uris` tool) or its CHANGELOG before using an
+API. If an API looks different from what you expect, trust the source.
+
 ## Commands
 
 ```bash
@@ -39,6 +49,16 @@ flutter run
 
 Run `flutter analyze` and `flutter test` before considering a task done.
 Testing rules and coverage thresholds: `docs/AGENT_RULES.md`, section 8.
+
+## Dart MCP server
+
+`.mcp.json` registers the Dart SDK's MCP server (`dart mcp-server`):
+analyzer, LSP, pub.dev search, package source reading and, for a running
+app, hot reload, runtime errors and the widget inspector. To connect it to
+a running app, start the app with `flutter run --print-dtd` and pass the
+printed DTD URI to the `dtd` tool. Read-only tools are pre-allowed in
+`.claude/settings.json`; `pub` stays behind a prompt because adding
+dependencies requires asking first.
 
 ## Project structure
 
