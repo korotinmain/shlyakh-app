@@ -1,0 +1,7 @@
+{
+  "@@locale": "en",
+  "appTitle": "Shlyakh",
+  "@appTitle": {
+    "description": "App name shown on the home screen"
+  }
+}

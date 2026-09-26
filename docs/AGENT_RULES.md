@@ -174,5 +174,6 @@ without a meaningful assertion does not count.
   (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`).
 - Never force push, never rewrite pushed history, never `reset --hard`
   without permission.
-- Generated files (`*.g.dart`, `*.freezed.dart`): see decision in
-  `docs/decisions/` (TBD; until decided, do not commit them).
+- Generated files (`*.g.dart`, `*.freezed.dart`, l10n output) are never
+  committed; they are regenerated locally and on CI. See
+  `docs/decisions/0001-generated-files-not-committed.md`.
