@@ -71,7 +71,8 @@ convenience. If a task seems to require breaking one, stop and ask.
 
 ## 7. Code quality
 
-- `flutter analyze` must report no issues.
+- `dart analyze` must report no issues (it includes analyzer-plugin lints
+  such as `riverpod_lint`, which `flutter analyze` skips).
 - No hardcoded user-facing strings (use l10n), no magic design values
   (use tokens).
 
