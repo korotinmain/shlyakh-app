@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# A new push to the same PR cancels the run that is still in progress.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          # Keep in sync with the local Flutter version (Dart 3.13 syntax).
+          flutter-version: 3.47.5
+          channel: stable
+          cache: true
+
+      # Also regenerates l10n (generate: true), see docs/decisions/0001.
+      - name: Install dependencies
+        run: flutter pub get
+
+      # After pub get (language version comes from package_config), before
+      # code generation, so only hand-written code is checked.
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # dart analyze, not flutter analyze: only it reports riverpod_lint.
+      # --fatal-infos: riverpod_lint reports at info level.
+      - name: Analyze
+        run: dart analyze --fatal-infos
+
+      - name: Test
+        run: flutter test

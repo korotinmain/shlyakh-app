@@ -41,6 +41,7 @@ API. If an API looks different from what you expect, trust the source.
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 flutter gen-l10n
+dart format --output=none --set-exit-if-changed .
 dart analyze --fatal-infos
 flutter test
 flutter test --coverage
@@ -53,6 +54,8 @@ task done. `dart analyze` includes the `riverpod_lint` analyzer plugin
 its info-level lints fail the exit code. `flutter pub get` regenerates l10n
 files; `flutter test` does not.
 Testing rules and coverage thresholds: `docs/AGENT_RULES.md`, section 8.
+CI (`.github/workflows/ci.yml`) runs format check, analyze and tests on
+every PR to `main`; merging requires it to pass.
 
 ## Dart MCP server
 
