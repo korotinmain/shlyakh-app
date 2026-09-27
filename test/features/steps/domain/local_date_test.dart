@@ -104,10 +104,7 @@ void main() {
     ];
     for (final (from, days, expected) in cases) {
       test('$from + $days is $expected', () {
-        expect(
-          LocalDate.parse(from).addDays(days),
-          LocalDate.parse(expected),
-        );
+        expect(LocalDate.parse(from).addDays(days), LocalDate.parse(expected));
       });
     }
   });
