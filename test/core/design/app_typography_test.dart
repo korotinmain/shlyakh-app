@@ -16,11 +16,13 @@ void main() {
     ];
 
     for (final (name, style, size, weight) in scale) {
-      test('$name is Geologica $size/$weight on the wght axis', () {
+      test('$name is Geologica $size/$weight', () {
         expect(style.fontFamily, 'Geologica');
         expect(style.fontSize, size);
         expect(style.fontWeight, FontWeight.values[weight ~/ 100 - 1]);
-        expect(style.fontVariations, [FontVariation.weight(weight.toDouble())]);
+        // fontWeight alone drives the variable font's wght axis; a pinned
+        // axis would compete with later copyWith(fontWeight: ...) calls.
+        expect(style.fontVariations, isNull);
       });
     }
 

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 const _family = 'Geologica';
 
-/// Geologica is bundled as one variable font, so each weight is also set
-/// on the `wght` axis; `fontWeight` alone would not move the axis.
+/// Geologica is bundled as one variable font. The engine sets its `wght`
+/// axis from `fontWeight` (verified on the simulator), so styles set only
+/// `fontWeight`: a pinned axis would compete with later
+/// `copyWith(fontWeight: ...)` calls.
 TextStyle _style(double size, int weight, {bool tight = false}) => TextStyle(
   fontFamily: _family,
   fontSize: size,
   fontWeight: FontWeight.values[weight ~/ 100 - 1],
-  fontVariations: [FontVariation.weight(weight.toDouble())],
   letterSpacing: tight ? -0.02 * size : null,
 );
 

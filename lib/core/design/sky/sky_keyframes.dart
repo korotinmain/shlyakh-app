@@ -18,6 +18,12 @@ typedef SkyPalette = ({
   SurfaceTone surfaceTone,
 });
 
+/// Where the three sky colours sit in the gradient, top to bottom.
+const List<double> skyGradientStops = [0, 0.55, 1];
+
+/// Opacity of the overlay grain drawn over the sky.
+const double skyGrainOpacity = 0.12;
+
 const _onDark = 0xFFFFFFFF;
 const _onLight = 0xFF18293A;
 

@@ -24,6 +24,11 @@ SkyPalette skyAt(
   double longitude = kyivLongitude,
   Duration? utcOffset,
 }) {
+  assert(
+    !wallClock.isUtc || utcOffset != null,
+    'A UTC DateTime has no local wall clock: pass the local time or '
+    'an explicit utcOffset.',
+  );
   final offset = utcOffset ?? wallClock.timeZoneOffset;
   final instant = DateTime.utc(
     wallClock.year,

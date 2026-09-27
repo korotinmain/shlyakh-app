@@ -60,6 +60,8 @@ dev_dependencies:
 
 flutter:
   generate: true
+  assets:
+    - assets/fonts/geologica/OFL.txt
   fonts:
     - family: Geologica
       fonts:

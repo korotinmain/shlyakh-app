@@ -62,7 +62,8 @@ of their user id (the same on every device): coral `#E8927C`, sage
 ## Typography
 
 Geologica (bundled, SIL Open Font License, `assets/fonts/geologica/`),
-one variable font: every style sets both `fontWeight` and the `wght` axis.
+one variable font: `fontWeight` drives its `wght` axis, so styles never
+pin the axis themselves.
 
 | Style | Size / weight | Use |
 |---|---|---|

@@ -153,6 +153,10 @@ void main() {
     });
   });
 
+  test('refuses a UTC time without an explicit offset', () {
+    expect(() => skyAt(DateTime.utc(2026, 6, 21, 12)), throwsAssertionError);
+  });
+
   group('polar latitudes', () {
     test('hold day in a polar summer', () {
       expect(
