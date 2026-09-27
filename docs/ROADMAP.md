@@ -21,9 +21,9 @@ validated first, visual polish comes last. No deadlines.
 - [ ] Write findings to `docs/decisions/`
 
 ## 2. Domain
-- [ ] Decide XP formula and level curve (update PRODUCT.md)
+- [x] Decide XP formula and level curve (update PRODUCT.md)
 - [ ] Choose level names
-- [ ] Pure Dart XP/level logic with unit tests
+- [x] Pure Dart XP/level logic with unit tests
 - [ ] Drift schema for daily steps
 - [ ] Repository: HealthKit to Drift sync
 

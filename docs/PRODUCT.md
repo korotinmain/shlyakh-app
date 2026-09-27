@@ -47,9 +47,24 @@ but the architecture should not block adding more users later
 - Calm over gamified noise: rewards feel pleasant, not pushy.
 - Fonts must have high-quality Cyrillic support.
 
+## XP and levels
+
+- Each local day is scored on its own: 1 XP per step up to 10 000 steps,
+  1 XP per 2 steps beyond that, at most 20 000 XP a day (a long hike is
+  rewarded without skipping levels; sensor glitches cannot break the pace).
+- The main path has 25 levels and ends at 1 000 000 XP, "a million steps".
+  At a typical pace it takes about a year: the first levels arrive within
+  days, the last ones about every six weeks.
+- After the main path the journey continues ("a new trail"): every further
+  level takes the same 81 600 XP. A separate landscape for it is not
+  planned yet.
+- No penalties, no streaks, no XP ever lost; a day without steps simply
+  earns nothing. Both users follow the same rules.
+- Exact rules and tables: `docs/superpowers/specs/2026-09-27-xp-rules-design.md`;
+  code: `lib/features/progress/domain/`.
+
 ## Open questions
 
-- XP formula and level curve
 - Level names (theme and list)
 - What exactly the dot's position on the landscape represents
   (daily progress, level progress, or total distance)
