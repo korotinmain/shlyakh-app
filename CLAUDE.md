@@ -48,6 +48,7 @@ dart format --output=none --set-exit-if-changed .
 dart analyze --fatal-infos
 flutter test
 flutter test --coverage
+dart run tool/coverage/check_coverage.dart
 flutter run
 ```
 
@@ -57,8 +58,9 @@ task done. `dart analyze` includes the `riverpod_lint` analyzer plugin
 its info-level lints fail the exit code. `flutter pub get` regenerates l10n
 files; `flutter test` does not.
 Testing rules and coverage thresholds: `docs/AGENT_RULES.md`, section 8.
-CI (`.github/workflows/ci.yml`) runs format check, analyze and tests on
-every PR to `main`; merging requires it to pass.
+CI (`.github/workflows/ci.yml`) runs format check, analyze, tests and the
+coverage thresholds check on every PR to `main`; merging requires it to
+pass.
 
 ## Dart MCP server
 
@@ -80,7 +82,8 @@ lib/
 │   └── <feature>/
 │       ├── data/          # repositories impl, data sources (HealthKit, Drift, Supabase)
 │       ├── domain/        # entities, pure business logic, repository interfaces
-│       └── presentation/  # widgets, screens, Riverpod providers
+│       └── presentation/  # widgets, screens
+│           └── providers/ # Riverpod providers and notifiers (coverage-measured)
 └── l10n/           # ARB files
 ios/Runner/         # native Swift (HealthKit background delivery)
 docs/               # product, roadmap, architecture, decisions

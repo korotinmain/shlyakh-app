@@ -160,8 +160,15 @@ without a meaningful assertion does not count.
   - `domain/`: **100%** (pure logic, no excuses).
   - `data/` and presentation logic (notifiers, providers): **≥ 85%**.
   - Whole measured codebase: **≥ 85%**.
-- Coverage must not decrease in a change. If a line truly cannot be
-  tested, say why in the final report instead of writing a hollow test.
+- Checked automatically by `tool/coverage/check_coverage.dart` (runs in
+  CI after `flutter test --coverage`). Layers are detected by path;
+  presentation logic lives in `lib/features/*/presentation/providers/`.
+  A measured file that no test loads fails the check.
+- Coverage must not decrease in a change. This is checked in review, not
+  by the script. If a line truly cannot be tested, say why in the final
+  report instead of writing a hollow test.
+- `// coverage:ignore-file` is for rare cases only (e.g. DI wiring) and
+  must be followed by a comment with the reason.
 
 ### 8.6 Required edge cases for this product
 
