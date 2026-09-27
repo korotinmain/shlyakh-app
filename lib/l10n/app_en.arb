@@ -260,5 +260,25 @@
         "type": "String"
       }
     }
+  },
+  "errorHealthAccessDenied": "Shlyakh can't read your steps. Allow access to Steps in the Health settings.",
+  "@errorHealthAccessDenied": {
+    "description": "HealthKit read access was not granted or was revoked"
+  },
+  "errorHealthUnavailable": "Health data isn't available on this device.",
+  "@errorHealthUnavailable": {
+    "description": "HealthKit is not available on this device"
+  },
+  "errorStorage": "Couldn't save your data on this device. Try restarting the app.",
+  "@errorStorage": {
+    "description": "The local database failed"
+  },
+  "errorUnexpected": "Something went wrong while reading your data.",
+  "@errorUnexpected": {
+    "description": "An unknown error at a platform or SDK boundary"
+  },
+  "errorGeneric": "Something went wrong.",
+  "@errorGeneric": {
+    "description": "A bug: an error that is not a known failure"
   }
 }
