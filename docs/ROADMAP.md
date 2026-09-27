@@ -42,9 +42,10 @@ validated first, visual polish comes last. No deadlines.
 
 ## 5. Backend
 - [ ] Supabase project, schema, RLS policies
-- [ ] Auth for two users
+- [ ] Auth and registration (gender required)
+- [ ] Спільно: private groups by invitation (any number of members)
 - [ ] Sync daily steps to Supabase
-- [ ] Realtime: partner's dot on the landscape
+- [ ] Realtime: Спільно members' dots on the landscape
 - [x] Create `docs/ARCHITECTURE.md` (created early, before stage 2)
 
 ## 6. Polish
