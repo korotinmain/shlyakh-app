@@ -31,5 +31,10 @@
   "levelChapter3": "Чумацький тракт",
   "levelChapter4": "Гори й перевали",
   "levelChapter5": "Чумацький Шлях",
-  "levelTitleContinuation": "{title} {degree}"
+  "levelTitleContinuation": "{title} {degree}",
+  "errorHealthAccessDenied": "Шлях не має доступу до кроків. Дозвольте доступ до кроків у налаштуваннях Здоров'я.",
+  "errorHealthUnavailable": "Дані про здоров'я недоступні на цьому пристрої.",
+  "errorStorage": "Не вдалося зберегти дані на пристрої. Спробуйте перезапустити застосунок.",
+  "errorUnexpected": "Під час читання даних щось пішло не так.",
+  "errorGeneric": "Щось пішло не так."
 }
