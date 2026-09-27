@@ -7,30 +7,32 @@ import 'package:shlyakh/core/time/clock_provider.dart';
 
 part 'sky_provider.g.dart';
 
-/// The sky for the current time: now, then again at every minute boundary.
+/// The sky for the current time, updated at every minute boundary.
+///
+/// Synchronous, so the first frame already has the right sky.
 @Riverpod(keepAlive: true)
-Stream<SkyPalette> sky(Ref ref) {
-  final clock = ref.watch(clockProvider);
-  final controller = StreamController<SkyPalette>();
-  void emit() => controller.add(skyAt(clock.now()));
+class Sky extends _$Sky {
+  @override
+  SkyPalette build() {
+    final clock = ref.watch(clockProvider);
+    void update() => state = skyAt(clock.now());
 
-  final now = clock.now();
-  final intoMinute = Duration(
-    seconds: now.second,
-    milliseconds: now.millisecond,
-    microseconds: now.microsecond,
-  );
-  Timer? periodic;
-  final first = Timer(const Duration(minutes: 1) - intoMinute, () {
-    emit();
-    periodic = Timer.periodic(const Duration(minutes: 1), (_) => emit());
-  });
-  ref.onDispose(() {
-    first.cancel();
-    periodic?.cancel();
-    unawaited(controller.close());
-  });
+    final now = clock.now();
+    final intoMinute = Duration(
+      seconds: now.second,
+      milliseconds: now.millisecond,
+      microseconds: now.microsecond,
+    );
+    Timer? periodic;
+    final first = Timer(const Duration(minutes: 1) - intoMinute, () {
+      update();
+      periodic = Timer.periodic(const Duration(minutes: 1), (_) => update());
+    });
+    ref.onDispose(() {
+      first.cancel();
+      periodic?.cancel();
+    });
 
-  emit();
-  return controller.stream;
+    return skyAt(now);
+  }
 }

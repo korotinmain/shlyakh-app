@@ -32,11 +32,11 @@ void main() {
     final values = <SkyPalette>[];
     container.listen(
       skyProvider,
-      (_, next) => next.whenData(values.add),
+      (_, next) => values.add(next),
       fireImmediately: true,
     );
 
-    await tester.pump();
+    // Synchronous: the first frame already has a sky.
     expect(values, [_isPalette(skyAt(start))]);
 
     now = start.add(const Duration(seconds: 29));
