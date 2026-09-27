@@ -51,10 +51,14 @@ but the architecture should not block adding more users later
 
 - Each local day is scored on its own: 1 XP per step up to 10 000 steps,
   1 XP per 2 steps beyond that, at most 20 000 XP a day (a long hike is
-  rewarded without skipping levels; sensor glitches cannot break the pace).
+  rewarded but cannot race through the later path; sensor glitches cannot
+  break the pace). Early on one big day can bring several levels at once
+  (a capped first day reaches level 4), so level-ups must handle more than
+  one level at a time.
 - The main path has 25 levels and ends at 1 000 000 XP, "a million steps".
   At a typical pace it takes about a year: the first levels arrive within
-  days, the last ones about every six weeks.
+  days, the last ones about once a month (about every six weeks at a
+  slower 1 800 steps a day).
 - After the main path the journey continues ("a new trail"): every further
   level takes the same 81 600 XP. A separate landscape for it is not
   planned yet.

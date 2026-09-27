@@ -17,7 +17,8 @@ question "XP formula and level curve" in `docs/PRODUCT.md`.
   out of scope; the model only has to support levels above 25.
 - The main path takes **about a year** at a typical pace (~2 750 steps a
   day; ~1.5 years at 1 800). First levels arrive within days, the last
-  ones about every six weeks.
+  ones about once a month (every six weeks at 1 800 steps a day). One
+  capped day early on can bring several levels at once.
 - **Calm, not pushy:** no penalties, no streaks, no XP ever lost. A day
   without steps gives 0 XP and nothing else.
 - Both users use the same rules.
@@ -106,8 +107,10 @@ level_curve.dart
   });
 ```
 
-`LevelProgress` gives the UI everything for the progress ring and "N steps
-to the next level" without recomputing thresholds in widgets. It is a
+`LevelProgress` gives the UI everything for the progress ring and "N XP
+to the next level" without recomputing thresholds in widgets. The gap is
+XP, not steps: above 10 000 steps a day one XP costs two steps, so showing
+it as steps needs today's count and a separate helper. It is a
 record, so it has value equality without `package:meta` (same choice as
 `FileCoverage` in the coverage tool).
 

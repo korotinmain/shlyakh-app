@@ -15,7 +15,8 @@ typedef LevelProgress = ({
   /// XP earned since reaching [level].
   int xpIntoLevel,
 
-  /// XP between [level] and the next level.
+  /// XP between [level] and the next level. XP, not steps: above 10 000
+  /// steps a day one XP costs two steps.
   int xpForNextLevel,
 });
 
