@@ -44,6 +44,18 @@ void main() {
     }
   });
 
+  group('variantName', () {
+    final variants = <(Failure, String)>[
+      (const HealthAccessDenied(), 'HealthAccessDenied'),
+      (const HealthUnavailable(), 'HealthUnavailable'),
+      (const StorageFailure(), 'StorageFailure'),
+      (const UnexpectedFailure(), 'UnexpectedFailure'),
+    ];
+    for (final (failure, name) in variants) {
+      test('is $name', () => expect(failure.toString(), name));
+    }
+  });
+
   test('toString names the variant only, never the cause', () {
     final failure = StorageFailure(cause: Exception('steps=12345'));
 
