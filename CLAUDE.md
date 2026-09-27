@@ -7,6 +7,9 @@ Built for two users; architected like a small SaaS product.
 
 Before starting work, read `docs/ROADMAP.md` to see the current stage.
 For product scope and non-goals, see `docs/PRODUCT.md`.
+For layers, data flow and what is built vs planned, see
+`docs/ARCHITECTURE.md`; update it in the same PR when the architecture
+changes.
 
 **Hard rules for agents are in `docs/AGENT_RULES.md`. Read them before
 making any change. They override convenience.**
