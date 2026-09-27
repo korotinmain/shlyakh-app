@@ -23,13 +23,24 @@ a review rule; no logs at all.
 - `DeveloperLogger` writes through `dart:developer` only in debug builds;
   release builds log nothing until a crash-reporting service is chosen (a
   separate decision with a new dependency, behind the same interface).
-- `dart:developer` `log` is used nowhere else; `print` is already
-  forbidden by `avoid_print`.
+- `dart:developer` is imported nowhere else; `print` is forbidden by
+  `avoid_print`, and `debugPrint` (which `avoid_print` does not catch) is
+  forbidden too.
+- `test/core/logging/logging_policy_test.dart` enforces this: it fails on
+  `debugPrint(`, on `dart:developer` outside the logger, on a `LogEvent`
+  declared outside `log_events.dart`, and on an interpolated event name.
 
 ## Consequences
 
-- Most leaks are impossible by construction; the remaining one (a step
-  count passed as `count`) is caught by reviewing one file.
+- Most leaks are impossible by construction or fail the policy test; the
+  remaining one (a step count passed as `count`) is caught by reviewing
+  one file.
+- In debug builds `FlutterError.presentError` still prints framework
+  errors in full, as Flutter's own report; asynchronous errors are logged
+  by type only. Our code never puts user data into exception messages.
+- In release builds errors leave no trace until crash reporting replaces
+  `DeveloperLogger`; that stage must also re-install the handlers in
+  `main.dart`, which read the logger once at startup.
 - Every new event costs a few lines in `log_events.dart`.
 - Logs contain type names, which are obfuscated if release builds are
   ever obfuscated; they are for debugging, not analytics.
