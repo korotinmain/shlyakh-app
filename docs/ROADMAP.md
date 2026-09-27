@@ -22,7 +22,7 @@ validated first, visual polish comes last. No deadlines.
 
 ## 2. Domain
 - [x] Decide XP formula and level curve (update PRODUCT.md)
-- [ ] Choose level names
+- [x] Choose level names
 - [x] Pure Dart XP/level logic with unit tests
 - [ ] Drift schema for daily steps
 - [ ] Repository: HealthKit to Drift sync
