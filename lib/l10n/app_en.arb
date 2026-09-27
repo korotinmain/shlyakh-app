@@ -3,5 +3,262 @@
   "appTitle": "Shlyakh",
   "@appTitle": {
     "description": "App name shown on the home screen"
+  },
+  "levelTitle1": "{gender, select, other{Newcomer}}",
+  "@levelTitle1": {
+    "description": "Title of level 1; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle2": "{gender, select, other{Passer-by}}",
+  "@levelTitle2": {
+    "description": "Title of level 2; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle3": "{gender, select, other{Wanderer}}",
+  "@levelTitle3": {
+    "description": "Title of level 3; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle4": "{gender, select, other{Pathfinder}}",
+  "@levelTitle4": {
+    "description": "Title of level 4; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle5": "{gender, select, other{Local Guide}}",
+  "@levelTitle5": {
+    "description": "Title of level 5; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle6": "{gender, select, other{Traveller}}",
+  "@levelTitle6": {
+    "description": "Title of level 6; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle7": "{gender, select, other{Pilgrim}}",
+  "@levelTitle7": {
+    "description": "Title of level 7; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle8": "{gender, select, other{Swift-foot}}",
+  "@levelTitle8": {
+    "description": "Title of level 8; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle9": "{gender, select, other{Messenger}}",
+  "@levelTitle9": {
+    "description": "Title of level 9; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle10": "{gender, select, other{Road Warden}}",
+  "@levelTitle10": {
+    "description": "Title of level 10; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle11": "{gender, select, other{Drover}}",
+  "@levelTitle11": {
+    "description": "Title of level 11; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle12": "{gender, select, other{Salt Trader}}",
+  "@levelTitle12": {
+    "description": "Title of level 12; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle13": "{gender, select, other{Seasoned Trader}}",
+  "@levelTitle13": {
+    "description": "Title of level 13; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle14": "{gender, select, other{Steppe-wise}}",
+  "@levelTitle14": {
+    "description": "Title of level 14; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle15": "{gender, select, other{Caravan Chief}}",
+  "@levelTitle15": {
+    "description": "Title of level 15; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle16": "{gender, select, other{Highlander}}",
+  "@levelTitle16": {
+    "description": "Title of level 16; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle17": "{gender, select, other{Meadow Shepherd}}",
+  "@levelTitle17": {
+    "description": "Title of level 17; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle18": "{gender, select, other{Highland Daredevil}}",
+  "@levelTitle18": {
+    "description": "Title of level 18; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle19": "{gender, select, other{Pass Conqueror}}",
+  "@levelTitle19": {
+    "description": "Title of level 19; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle20": "{gender, select, other{Lord of the Peaks}}",
+  "@levelTitle20": {
+    "description": "Title of level 20; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle21": "{gender, select, other{Stargazer}}",
+  "@levelTitle21": {
+    "description": "Title of level 21; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle22": "{gender, select, other{Night Wanderer}}",
+  "@levelTitle22": {
+    "description": "Title of level 22; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle23": "{gender, select, other{Star Guide}}",
+  "@levelTitle23": {
+    "description": "Title of level 23; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle24": "{gender, select, other{Keeper of the Way}}",
+  "@levelTitle24": {
+    "description": "Title of level 24; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle25": "{gender, select, other{Star Wanderer}}",
+  "@levelTitle25": {
+    "description": "Title of level 25; gender selects the grammatical form (feminine, other)",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "levelChapter1": "Home Land",
+  "@levelChapter1": {
+    "description": "Name of chapter 1 of the path (levels 1-5)"
+  },
+  "levelChapter2": "The Beaten Road",
+  "@levelChapter2": {
+    "description": "Name of chapter 2 of the path (levels 6-10)"
+  },
+  "levelChapter3": "The Salt Road",
+  "@levelChapter3": {
+    "description": "Name of chapter 3 of the path (levels 11-15)"
+  },
+  "levelChapter4": "Peaks and Passes",
+  "@levelChapter4": {
+    "description": "Name of chapter 4 of the path (levels 16-20)"
+  },
+  "levelChapter5": "The Milky Way",
+  "@levelChapter5": {
+    "description": "Name of chapter 5 of the path (levels 21-25)"
+  },
+  "levelTitleContinuation": "{title} {degree}",
+  "@levelTitleContinuation": {
+    "description": "Title after the main path: the last title and a Roman degree, e.g. Star Wanderer II",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "degree": {
+        "type": "String"
+      }
+    }
   }
 }
