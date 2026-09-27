@@ -44,6 +44,7 @@ API. If an API looks different from what you expect, trust the source.
 ```bash
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs
+dart run drift_dev make-migrations   # after a schema change + schemaVersion bump; commit its output
 flutter gen-l10n
 dart format --output=none --set-exit-if-changed .
 dart analyze --fatal-infos
