@@ -22,6 +22,16 @@ void main() {
       ),
       ('data', 'lib/features/steps/data/steps_repository.dart', Layer.data),
       (
+        'drift table DSL',
+        'lib/features/steps/data/local/daily_steps_table.dart',
+        Layer.excluded,
+      ),
+      (
+        'a data file named table outside local/',
+        'lib/features/steps/data/steps_table.dart',
+        Layer.data,
+      ),
+      (
         'providers',
         'lib/features/steps/presentation/providers/today.dart',
         Layer.presentationLogic,
