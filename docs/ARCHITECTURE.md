@@ -58,6 +58,13 @@ main.dart ── ProviderScope
 - Domain: `features/progress/domain/` holds the XP rules (`dailyXp`,
   `totalXp`) and the level curve (`xpToReachLevel`, `levelProgress`), pure
   functions with 100% test coverage. Nothing reads real steps yet.
+- Local storage: `core/database/app_database.dart` (Drift, schema v1,
+  snapshot in `drift_schemas/`) with the `daily_steps` table
+  (`user_id`, `local_date` `YYYY-MM-DD`, IANA `timezone`, `steps`; key
+  `(user_id, local_date)`; STRICT; CHECKs on steps, date format and
+  non-empty ids) and `DailyStepsDao` in
+  `features/steps/data/local/`. Upsert replaces, HealthKit being the
+  source of truth. Nothing writes to it yet.
 - Level titles: `features/progress/domain/level_titles.dart` (chapters,
   continuation degree, `GrammaticalGender`) and
   `presentation/providers/level_title.dart` (maps a level to its ARB string;
@@ -74,7 +81,7 @@ main.dart ── ProviderScope
 flowchart LR
   HK[HealthKit] -->|daily totals<br/>statistics query| SR[data: StepsRepository]
   OBS[Swift HKObserverQuery<br/>via Pigeon] -->|"steps changed"| SR
-  SR -->|upsert user_id + local_date| DB[(Drift / SQLite<br/>local source of truth)]
+  SR -->|upsert user_id + local_date| DB[(Drift / SQLite<br/>local source of truth<br/>built)]
   DB --> XP[domain: XP and levels<br/>pure functions of daily steps<br/>built]
   DB --> SYNC[data: sync]
   SYNC <-->|upsert, RLS| SB[(Supabase Postgres)]
@@ -125,7 +132,7 @@ Findings of the stage 1 spike (full ADR follows when the spike ends):
 | Localization | gen-l10n, every user-facing string in ARB | [built] |
 | Navigation | go_router behind `routerProvider` | [built] |
 | Models | freezed + json_serializable | [decided] |
-| Local storage | Drift | [decided] |
+| Local storage | Drift: one `AppDatabase` in `core/database/`, tables per feature, migrations from schema v1 | [built] |
 | Backend | Supabase: auth, Postgres with RLS on every table, Realtime | [decided] |
 | Design tokens | `lib/core/`, extracted from the design (stage 3) | [decided] |
 | Error handling | how data-layer errors become domain failures and UI states | [open] |

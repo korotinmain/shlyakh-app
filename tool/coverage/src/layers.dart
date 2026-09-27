@@ -15,6 +15,12 @@ Layer classify(String path) {
     return Layer.excluded;
   }
 
+  // Drift table definitions are a DSL read by the code generator; their
+  // getters never run, so they cannot be covered.
+  if (path.contains('/data/local/') && path.endsWith('_table.dart')) {
+    return Layer.excluded;
+  }
+
   // lib/features/<feature>/<layer>/...
   final segments = path.split('/');
   if (segments.length > 3 && segments[1] == 'features') {

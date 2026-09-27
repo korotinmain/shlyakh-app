@@ -30,3 +30,8 @@ Generated files are not committed: `*.g.dart`, `*.freezed.dart` and
   this rule (regenerate with `dart run pigeon --input <file>`), but its
   Swift output (`*.g.swift`) is committed, because Xcode compiles it
   directly and does not run Dart tooling.
+- `dart run drift_dev make-migrations` output is committed: the schema
+  snapshots in `drift_schemas/` and, from schema version 2 on, the
+  generated migration steps and tests. Old schema versions cannot be
+  regenerated from the current code, and CI must never create a snapshot
+  on its own.

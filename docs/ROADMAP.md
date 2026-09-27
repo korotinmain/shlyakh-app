@@ -24,7 +24,7 @@ validated first, visual polish comes last. No deadlines.
 - [x] Decide XP formula and level curve (update PRODUCT.md)
 - [x] Choose level names
 - [x] Pure Dart XP/level logic with unit tests
-- [ ] Drift schema for daily steps
+- [x] Drift schema for daily steps
 - [ ] Repository: HealthKit to Drift sync
 
 ## 3. Design (Claude Design)
