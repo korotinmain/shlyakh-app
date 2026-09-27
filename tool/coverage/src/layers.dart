@@ -31,12 +31,30 @@ Layer classify(String path) {
   return Layer.core;
 }
 
-/// Whether [source] opts out of coverage with a `// coverage:ignore-file`
-/// line comment, optionally followed by a reason.
-bool hasIgnoreFileComment(String source) {
-  const marker = '// coverage:ignore-file';
-  return source
-      .split('\n')
-      .map((line) => line.trim())
-      .any((line) => line == marker || line.startsWith('$marker '));
+/// The rule `flutter test --coverage` uses to omit a file (package:coverage).
+final _ignoreFile = RegExp(
+  r'//\s*coverage:ignore-file[\w\d\s]*$',
+  multiLine: true,
+);
+
+/// Whether [source] opts out of coverage with `// coverage:ignore-file`,
+/// exactly as `flutter test --coverage` decides it.
+bool hasIgnoreFileComment(String source) => _ignoreFile.hasMatch(source);
+
+final _comments = RegExp(r'//[^\n]*|/\*[\s\S]*?\*/');
+final _strings = RegExp(
+  r"'(?:\\.|[^'\\\n])*'|"
+  r'"(?:\\.|[^"\\\n])*"',
+);
+final _body = RegExp(r'=>|\)\s*(?:async\*?|sync\*)?\s*\{');
+
+/// Whether [source] has function, method or getter bodies.
+///
+/// Files with only declarations (interfaces, enums, constants, typedefs,
+/// const constructors) get no lcov record even when a test loads them, so
+/// their absence from lcov is not a missing test. A heuristic: looks for
+/// `=>` or `) {` outside comments and string literals.
+bool hasExecutableCode(String source) {
+  final code = source.replaceAll(_comments, '').replaceAll(_strings, "''");
+  return _body.hasMatch(code);
 }

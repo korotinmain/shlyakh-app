@@ -48,29 +48,55 @@ void main() {
   });
 
   group('hasIgnoreFileComment', () {
-    test('detects the bare comment', () {
-      expect(
-        hasIgnoreFileComment('// coverage:ignore-file\nvoid f() {}'),
-        isTrue,
-      );
-    });
+    // Must match what flutter test omits from lcov (package:coverage regex).
+    final cases = <(String, String, bool)>[
+      ('the bare comment', '// coverage:ignore-file\nvoid f() {}', true),
+      ('extra spaces after //', '//  coverage:ignore-file', true),
+      ('the comment after code', 'int a() => 1; // coverage:ignore-file', true),
+      ('a reason after a colon', '// coverage:ignore-file reason: x', false),
+      ('other coverage comments', '// coverage:ignore-line', false),
+      (
+        'the marker inside a string',
+        'final s = "// coverage:ignore-file";',
+        false,
+      ),
+    ];
+    for (final (name, source, expected) in cases) {
+      test('returns $expected for $name', () {
+        expect(hasIgnoreFileComment(source), expected);
+      });
+    }
+  });
 
-    test('detects the comment followed by a reason', () {
-      expect(
-        hasIgnoreFileComment('// coverage:ignore-file reason: FFI glue'),
-        isTrue,
-      );
-    });
-
-    test('ignores other coverage comments', () {
-      expect(hasIgnoreFileComment('// coverage:ignore-line'), isFalse);
-    });
-
-    test('ignores the marker inside code', () {
-      expect(
-        hasIgnoreFileComment('final s = "// coverage:ignore-file";'),
-        isFalse,
-      );
-    });
+  group('hasExecutableCode', () {
+    final cases = <(String, String, bool)>[
+      (
+        'an interface',
+        'abstract interface class R {\n  int steps();\n}',
+        false,
+      ),
+      ('an enum', 'enum Kind { a, b }', false),
+      (
+        'constants and typedefs',
+        'const int max = 5;\ntypedef Steps = int;',
+        false,
+      ),
+      (
+        'a const constructor',
+        'class A {\n  const A(this.v);\n  final int v;\n}',
+        false,
+      ),
+      ('an arrow function', 'int f(int x) => x + 1;', true),
+      ('a block body', 'void f() {\n  g();\n}', true),
+      ('an async block body', 'Future<void> f() async {\n}', true),
+      ('an arrow getter', 'class A {\n  int get v => 1;\n}', true),
+      ('an arrow only in a comment', '// f() => 1\nenum K { a }', false),
+      ('an arrow only in a string', "const s = 'a => b';", false),
+    ];
+    for (final (name, source, expected) in cases) {
+      test('returns $expected for $name', () {
+        expect(hasExecutableCode(source), expected);
+      });
+    }
   });
 }

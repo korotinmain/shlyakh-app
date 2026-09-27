@@ -48,15 +48,17 @@ Future<void> main(List<String> args) async {
   exitCode = report.passed ? 0 : 1;
 }
 
-/// All `lib/**.dart` files that are measured: not excluded by path and not
-/// opted out with `// coverage:ignore-file`.
+/// All `lib/**.dart` files that are measured: not excluded by path, not
+/// opted out with `// coverage:ignore-file`, and with executable code
+/// (declaration-only files never get an lcov record).
 Future<List<String>> _measuredCandidates() async {
   final candidates = <String>[];
   await for (final entity in Directory('lib').list(recursive: true)) {
     if (entity is! File || !entity.path.endsWith('.dart')) continue;
     final path = entity.path.replaceAll(r'\', '/');
     if (classify(path) == Layer.excluded) continue;
-    if (hasIgnoreFileComment(await entity.readAsString())) continue;
+    final source = await entity.readAsString();
+    if (hasIgnoreFileComment(source) || !hasExecutableCode(source)) continue;
     candidates.add(path);
   }
   return candidates;

@@ -123,11 +123,16 @@ Unit tests, table-driven where there are thresholds:
 - `flutter test --coverage` path format (`SF:lib/...` relative) is taken
   from the current output; if it ever becomes absolute, `classify` must
   normalize. Tests pin the relative form.
-- Files that contain only declarations (e.g. an abstract repository
-  interface) appear with zero lines when a test loads them; they count as
-  0/0 and do not affect percentages. If no test loads such a file, it is
-  reported as missing like any other file. This is intended: every
-  repository interface should have a fake used by tests (AGENT_RULES 8.4).
+- Files that contain only declarations (abstract interfaces, enums,
+  constants, typedefs) get no lcov record at all, even when a test loads
+  them (verified during final review). The CLI therefore skips candidates
+  without executable code (`hasExecutableCode`: `=>` or `) {` outside
+  comments and strings). Heuristic risk: a file whose only code is a
+  constructor initializer list is treated as declaration-only.
+- `hasIgnoreFileComment` uses package:coverage's own regex, so the script
+  omits exactly the files `flutter test --coverage` omits. A reason must
+  go on the next line (`// coverage:ignore-file reason: x` is not
+  recognised by flutter).
 - `lib/features/*/presentation/providers/` is a new convention; a provider
   placed elsewhere in `presentation/` is silently treated as a widget and
   not measured. Mitigated by documenting the convention in CLAUDE.md.
