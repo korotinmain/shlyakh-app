@@ -26,3 +26,21 @@ a fallback for devices set to any other language.
   language anywhere in the list wins over the fallback.
 - Every new string is written in English first and must be translated to
   Ukrainian in the same change.
+
+## Manual check on iOS
+
+Widget tests cover Flutter's locale resolution but not what iOS reports.
+Check on the simulator after touching localization or `Info.plist`:
+
+```bash
+xcrun simctl spawn <sim> defaults write -g AppleLanguages '("en-UA","uk-UA")'
+xcrun simctl launch --terminate-running-process <sim> com.denyskorotin.shlyakh
+```
+
+Expect "Shlyakh"; with `'("uk-UA","en-UA")'` expect "Шлях".
+`--terminate-running-process` is required: `defaults write` does not
+restart running apps (unlike the Settings app), and the Flutter engine
+reads the preferred languages only at startup and on
+`NSCurrentLocaleDidChangeNotification`, which a `defaults write` of
+`AppleLanguages` does not send. A plain `simctl launch` brings the old
+process to the foreground with the old languages.
