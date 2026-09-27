@@ -29,7 +29,7 @@ validated first, visual polish comes last. No deadlines.
 
 ## 3. Design
 - [x] A. Main screen content decisions (PRODUCT.md "Main screen content")
-- [ ] B. Design foundation: sky palettes per time of day, accents,
+- [x] B. Design foundation: sky palettes per time of day, accents,
       typography with Cyrillic, spacing, radii, glass material;
       `docs/DESIGN.md` and tokens in `lib/core/`
 - [ ] C. Main screen skeleton: live sky, glass card with ring, collapsed /

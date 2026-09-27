@@ -56,15 +56,18 @@ Relative to local sunrise `S`, solar noon `N` and sunset `E` of the day:
 | `blueHour` | `E + 20 min` |
 | `night` | `E + 90 min`, held until the next day's `preDawn` |
 
-Between two consecutive keyframes every colour is interpolated linearly in
-**Oklab** (perceptually even, no grey midpoints), by the fraction of time
+Between two consecutive keyframes every colour is interpolated in
+**OkLCh** (implementation note: a straight Oklab line still goes grey
+between opposite hues, so hue follows the shorter arc; see the plan
+rulings), by the fraction of time
 elapsed between them. From `night` to the next `preDawn` the night palette
 holds, then blends into `preDawn` over the last 60 minutes before it.
 
 ### Sunrise and sunset
 
-- Computed with the NOAA solar position algorithm (pure Dart, no
-  dependency) for a date and coordinates, in UTC, then shown in local time
+- Computed with the NOAA Solar Calculator equations (Meeus-based; the
+  shorter Spencer series drifts by about a day near equinoxes) (pure Dart,
+  no dependency) for a date and coordinates, in UTC, then shown in local time
   via the device clock's offset.
 - Coordinates: a fixed default of Kyiv (50.45° N, 30.52° E) until location
   is a deliberate decision (privacy; out of scope). The error for anywhere
