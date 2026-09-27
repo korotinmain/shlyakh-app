@@ -1,3 +1,5 @@
+// coverage:ignore-file
+// Reason: DI wiring for the real clock; tests override clockProvider.
 import 'package:clock/clock.dart' show Clock;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
