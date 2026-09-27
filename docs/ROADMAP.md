@@ -45,7 +45,7 @@ validated first, visual polish comes last. No deadlines.
 - [ ] Auth for two users
 - [ ] Sync daily steps to Supabase
 - [ ] Realtime: partner's dot on the landscape
-- [ ] Create `docs/ARCHITECTURE.md`
+- [x] Create `docs/ARCHITECTURE.md` (created early, before stage 2)
 
 ## 6. Polish
 - [ ] Rive landscape with day/night transition
