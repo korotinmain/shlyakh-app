@@ -31,6 +31,19 @@ void main() {
   tearDown(() => db.close());
 
   group('upsert', () {
+    test('stores a day with zero steps', () async {
+      await dao.upsert(_day('a', '2026-09-27', 0));
+
+      expect((await dao.forDay('a', _date('2026-09-27')))!.steps, 0);
+    });
+
+    test('stores a very large step count unchanged', () async {
+      const huge = 1 << 40;
+      await dao.upsert(_day('a', '2026-09-27', huge));
+
+      expect((await dao.forDay('a', _date('2026-09-27')))!.steps, huge);
+    });
+
     test('inserts a new day', () async {
       await dao.upsert(_day('a', '2026-09-27', 5000));
 
@@ -115,6 +128,32 @@ void main() {
       ]);
     });
 
+    test('applies only a lower bound', () async {
+      for (var d = 25; d <= 27; d++) {
+        await dao.upsert(_day('a', '2026-09-$d', 100));
+      }
+
+      final days = await dao.watchForUser('a', from: _date('2026-09-26')).first;
+
+      expect(days.map((d) => d.localDate.toIsoString()), [
+        '2026-09-26',
+        '2026-09-27',
+      ]);
+    });
+
+    test('applies only an upper bound', () async {
+      for (var d = 25; d <= 27; d++) {
+        await dao.upsert(_day('a', '2026-09-$d', 100));
+      }
+
+      final days = await dao.watchForUser('a', to: _date('2026-09-26')).first;
+
+      expect(days.map((d) => d.localDate.toIsoString()), [
+        '2026-09-25',
+        '2026-09-26',
+      ]);
+    });
+
     test('emits again after an upsert in range', () async {
       await dao.upsert(_day('a', '2026-09-26', 100));
       final stream = dao.watchForUser('a');
@@ -141,12 +180,21 @@ void main() {
     });
   });
 
-  test('the CHECK constraint rejects negative steps', () async {
-    await expectLater(
-      db.customStatement(
-        "INSERT INTO daily_steps VALUES ('a', '2026-09-27', 'Europe/Kyiv', -1)",
-      ),
-      throwsA(isA<SqliteException>()),
-    );
+  group('SQL constraints reject a bad raw row', () {
+    final rows = <(String, String)>[
+      ('negative steps', "('a', '2026-09-27', 'Europe/Kyiv', -1)"),
+      ('steps as text', "('a', '2026-09-27', 'Europe/Kyiv', 'abc')"),
+      ('a malformed local_date', "('a', '2026-9-27', 'Europe/Kyiv', 1)"),
+      ('an empty timezone', "('a', '2026-09-27', '', 1)"),
+      ('an empty user_id', "('', '2026-09-27', 'Europe/Kyiv', 1)"),
+    ];
+    for (final (name, values) in rows) {
+      test(name, () async {
+        await expectLater(
+          db.customStatement('INSERT INTO daily_steps VALUES $values'),
+          throwsA(isA<SqliteException>()),
+        );
+      });
+    }
   });
 }

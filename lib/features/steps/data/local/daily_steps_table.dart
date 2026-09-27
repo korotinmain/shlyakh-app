@@ -21,6 +21,17 @@ class DailyStepsTable extends Table {
   @override
   Set<Column<Object>> get primaryKey => {userId, localDate};
 
+  /// STRICT: SQLite enforces column types (no text in `steps`).
   @override
-  List<String> get customConstraints => ['CHECK (steps >= 0)'];
+  bool get isStrict => true;
+
+  /// One malformed row would break every stream of that user, so the
+  /// database rejects it, not only the DAO.
+  @override
+  List<String> get customConstraints => [
+    'CHECK (steps >= 0)',
+    "CHECK (local_date GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')",
+    "CHECK (timezone <> '')",
+    "CHECK (user_id <> '')",
+  ];
 }

@@ -59,8 +59,12 @@
         "is_virtual": false,
         "without_rowid": false,
         "constraints": [
-          "CHECK (steps >= 0)"
+          "CHECK (steps >= 0)",
+          "CHECK (local_date GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')",
+          "CHECK (timezone <> '')",
+          "CHECK (user_id <> '')"
         ],
+        "strict": true,
         "explicit_pk": [
           "user_id",
           "local_date"
@@ -74,7 +78,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"daily_steps\" (\"user_id\" TEXT NOT NULL, \"local_date\" TEXT NOT NULL, \"timezone\" TEXT NOT NULL, \"steps\" INTEGER NOT NULL, PRIMARY KEY (\"user_id\", \"local_date\"), CHECK (steps >= 0));"
+          "sql": "CREATE TABLE IF NOT EXISTS \"daily_steps\" (\"user_id\" TEXT NOT NULL, \"local_date\" TEXT NOT NULL, \"timezone\" TEXT NOT NULL, \"steps\" INTEGER NOT NULL, PRIMARY KEY (\"user_id\", \"local_date\"), CHECK (steps >= 0), CHECK (local_date GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'), CHECK (timezone <> ''), CHECK (user_id <> '')) STRICT;"
         }
       ]
     }

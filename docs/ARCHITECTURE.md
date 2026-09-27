@@ -61,7 +61,8 @@ main.dart ── ProviderScope
 - Local storage: `core/database/app_database.dart` (Drift, schema v1,
   snapshot in `drift_schemas/`) with the `daily_steps` table
   (`user_id`, `local_date` `YYYY-MM-DD`, IANA `timezone`, `steps`; key
-  `(user_id, local_date)`; `CHECK steps >= 0`) and `DailyStepsDao` in
+  `(user_id, local_date)`; STRICT; CHECKs on steps, date format and
+  non-empty ids) and `DailyStepsDao` in
   `features/steps/data/local/`. Upsert replaces, HealthKit being the
   source of truth. Nothing writes to it yet.
 - Level titles: `features/progress/domain/level_titles.dart` (chapters,

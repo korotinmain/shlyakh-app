@@ -50,7 +50,10 @@ Table `daily_steps`:
 | `timezone` | TEXT | NOT NULL |
 | `steps` | INTEGER | NOT NULL, `CHECK (steps >= 0)` |
 
-Primary key `(user_id, local_date)`.
+Primary key `(user_id, local_date)`. The table is `STRICT` (SQLite enforces
+column types) and also checks `local_date GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'`,
+`timezone <> ''` and `user_id <> ''`, so a malformed row cannot reach a
+stream (added after final review, before v1 ever shipped).
 
 ## Structure
 
