@@ -27,11 +27,18 @@ validated first, visual polish comes last. No deadlines.
 - [x] Drift schema for daily steps
 - [ ] Repository: HealthKit to Drift sync
 
-## 3. Design (Claude Design)
-- [ ] Main screen "postcard" concept
-- [ ] Level-up moment
-- [ ] History / details in bottom sheet
-- [ ] Extract design tokens, create `docs/DESIGN.md`
+## 3. Design
+- [x] A. Main screen content decisions (PRODUCT.md "Main screen content")
+- [ ] B. Design foundation: sky palettes per time of day, accents,
+      typography with Cyrillic, spacing, radii, glass material;
+      `docs/DESIGN.md` and tokens in `lib/core/`
+- [ ] C. Main screen skeleton: live sky, glass card with ring, collapsed /
+      expanded bottom sheet, floating tab bar; placeholder hills
+- [ ] D. Illustration (waits for art): layered hills with atmospheric
+      perspective, grain, parallax, path and member dots, night sky with
+      the Milky Way growing with progress
+- [ ] E. Level-up moment (several levels at once) and history
+- [ ] F. Motion and haptics (walking dots, count-up, level-up haptics)
 
 ## 4. Main screen
 - [ ] Theme and tokens in code
@@ -55,9 +62,9 @@ validated first, visual polish comes last. No deadlines.
 - [ ] Ukrainian + English localization complete
 - [ ] Home screen widget (if in scope)
 
-## 7. Release to two phones
+## 7. Release to our phones
 - [ ] TestFlight build
-- [ ] Installed on both phones
+- [ ] Installed on our family's phones
 
 ## Later
 - Watch complication (SwiftUI)
