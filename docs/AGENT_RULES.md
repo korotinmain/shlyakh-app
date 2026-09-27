@@ -12,6 +12,8 @@ convenience. If a task seems to require breaking one, stop and ask.
   wrong, explain why and ask.
 - Never swallow errors: no empty `catch`, no `catch (_) {}` without handling
   or rethrowing.
+- Repositories catch only specific exceptions and rethrow a `Failure`;
+  programmer errors are never caught (`docs/decisions/0005-error-handling.md`).
 - In the final report, separate clearly:
   - what was changed,
   - what was verified (commands actually run and their result),
@@ -56,6 +58,10 @@ convenience. If a task seems to require breaking one, stop and ask.
 - Step counts and any HealthKit data are sensitive.
 - Never log health data, user ids, emails or tokens: not in `print`,
   not in debug logs, not in crash reports.
+- Log only through `AppLogger` with events declared in
+  `lib/core/logging/log_events.dart`; `LogValue.count` never carries
+  steps, XP, dates or ids. Never log an exception's message
+  (`docs/decisions/0006-logging.md`).
 - Request only the HealthKit permissions actually used (read: step count).
 - The data model must support full deletion of a user's account and data
   (required by the App Store when the app has account creation).
