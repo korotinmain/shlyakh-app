@@ -72,6 +72,18 @@ printed DTD URI to the `dtd` tool. Read-only tools are pre-allowed in
 `.claude/settings.json`; `pub` stays behind a prompt because adding
 dependencies requires asking first.
 
+## Claude Code hooks
+
+`.claude/settings.json` runs these hooks (scripts in `.claude/hooks/`):
+
+- Edit/Write on a generated file (`*.g.dart`, `*.freezed.dart`,
+  `*.g.swift`, l10n output) is blocked: edit the source and regenerate.
+- After an edit, the Dart file is formatted with `dart format`.
+- After an edit, `DateTime.now()` in `lib/` (outside `clockProvider`) is
+  reported (ADR 0002).
+- Before finishing a turn with changed Dart files, `dart analyze
+  --fatal-infos` and `flutter test` run; a failure keeps the turn going.
+
 ## Project structure
 
 ```
