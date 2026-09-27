@@ -13,6 +13,10 @@ Two people: the developer and his wife. No public release planned for now,
 but the architecture should not block adding more users later
 (multi-user data model, auth, row-level security).
 
+Registration must ask for the user's gender (male or female). It is stored
+as a grammatical gender and used only to pick the form of Ukrainian level
+titles ("Мандрівник" / "Мандрівниця").
+
 ## Goals
 
 - Steps are imported from HealthKit automatically, with no manual entry and
@@ -44,7 +48,9 @@ but the architecture should not block adding more users later
 - Should not look like a template or AI-generated UI: no generic dashboard
   cards, no default gradients, no stock icon grids.
 - Illustration first: the landscape is the hero of the main screen.
-- Calm over gamified noise: rewards feel pleasant, not pushy.
+- RPG flavour is welcome in names and rewards (titles, chapters, level-up
+  moments), but the mechanics stay fair: no penalties, no streaks, no XP
+  ever lost.
 - Fonts must have high-quality Cyrillic support.
 
 ## XP and levels
@@ -67,9 +73,52 @@ but the architecture should not block adding more users later
 - Exact rules and tables: `docs/superpowers/specs/2026-09-27-xp-rules-design.md`;
   code: `lib/features/progress/domain/`.
 
+## Level titles
+
+Every level has a title; the 25 main-path titles form 5 chapters of 5,
+from the home village to the stars. After level 25 the last title gains a
+Roman degree: Зоряний мандрівник II, III, … / Star Wanderer II, III, ….
+Ukrainian titles have masculine and feminine forms, chosen by the user's
+grammatical gender.
+
+| Level | Українська (ч.) | Українська (ж.) | English |
+|---|---|---|---|
+| **1. Рідний край / Home Land** | | | |
+| 1 | Новачок | Новачка | Newcomer |
+| 2 | Перехожий | Перехожа | Passer-by |
+| 3 | Мандрівник | Мандрівниця | Wanderer |
+| 4 | Шукач стежок | Шукачка стежок | Pathfinder |
+| 5 | Знавець околиць | Знавчиня околиць | Local Guide |
+| **2. Битий шлях / The Beaten Road** | | | |
+| 6 | Подорожній | Подорожня | Traveller |
+| 7 | Прочанин | Прочанка | Pilgrim |
+| 8 | Прудконогий | Прудконога | Swift-foot |
+| 9 | Посланець | Посланниця | Messenger |
+| 10 | Вартовий шляху | Вартова шляху | Road Warden |
+| **3. Чумацький тракт / The Salt Road** | | | |
+| 11 | Погонич | Погоничка | Drover |
+| 12 | Чумак | Чумачка | Salt Trader |
+| 13 | Бувалий чумак | Бувала чумачка | Seasoned Trader |
+| 14 | Знавець степу | Знавчиня степу | Steppe-wise |
+| 15 | Отаман валки | Отаманка валки | Caravan Chief |
+| **4. Гори й перевали / Peaks and Passes** | | | |
+| 16 | Верховинець | Верховинка | Highlander |
+| 17 | Пастух полонин | Пастушка полонин | Meadow Shepherd |
+| 18 | Легінь | Легінка | Highland Daredevil |
+| 19 | Підкорювач перевалів | Підкорювачка перевалів | Pass Conqueror |
+| 20 | Володар вершин | Володарка вершин | Lord of the Peaks |
+| **5. Чумацький Шлях / The Milky Way** | | | |
+| 21 | Зорезнавець | Зорезнавчиня | Stargazer |
+| 22 | Нічний мандрівник | Нічна мандрівниця | Night Wanderer |
+| 23 | Провідник за зорями | Провідниця за зорями | Star Guide |
+| 24 | Хранитель шляху | Хранителька шляху | Keeper of the Way |
+| 25 | Зоряний мандрівник | Зоряна мандрівниця | Star Wanderer |
+
+Source of truth for the strings: `lib/l10n/app_*.arb`; the table is pinned
+by `test/features/progress/presentation/providers/level_title_test.dart`.
+
 ## Open questions
 
-- Level names (theme and list)
 - What exactly the dot's position on the landscape represents
   (daily progress, level progress, or total distance)
 - Home screen widget: in scope for v1 or later?
