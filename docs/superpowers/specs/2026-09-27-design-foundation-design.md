@@ -35,7 +35,8 @@ from tokens and the placeholder seed colour disappears.
 Each keyframe also defines two separate values:
 
 - `onSky`, the colour of text drawn directly on the sky: `#18293A` for
-  `morning` and `day`, `#FFFFFF` for the other five.
+  `morning`, `day` and `goldenHour` (changed in review: white on the
+  golden-hour sky was 2.8:1), `#FFFFFF` for the other four.
 - `surfaceTone`, which matte glass tint to use: `light` for `morning` and
   `day`, `dark` for `preDawn`, `dawn`, `goldenHour`, `blueHour` and `night`.
 

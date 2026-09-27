@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/core/design/sky/sky_keyframes.dart';
 import 'package:shlyakh/core/design/sky/sky_palette.dart';
@@ -67,6 +69,25 @@ bool _listEquals(List<int> a, List<int> b) =>
 
 SkyPalette _at(DateTime wall, [Duration offset = _summer]) =>
     skyAt(wall, utcOffset: offset);
+
+/// WCAG 2 contrast ratio of two opaque ARGB colours.
+double _contrast(int a, int b) {
+  double luminance(int argb) {
+    double channel(int shift) {
+      final c = ((argb >> shift) & 0xFF) / 255;
+      return c <= 0.04045
+          ? c / 12.92
+          : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
+    }
+
+    return 0.2126 * channel(16) + 0.7152 * channel(8) + 0.0722 * channel(0);
+  }
+
+  final la = luminance(a);
+  final lb = luminance(b);
+  final (hi, lo) = la > lb ? (la, lb) : (lb, la);
+  return (hi + 0.05) / (lo + 0.05);
+}
 
 int _maxChannelDiff(int a, int b) => [16, 8, 0]
     .map((s) => (((a >> s) & 0xFF) - ((b >> s) & 0xFF)).abs())
@@ -179,7 +200,7 @@ void main() {
       SkyKeyframe.dawn: (0xFFFFFFFF, SurfaceTone.dark),
       SkyKeyframe.morning: (0xFF18293A, SurfaceTone.light),
       SkyKeyframe.day: (0xFF18293A, SurfaceTone.light),
-      SkyKeyframe.goldenHour: (0xFFFFFFFF, SurfaceTone.dark),
+      SkyKeyframe.goldenHour: (0xFF18293A, SurfaceTone.dark),
       SkyKeyframe.blueHour: (0xFFFFFFFF, SurfaceTone.dark),
       SkyKeyframe.night: (0xFFFFFFFF, SurfaceTone.dark),
     };
@@ -188,6 +209,16 @@ void main() {
       test('${keyframe.name} has its text colour and surface tone', () {
         expect(skyKeyframes[keyframe]!.onSky, onSky);
         expect(skyKeyframes[keyframe]!.surfaceTone, tone);
+      });
+    }
+
+    for (final MapEntry(key: keyframe, value: palette)
+        in skyKeyframes.entries) {
+      test('${keyframe.name} text on the sky meets WCAG AA contrast', () {
+        expect(
+          _contrast(palette.onSky, palette.sky.first),
+          greaterThanOrEqualTo(4.5),
+        );
       });
     }
 

@@ -20,7 +20,9 @@ The sky follows the real time of day through seven keyframes. Between two
 keyframes every colour is interpolated in OkLCh (lightness and chroma
 linearly, hue along the shorter arc), so warm-to-cool transitions keep
 their colour instead of passing through grey. The gradient places its
-three colours at 0%, 55% and 100% of the height. A 12% overlay grain sits
+three colours at 0%, 55% and 100% of the height. Text drawn directly on
+the sky uses its keyframe's text colour and meets WCAG AA (4.5:1) against
+the top sky colour; put it in the upper part of the sky. A 12% overlay grain sits
 on top.
 
 | Keyframe | Sky top → bottom | Hills far → near | Accent | Text on sky | Glass |
@@ -29,7 +31,7 @@ on top.
 | Dawn | `#545784` `#CF98A2` `#F2C7A8` | `#C29AAB` `#8B7790` `#4F4D63` | `#F2A98A` | white | dark |
 | Morning | `#7EA8CF` `#BCD6E6` `#F2EBDD` | `#B7D0C6` `#8CB392` `#5B8C64` | `#F0C27A` | `#18293A` | light |
 | Day | `#6C9DCC` `#A2C8E5` `#E0EEF1` | `#AECFC2` `#7EAF85` `#4D8259` | `#E9B44C` | `#18293A` | light |
-| Golden hour | `#D38A6C` `#EEB385` `#F7DCB0` | `#DCA689` `#A8786A` `#634448` | `#F29A5B` | white | dark |
+| Golden hour | `#D38A6C` `#EEB385` `#F7DCB0` | `#DCA689` `#A8786A` `#634448` | `#F29A5B` | `#18293A` | dark |
 | Blue hour | `#2C3868` `#546A9C` `#A2B0CF` | `#5C6A92` `#3C4870` `#252D4A` | `#A9B8E8` | white | dark |
 | Night | `#121831` `#222B54` `#364378` | `#323C6C` `#222A4D` `#141A35` | `#C8D2F0` | white | dark |
 

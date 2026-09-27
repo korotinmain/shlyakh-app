@@ -60,7 +60,8 @@ const Map<SkyKeyframe, SkyPalette> skyKeyframes = {
     sky: [0xFFD38A6C, 0xFFEEB385, 0xFFF7DCB0],
     hills: [0xFFDCA689, 0xFFA8786A, 0xFF634448],
     accent: 0xFFF29A5B,
-    onSky: _onDark,
+    // The golden-hour sky is light: white text would fall below WCAG AA.
+    onSky: _onLight,
     surfaceTone: SurfaceTone.dark,
   ),
   SkyKeyframe.blueHour: (
