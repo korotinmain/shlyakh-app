@@ -46,4 +46,8 @@ jobs:
         run: dart analyze --fatal-infos
 
       - name: Test
-        run: flutter test
+        run: flutter test --coverage
+
+      # Floors from docs/AGENT_RULES.md 8.5; fails on untested files too.
+      - name: Coverage thresholds
+        run: dart run tool/coverage/check_coverage.dart
