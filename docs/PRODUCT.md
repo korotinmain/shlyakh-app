@@ -31,7 +31,8 @@ titles ("Мандрівник" / "Мандрівниця").
   progress ring, bottom sheet with details.
 - Members of a Спільно see where the others are on the landscape, ideally in
   real time.
-- Day/night gradient landscape that reflects the time of day.
+- The sky follows the real time of day continuously (dawn, day, golden
+  hour, blue hour, night), not just day and night.
 - Smooth, deliberate animations; typography in a modern SaaS style.
 - Full Ukrainian and English localization.
 - Also serves as a learning project for mobile development from scratch.
@@ -122,8 +123,25 @@ grammatical gender.
 Source of truth for the strings: `lib/l10n/app_*.arb`; the table is pinned
 by `test/features/progress/presentation/providers/level_title_test.dart`.
 
+## Main screen content
+
+Decided 2026-09-27 (design stage A):
+
+- **No XP bonuses.** XP is only `dailyXp(steps)`; no "together" or
+  "30-minute walk" bonuses: they would need intra-day data, location and
+  more rules to understand.
+- **No daily goal.** The progress ring shows progress to the next level
+  (`levelProgress`); today's steps are the big number next to it.
+- **Neutral week:** 7 bars with each day's steps (today highlighted) and
+  the week's total. No check marks, no "active days", no weekly goal.
+- **The dot is the position on the whole path:** 0 XP at the start of
+  «Рідний край», 1 000 000 XP at «Чумацький Шлях». The landscape shows the
+  viewer's current chapter; Спільно members in another chapter appear at
+  the edge with a hint ("ahead · Битий шлях").
+- The bottom sheet discloses progressively: collapsed shows the title,
+  level and a thin progress bar; expanded shows today, the week and
+  history.
+
 ## Open questions
 
-- What exactly the dot's position on the landscape represents
-  (daily progress, level progress, or total distance)
 - Home screen widget: in scope for v1 or later?
