@@ -12,6 +12,19 @@ import 'package:shlyakh/features/today/presentation/providers/sky_provider.dart'
 class FloatingTabBar extends ConsumerWidget {
   const new({required this.index, required this.onSelect, super.key});
 
+  /// Height of the bar, in logical pixels. Labels do not grow with the
+  /// system text size, like the iOS tab bar.
+  static const double height = 72;
+
+  /// Space the bar and its inset take at the bottom of the screen; content
+  /// that must stay visible ends above it.
+  static double bottomClearance(BuildContext context) =>
+      bottomInset(context) + height + AppSpacing.xs;
+
+  /// Distance from the bottom of the screen to the bar.
+  static double bottomInset(BuildContext context) =>
+      MediaQuery.paddingOf(context).bottom + AppSpacing.m;
+
   /// The selected tab.
   final int index;
   final ValueChanged<int> onSelect;
@@ -26,26 +39,31 @@ class FloatingTabBar extends ConsumerWidget {
       (Icons.history, l10n.tabHistory),
     ];
     final idle = GlassStyle.onGlass(sky.surfaceTone);
-    return GlassPanel(
-      tone: sky.surfaceTone,
-      shape: const StadiumBorder(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.xs,
-          vertical: AppSpacing.xxs,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final (i, (icon, label)) in tabs.indexed)
-              _Tab(
-                icon: icon,
-                label: label,
-                selected: i == index,
-                color: i == index ? sky.accent.color : idle,
-                onTap: () => onSelect(i),
-              ),
-          ],
+    return MediaQuery.withNoTextScaling(
+      child: SizedBox(
+        height: height,
+        child: GlassPanel(
+          tone: sky.surfaceTone,
+          shape: const StadiumBorder(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.xs,
+              vertical: AppSpacing.xxs,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final (i, (icon, label)) in tabs.indexed)
+                  _Tab(
+                    icon: icon,
+                    label: label,
+                    selected: i == index,
+                    color: i == index ? sky.accent.color : idle,
+                    onTap: () => onSelect(i),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );

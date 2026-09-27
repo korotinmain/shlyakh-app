@@ -35,4 +35,10 @@ abstract final class GlassStyle {
     SurfaceTone.light => onLight,
     SurfaceTone.dark => onDark,
   };
+
+  /// Opacity of the text colour for tracks (ring, progress bar) on glass.
+  static const double trackOpacity = 0.18;
+
+  /// Opacity of the text colour for secondary marks (other days' bars).
+  static const double mutedOpacity = 0.28;
 }

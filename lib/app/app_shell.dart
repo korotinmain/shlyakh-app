@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shlyakh/app/floating_tab_bar.dart';
-import 'package:shlyakh/core/design/app_spacing.dart';
 
 /// The tab branches with the floating tab bar over them.
 class AppShell extends StatelessWidget {
@@ -18,7 +17,7 @@ class AppShell extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            bottom: MediaQuery.paddingOf(context).bottom + AppSpacing.m,
+            bottom: FloatingTabBar.bottomInset(context),
             child: Center(
               child: FloatingTabBar(
                 index: shell.currentIndex,
