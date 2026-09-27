@@ -14,6 +14,16 @@ void main() {
         'Шлях',
       ),
       (
+        'shows English title when regional en_UA comes before uk_UA',
+        [const Locale('en', 'UA'), const Locale('uk', 'UA')],
+        'Shlyakh',
+      ),
+      (
+        'shows Ukrainian title when regional uk_UA comes before en_UA',
+        [const Locale('uk', 'UA'), const Locale('en', 'UA')],
+        'Шлях',
+      ),
+      (
         'falls back to English for unsupported pl',
         [const Locale('pl')],
         'Shlyakh',
