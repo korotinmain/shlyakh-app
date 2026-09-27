@@ -1,9 +1,16 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/pump_app.dart';
 
 void main() {
+  testWidgets('uses Geologica from the design tokens', (tester) async {
+    await pumpApp(tester);
+    final context = tester.element(find.byType(Scaffold));
+
+    expect(Theme.of(context).textTheme.bodyMedium!.fontFamily, 'Geologica');
+  });
+
   group('App locale resolution', () {
     final cases = <(String, List<Locale>, String)>[
       ('shows English title for en', [const Locale('en')], 'Shlyakh'),

@@ -1,0 +1,19 @@
+import 'package:flutter/painting.dart';
+
+/// Matte glass surfaces ("C" on the visual companion): a dense tint over a
+/// light blur, no border, a soft shadow (docs/DESIGN.md).
+abstract final class GlassStyle {
+  /// White at 68%, over light skies (morning, day).
+  static const Color lightTint = Color(0xADFFFFFF);
+
+  /// `#161C38` at 72%, over dark skies.
+  static const Color darkTint = Color(0xB8161C38);
+
+  static const double blurSigma = 12;
+
+  static const BoxShadow shadow = BoxShadow(
+    color: Color(0x29000000),
+    offset: Offset(0, 6),
+    blurRadius: 18,
+  );
+}

@@ -58,6 +58,9 @@ main.dart ── ProviderScope
 - Domain: `features/progress/domain/` holds the XP rules (`dailyXp`,
   `totalXp`) and the level curve (`xpToReachLevel`, `levelProgress`), pure
   functions with 100% test coverage. Nothing reads real steps yet.
+- Design tokens: `core/design/` (sky keyframes and `skyAt`, Oklab/OkLCh
+  blending, NOAA sun times, member colours, Geologica typography, spacing,
+  radii, glass, motion); `app/theme.dart` is built from them.
 - Local storage: `core/database/app_database.dart` (Drift, schema v1,
   snapshot in `drift_schemas/`) with the `daily_steps` table
   (`user_id`, `local_date` `YYYY-MM-DD`, IANA `timezone`, `steps`; key
@@ -134,7 +137,7 @@ Findings of the stage 1 spike (full ADR follows when the spike ends):
 | Models | freezed + json_serializable | [decided] |
 | Local storage | Drift: one `AppDatabase` in `core/database/`, tables per feature, migrations from schema v1 | [built] |
 | Backend | Supabase: auth, Postgres with RLS on every table, Realtime | [decided] |
-| Design tokens | `lib/core/`, extracted from the design (stage 3) | [decided] |
+| Design tokens | `lib/core/design/`: time-of-day sky, member colours, Geologica type scale, spacing, radii, matte glass, motion (`docs/DESIGN.md`) | [built] |
 | Error handling | sealed `Failure` thrown by repositories, `AsyncValue.error`, `failureMessage` in the UI; unhandled errors to the logger (ADR 0005) | [built] |
 | Logging | `AppLogger` with typed `LogEvent`s only; failures and errors by type, never by message; debug builds only (ADR 0006) | [built] |
 
