@@ -3,7 +3,8 @@
 Personal walking tracker for iOS built with Flutter. Steps from HealthKit
 (including Apple Watch data) turn into XP, XP raises named levels, and the
 main screen is an illustrated landscape ("postcard") where each user is a dot.
-Built for two users; architected like a small SaaS product.
+Users can walk together in private groups ("Спільно"); no fixed number of
+users or members. Architected like a small SaaS product.
 
 Before starting work, read `docs/ROADMAP.md` to see the current stage.
 For product scope and non-goals, see `docs/PRODUCT.md`.

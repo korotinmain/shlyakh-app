@@ -9,9 +9,13 @@ person is a dot on the path.
 
 ## Users
 
-Two people: the developer and his wife. No public release planned for now,
-but the architecture should not block adding more users later
-(multi-user data model, auth, row-level security).
+Any number of people. Everyone walks on their own path, and anyone can
+create a "Спільно" (Together): a private shared journey where they invite
+people close to them (a spouse, a relative, friends). Members of a Спільно
+see each other on the landscape. The first users are the developer and his
+wife, then family; no public release is planned yet, but nothing in the
+data model, auth or row-level security may assume a fixed number of users
+or of members per Спільно.
 
 Registration must ask for the user's gender (male or female). It is stored
 as a grammatical gender and used only to pick the form of Ukrainian level
@@ -25,7 +29,7 @@ titles ("Мандрівник" / "Мандрівниця").
 - XP is earned from steps and raises levels; every level has a name.
 - Main screen follows the "postcard" concept: illustrated landscape,
   progress ring, bottom sheet with details.
-- Each user can see where the other one is on the landscape, ideally in
+- Members of a Спільно see where the others are on the landscape, ideally in
   real time.
 - Day/night gradient landscape that reflects the time of day.
 - Smooth, deliberate animations; typography in a modern SaaS style.
@@ -36,7 +40,8 @@ titles ("Мандрівник" / "Мандрівниця").
 
 - Android version
 - Manual step entry or editing
-- Social features beyond the two users (friends, feeds, leaderboards, sharing)
+- Public social features: feeds, global leaderboards, finding strangers.
+  Спільно is only private groups by invitation
 - A virtual geographic route (e.g. Kyiv to another city). Dropped in favor
   of an abstract landscape
 - Workouts, calories, heart rate or other health metrics beyond steps
@@ -69,7 +74,7 @@ titles ("Мандрівник" / "Мандрівниця").
   level takes the same 81 600 XP. A separate landscape for it is not
   planned yet.
 - No penalties, no streaks, no XP ever lost; a day without steps simply
-  earns nothing. Both users follow the same rules.
+  earns nothing. Everyone follows the same rules.
 - Exact rules and tables: `docs/superpowers/specs/2026-09-27-xp-rules-design.md`;
   code: `lib/features/progress/domain/`.
 
