@@ -14,6 +14,7 @@ import 'package:shlyakh/features/steps/domain/local_date.dart';
 import 'package:shlyakh/features/steps/domain/steps_repository.dart';
 import 'package:shlyakh/features/today/presentation/providers/steps_repository_provider.dart';
 import 'package:shlyakh/features/today/presentation/widgets/constellation_figure.dart';
+import 'package:shlyakh/features/today/presentation/widgets/hills_silhouette.dart';
 import 'package:shlyakh/features/today/presentation/widgets/progress_ring.dart';
 import 'package:shlyakh/features/today/presentation/widgets/today_card.dart';
 import 'package:shlyakh/features/today/presentation/widgets/week_bars.dart';
@@ -151,6 +152,17 @@ void main() {
     final name = tester.getRect(find.text('Vulpecula'));
     expect(name.top, greaterThan(card.bottom));
     expect(name.bottom, lessThan(sheet.top));
+  });
+
+  testWidgets('the constellation stays in the sky above the hills', (
+    tester,
+  ) async {
+    await _pump(tester);
+
+    final figure = tester.getRect(find.byType(ConstellationFigure));
+    final hills = tester.getRect(find.byType(HillsSilhouette));
+    expect(figure.bottom, lessThanOrEqualTo(hills.top));
+    expect(hills.bottom, 874);
   });
 
   testWidgets('with large text the constellation still keeps clear', (

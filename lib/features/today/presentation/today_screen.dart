@@ -15,6 +15,10 @@ import 'package:shlyakh/features/today/presentation/widgets/progress_sheet.dart'
 import 'package:shlyakh/features/today/presentation/widgets/sky_background.dart';
 import 'package:shlyakh/features/today/presentation/widgets/today_card.dart';
 
+/// How far the hills rise above the collapsed sheet: the constellation
+/// ends above them, in the sky.
+const double _hillsRise = 96;
+
 /// The Today tab, in zones (docs/DESIGN.md, "Layout"): the card at the
 /// top, the current constellation between the card and the collapsed
 /// sheet, a hills silhouette under it, and the sheet.
@@ -34,7 +38,13 @@ class TodayScreen extends ConsumerWidget {
     return Stack(
       children: [
         const Positioned.fill(child: SkyBackground()),
-        const Positioned.fill(child: HillsSilhouette()),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: collapsed + _hillsRise,
+          child: const HillsSilhouette(),
+        ),
         // The card on top; the sheet takes the space below it, so even
         // expanded it never covers the card. It runs under the floating tab
         // bar to the bottom edge; its sizes and content keep clear of the
@@ -77,7 +87,10 @@ class TodayScreen extends ConsumerWidget {
                         top: 0,
                         left: 0,
                         right: 0,
-                        height: math.max(0, constraints.maxHeight - collapsed),
+                        height: math.max(
+                          0,
+                          constraints.maxHeight - collapsed - _hillsRise,
+                        ),
                         child: ConstellationFigure(
                           constellation: view.constellation,
                           figure: view.figure,

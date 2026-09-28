@@ -36,6 +36,11 @@ const double _markerDiscAlpha = 0.12;
 /// Below this height the name is left out and only the figure is drawn.
 const double _minHeightForName = 64;
 
+/// Room kept under the figure for the name, and the name's gap below the
+/// lowest star (clear of the marker's disc).
+const double _nameSpace = AppSpacing.xxl;
+const double _nameGap = AppSpacing.m;
+
 /// Where [star] (in its unit box) lands in [zone]: the unit box is fitted
 /// into the largest square that leaves [_padding] on each side, centred.
 @visibleForTesting
@@ -46,12 +51,26 @@ Offset figurePoint(SkyPoint star, Rect zone) {
   return Offset(left + star.x * side, top + star.y * side);
 }
 
+/// The rectangle around [stars] placed in [zone].
+@visibleForTesting
+Rect figureBounds(List<SkyPoint> stars, Rect zone) {
+  final points = [for (final star in stars) figurePoint(star, zone)];
+  final xs = points.map((p) => p.dx);
+  final ys = points.map((p) => p.dy);
+  return Rect.fromLTRB(
+    xs.reduce(math.min),
+    ys.reduce(math.min),
+    xs.reduce(math.max),
+    ys.reduce(math.max),
+  );
+}
+
 /// Core radius of a star of visual magnitude [mag]: brighter is larger.
 double _coreRadius(double mag) => (3.5 - 0.5 * mag).clamp(1.5, 3.5);
 
 /// The current constellation on the sky: lit stars, the current star's
 /// marker, rings for the stars ahead, solid lines behind and dashed lines
-/// ahead, with its name below.
+/// ahead, with its name just under the lowest star.
 class ConstellationFigure extends StatelessWidget {
   const new({required this.constellation, required this.figure, super.key});
 
@@ -73,13 +92,27 @@ class ConstellationFigure extends StatelessWidget {
             size: Size.infinite,
           );
           if (constraints.maxHeight < _minHeightForName) return painter;
-          return Column(
+          final figureHeight = constraints.maxHeight - _nameSpace;
+          final bounds = figureBounds(
+            constellation.stars,
+            Rect.fromLTWH(0, 0, constraints.maxWidth, figureHeight),
+          );
+          return Stack(
             children: [
-              Expanded(child: painter),
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.s),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: figureHeight,
+                child: painter,
+              ),
+              Positioned(
+                top: bounds.bottom + _nameGap,
+                left: 0,
+                right: 0,
                 child: Text(
                   name,
+                  textAlign: TextAlign.center,
                   style: AppTypography.footnote.copyWith(
                     color: palette.onSkyMuted,
                   ),

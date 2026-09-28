@@ -2,14 +2,16 @@ import 'package:flutter/widgets.dart';
 import 'package:shlyakh/core/design/app_palette.dart';
 
 // Where each hill's ridge starts, peaks and ends, as fractions of the
-// screen height, far to near.
+// silhouette's height from its top, far to near. The near ridge sits under
+// the sheet's glass.
 const _ridges = <(double, double, double)>[
-  (0.52, 0.44, 0.56),
-  (0.62, 0.54, 0.60),
-  (0.72, 0.66, 0.70),
+  (0.10, 0, 0.14),
+  (0.20, 0.12, 0.19),
+  (0.32, 0.26, 0.30),
 ];
 
-/// A silhouette of three hills in the theme's colours, under the sky.
+/// A silhouette of three hills in the theme's colours, under the sky. It
+/// fills its box: the ridges start at its top edge.
 class HillsSilhouette extends StatelessWidget {
   const new({super.key});
 

@@ -55,6 +55,42 @@ void main() {
     });
   });
 
+  group('figureBounds', () {
+    test('wraps the placed stars', () {
+      const zone = Rect.fromLTWH(0, 0, 300, 200);
+
+      expect(
+        figureBounds([_at(0, 0.25), _at(1, 0.75)], zone),
+        Rect.fromPoints(
+          figurePoint(_at(0, 0.25), zone),
+          figurePoint(_at(1, 0.75), zone),
+        ),
+      );
+    });
+  });
+
+  testWidgets('the name sits just under the stars, not at the zone bottom', (
+    tester,
+  ) async {
+    await _pumpFigure(tester, size: const Size(300, 500));
+
+    final route = testRoute();
+    final vulpecula = route.constellations[1];
+    // The stars are drawn in the painter's box, above the name's room.
+    final zone = tester.getRect(
+      find
+          .descendant(
+            of: find.byType(ConstellationFigure),
+            matching: find.byType(CustomPaint),
+          )
+          .first,
+    );
+    final stars = figureBounds(vulpecula.stars, zone);
+    final name = tester.getRect(find.text('Vulpecula'));
+    expect(name.top, greaterThan(stars.bottom));
+    expect(name.top - stars.bottom, lessThanOrEqualTo(40));
+  });
+
   for (final brightness in Brightness.values) {
     testWidgets('draws the figure and its name in the ${brightness.name} '
         'theme', (tester) async {
