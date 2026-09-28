@@ -121,6 +121,34 @@ void main() {
     expect(find.text('Vulpecula'), findsNothing);
   });
 
+  for (final height in [70.0, 120.0]) {
+    testWidgets('a zone ${height.toInt()} high draws the stars without the '
+        'name rather than the name alone', (tester) async {
+      await _pumpFigure(tester, size: Size(300, height));
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Vulpecula'), findsNothing);
+      final painter = tester.getRect(
+        find
+            .descendant(
+              of: find.byType(ConstellationFigure),
+              matching: find.byType(CustomPaint),
+            )
+            .first,
+      );
+      expect(painter.height, height);
+    });
+  }
+
+  testWidgets('a zone with room for a 48 pt figure shows the name too', (
+    tester,
+  ) async {
+    // 48 + 2 × 24 padding + 48 for the name.
+    await _pumpFigure(tester, size: const Size(300, 144));
+
+    expect(find.text('Vulpecula'), findsOneWidget);
+  });
+
   testWidgets('the figure is labelled with its name for VoiceOver', (
     tester,
   ) async {

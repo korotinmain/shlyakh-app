@@ -69,6 +69,9 @@ art replaces it later with the same states.
   each side of its zone (less 48 pt kept for the name), centred. The name
   sits 16 pt under the lowest star in `footnote`, `onSkyMuted`, sentence
   case, no letter-spacing.
+  When that would leave the figure a square smaller than 48 pt (very
+  large text on a small phone), the name is left out and the stars take
+  the whole zone.
 - A lit star is a dot of radius `(3.5 − 0.5 × magnitude)` clamped to
   1.5–3.5 in `star`, with a glow three times that radius in `starGlow`
   (dark only). A star ahead is a ring of radius 3, stroke 0.8, in

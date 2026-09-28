@@ -33,8 +33,9 @@ const double _markerRingAlpha = 0.6;
 const double _markerSpikeAlpha = 0.5;
 const double _markerDiscAlpha = 0.12;
 
-/// Below this height the name is left out and only the figure is drawn.
-const double _minHeightForName = 64;
+/// The name is shown only when the figure beside it still gets a square
+/// of at least this side; otherwise the stars take the whole zone.
+const double _minFigureSide = 48;
 
 /// Room kept under the figure for the name, and the name's gap below the
 /// lowest star (clear of the marker's disc).
@@ -91,8 +92,10 @@ class ConstellationFigure extends StatelessWidget {
             painter: _FigurePainter(constellation, figure, palette),
             size: Size.infinite,
           );
-          if (constraints.maxHeight < _minHeightForName) return painter;
           final figureHeight = constraints.maxHeight - _nameSpace;
+          final side =
+              math.min(constraints.maxWidth, figureHeight) - 2 * _padding;
+          if (side < _minFigureSide) return painter;
           final bounds = figureBounds(
             constellation.stars,
             Rect.fromLTWH(0, 0, constraints.maxWidth, figureHeight),
