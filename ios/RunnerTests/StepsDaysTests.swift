@@ -28,6 +28,15 @@ final class StepsDaysTests: XCTestCase {
     XCTAssertEqual(range?.end, local(2026, 9, 29))
   }
 
+  /// enumerateStatistics(from:to:) includes the interval containing `to`,
+  /// so enumerating to `end` would add tomorrow as a zero day.
+  func testLastDayIsToday() {
+    let range = StepsDays.queryRange(
+      from: local(2026, 9, 26, 10, 20), now: local(2026, 9, 28, 10, 20), calendar: calendar)
+
+    XCTAssertEqual(range?.lastDayStart, local(2026, 9, 28))
+  }
+
   func testRangeOverSeveralDays() {
     let range = StepsDays.queryRange(
       from: local(2026, 9, 21), now: local(2026, 9, 28, 9), calendar: calendar)
