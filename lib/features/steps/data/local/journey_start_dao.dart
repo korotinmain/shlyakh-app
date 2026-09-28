@@ -18,9 +18,10 @@ class JourneyStartDao extends DatabaseAccessor<AppDatabase>
   }
 
   /// The user's journey start; emits again when it is created or deleted.
-  Stream<JourneyStart?> watch(String userId) => _byUser(
-    userId,
-  ).watchSingleOrNull().map((row) => row == null ? null : _toDomain(row));
+  Stream<JourneyStart?> watch(String userId) =>
+      _byUser(userId)
+          .watchSingleOrNull()
+          .map((row) => row == null ? null : _toDomain(row));
 
   /// Stores [start] unless the user already has one, which is never
   /// overwritten. Returns whether it was stored.
@@ -38,9 +39,8 @@ class JourneyStartDao extends DatabaseAccessor<AppDatabase>
 
   /// Deletes the user's start (account deletion, AGENT_RULES 5) and
   /// returns how many rows were removed.
-  Future<int> deleteForUser(String userId) => (delete(
-    journeyStartTable,
-  )..where((t) => t.userId.equals(userId))).go();
+  Future<int> deleteForUser(String userId) =>
+      (delete(journeyStartTable)..where((t) => t.userId.equals(userId))).go();
 
   SimpleSelectStatement<$JourneyStartTableTable, JourneyStartRow> _byUser(
     String userId,

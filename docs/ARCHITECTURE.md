@@ -78,13 +78,25 @@ main.dart ── ProviderScope
 - Design tokens: `core/design/` (sky keyframes and `skyAt`, Oklab/OkLCh
   blending, NOAA sun times, member colours, Geologica typography, spacing,
   radii, glass, motion); `app/theme.dart` is built from them.
-- Local storage: `core/database/app_database.dart` (Drift, schema v1,
-  snapshot in `drift_schemas/`) with the `daily_steps` table
+- Local storage: `core/database/app_database.dart` (Drift, schema v2,
+  snapshots, steps and migration tests in `drift_schemas/`,
+  `app_database.steps.dart` and `test/drift/`) with the `daily_steps` table
   (`user_id`, `local_date` `YYYY-MM-DD`, IANA `timezone`, `steps`; key
   `(user_id, local_date)`; STRICT; CHECKs on steps, date format and
   non-empty ids) and `DailyStepsDao` in
   `features/steps/data/local/`. Upsert replaces, HealthKit being the
-  source of truth. Nothing writes to it yet.
+  source of truth. Schema v2 adds `journey_start` (`user_id` key, UTC
+  `started_at`, IANA `timezone`; one row per user, never overwritten)
+  with `JourneyStartDao`.
+- Steps sync: `features/steps/data/sync/steps_sync.dart` — `StepsSync`
+  runs one sync at a time (a burst of calls gives at most two runs):
+  from the journey start on the first sync, then the last 7 days
+  (`syncFrom`); `mergeDays` in `domain/sync_rules.dart` writes new and
+  changed days and keeps days counted in another time zone. Failures are
+  logged, never thrown (`StepsSyncCompleted` on success).
+  `DriftStepsRepository` serves `StepsRepository` from Drift. Nothing
+  calls the sync yet, and the app still reads `DemoStepsRepository`
+  (PR 3 switches it).
 - Level titles: `features/progress/domain/level_titles.dart` (chapters,
   continuation degree, `GrammaticalGender`) and
   `presentation/providers/level_title.dart` (maps a level to its ARB string;
