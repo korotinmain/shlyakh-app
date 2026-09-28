@@ -143,9 +143,12 @@ later, when screens stabilize.
 - **Test data:** use builders/factories with sensible defaults
   (`aDailySteps(steps: 10000)`), so each test states only what matters.
   No copy-pasted fixtures.
-- **Determinism:** no real `DateTime.now()`, time zone, network,
-  HealthKit, Supabase, file system or random numbers in unit tests. Time
-  and randomness are injected. Drift uses an in-memory database. No
+- **Determinism:** no real `DateTime.now()`, network, HealthKit,
+  Supabase, file system or random numbers in unit tests. Time and
+  randomness are injected. The time zone is pinned: tests run with
+  `TZ=Europe/Kyiv` (CI sets it; `test/time_zone_test.dart` fails
+  without it), so local `DateTime`s and DST cases are the same on every
+  machine. Drift uses an in-memory database. No
   `Future.delayed` or sleeps to wait for results.
 - **Independence:** tests do not share mutable state and pass in any order
   and in isolation (`flutter test --name`).

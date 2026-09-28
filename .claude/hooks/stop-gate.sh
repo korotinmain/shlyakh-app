@@ -15,7 +15,7 @@ if ! out=$(dart analyze --fatal-infos 2>&1); then
   printf 'Done gate: dart analyze --fatal-infos failed.\n%s\n' "$(tail -n 40 <<<"$out")" >&2
   exit 2
 fi
-if ! out=$(flutter test 2>&1); then
+if ! out=$(TZ=Europe/Kyiv flutter test 2>&1); then
   printf 'Done gate: flutter test failed.\n%s\n' "$(tail -n 40 <<<"$out")" >&2
   exit 2
 fi
