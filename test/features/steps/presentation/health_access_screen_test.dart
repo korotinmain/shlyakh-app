@@ -23,6 +23,19 @@ void main() {
     expect(find.byType(FloatingTabBar), findsNothing);
   });
 
+  testWidgets('the access screen sits on a Material surface', (tester) async {
+    // Without one, Flutter draws the debug yellow underline under text.
+    await pumpApp(tester, journeyStarted: false, overrides: [_clock]);
+
+    expect(
+      find.ancestor(
+        of: find.text('Every step counts'),
+        matching: find.byType(Material),
+      ),
+      findsWidgets,
+    );
+  });
+
   testWidgets('Allow opens Today', (tester) async {
     await pumpApp(tester, journeyStarted: false, overrides: [_clock]);
 

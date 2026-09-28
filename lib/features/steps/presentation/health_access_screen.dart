@@ -23,40 +23,47 @@ class HealthAccessScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.watch(skyProvider);
     final l10n = context.l10n;
-    return Stack(
-      children: [
-        Positioned.fill(child: SkyBackground(palette: palette)),
-        SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.screen),
-              child: GlassPanel(
-                tone: palette.surfaceTone,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppRadii.card),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.l),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(l10n.healthAccessTitle, style: AppTypography.title),
-                      const SizedBox(height: AppSpacing.s),
-                      Text(l10n.healthAccessBody, style: AppTypography.body),
-                      const SizedBox(height: AppSpacing.l),
-                      _Action(
-                        accent: palette.accent.color,
-                        onAccent: GlassStyle.onLight,
-                      ),
-                    ],
+    // A Scaffold gives the text its default style, like AppShell does for
+    // the tabs; this route sits outside the shell.
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(child: SkyBackground(palette: palette)),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.screen),
+                child: GlassPanel(
+                  tone: palette.surfaceTone,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppRadii.card),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.l),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          l10n.healthAccessTitle,
+                          style: AppTypography.title,
+                        ),
+                        const SizedBox(height: AppSpacing.s),
+                        Text(l10n.healthAccessBody, style: AppTypography.body),
+                        const SizedBox(height: AppSpacing.l),
+                        _Action(
+                          accent: palette.accent.color,
+                          onAccent: GlassStyle.onLight,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
