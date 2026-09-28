@@ -23,12 +23,14 @@ final class StepsHost: StepsHostApi {
     await StepsObserver.shared.start()
   }
 
-  func dailySteps(fromEpochMs: Int64) async throws -> [NativeDay] {
+  func dailySteps(fromEpochMs: Int64) async throws -> NativeDays {
     guard HKHealthStore.isHealthDataAvailable() else { throw Self.unavailable }
     let calendar = Calendar.current
     let from = Date(timeIntervalSince1970: TimeInterval(fromEpochMs) / 1000)
+    // The zone travels with the days: both come from this one calendar.
+    let zone = calendar.timeZone.identifier
     guard let range = StepsDays.queryRange(from: from, now: Date(), calendar: calendar) else {
-      return []
+      return NativeDays(timeZoneId: zone, days: [])
     }
 
     let collection: HKStatisticsCollection = try await withCheckedThrowingContinuation {
@@ -58,7 +60,7 @@ final class StepsHost: StepsHostApi {
           localDate: StepsDays.localDateString(stats.startDate, calendar: calendar),
           steps: StepsDays.truncatedSteps(sum)))
     }
-    return days
+    return NativeDays(timeZoneId: zone, days: days)
   }
 
   func timeZoneId() throws -> String {

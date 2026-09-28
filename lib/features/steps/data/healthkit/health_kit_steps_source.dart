@@ -20,22 +20,20 @@ final class HealthKitStepsSource {
   /// saying what the user chose.
   Future<void> requestAccess() => _guard(_api.requestAccess);
 
-  /// Every local day from [from] to the end of today for [userId], counted
-  /// in the device's current time zone; the first day is partial when
-  /// [from] is not a local midnight.
+  /// Every local day from [from] to the end of today for [userId], each
+  /// with the zone it was counted in (the device's, from the same native
+  /// call); the first day is partial when [from] is not a local midnight.
   Future<List<DailySteps>> dailySteps({
     required String userId,
     required DateTime from,
   }) => _guard(() async {
-    final days = await _api.dailySteps(from.millisecondsSinceEpoch);
-    if (days.isEmpty) return const [];
-    final timezone = await _api.timeZoneId();
+    final result = await _api.dailySteps(from.millisecondsSinceEpoch);
     return [
-      for (final day in days)
+      for (final day in result.days)
         (
           userId: userId,
           localDate: LocalDate.parse(day.localDate),
-          timezone: timezone,
+          timezone: result.timeZoneId,
           steps: day.steps,
         ),
     ];

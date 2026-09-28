@@ -232,11 +232,56 @@ struct NativeDay: Hashable, CustomStringConvertible {
   }
 }
 
+/// Daily totals with the zone they were counted in.
+///
+/// Generated class from Pigeon that represents data sent in messages.
+struct NativeDays: Hashable, CustomStringConvertible {
+  /// IANA identifier of the calendar the days were computed with.
+  var timeZoneId: String
+  var days: [NativeDay]
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> NativeDays? {
+    let timeZoneId = pigeonVar_list[0] as! String
+    let days = pigeonVar_list[1] as! [NativeDay]
+
+    return NativeDays(
+      timeZoneId: timeZoneId,
+      days: days
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      timeZoneId,
+      days,
+    ]
+  }
+  static func == (lhs: NativeDays, rhs: NativeDays) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return StepsApiPigeonInternal.deepEquals(lhs.timeZoneId, rhs.timeZoneId) && StepsApiPigeonInternal.deepEquals(lhs.days, rhs.days)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("NativeDays")
+    StepsApiPigeonInternal.deepHash(value: timeZoneId, hasher: &hasher)
+    StepsApiPigeonInternal.deepHash(value: days, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "NativeDays(timeZoneId: \(String(describing: timeZoneId)), days: \(String(describing: days)))"
+  }
+}
+
 private class StepsApiPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
     case 129:
       return NativeDay.fromList(self.readValue() as! [Any?])
+    case 130:
+      return NativeDays.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -247,6 +292,9 @@ private class StepsApiPigeonCodecWriter: FlutterStandardWriter {
   override func writeValue(_ value: Any) {
     if let value = value as? NativeDay {
       super.writeByte(129)
+      super.writeValue(value.toList())
+    } else if let value = value as? NativeDays {
+      super.writeByte(130)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -281,7 +329,7 @@ protocol StepsHostApi {
   func requestAccess() async throws
   /// Every local day from [fromEpochMs] to the end of today, oldest first;
   /// the first day is partial when [fromEpochMs] is not a local midnight.
-  func dailySteps(fromEpochMs: Int64) async throws -> [NativeDay]
+  func dailySteps(fromEpochMs: Int64) async throws -> NativeDays
   /// The device's IANA time zone identifier, e.g. `Europe/Kyiv`.
   func timeZoneId() throws -> String
 }
