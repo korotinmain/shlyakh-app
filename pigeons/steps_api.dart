@@ -21,6 +21,16 @@ class NativeDay {
   int steps;
 }
 
+/// Daily totals with the zone they were counted in.
+class NativeDays {
+  new({required this.timeZoneId, required this.days});
+
+  /// IANA identifier of the calendar the days were computed with.
+  String timeZoneId;
+
+  List<NativeDay> days;
+}
+
 /// Calls from Dart into HealthKit. Errors carry the codes `unavailable`,
 /// `locked` or `healthkit` and never a message.
 @HostApi()
@@ -36,7 +46,7 @@ abstract class StepsHostApi {
   /// Every local day from [fromEpochMs] to the end of today, oldest first;
   /// the first day is partial when [fromEpochMs] is not a local midnight.
   @async
-  List<NativeDay> dailySteps(int fromEpochMs);
+  NativeDays dailySteps(int fromEpochMs);
 
   /// The device's IANA time zone identifier, e.g. `Europe/Kyiv`.
   String timeZoneId();

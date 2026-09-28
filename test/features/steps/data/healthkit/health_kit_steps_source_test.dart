@@ -21,7 +21,10 @@ void main() {
   group('dailySteps', () {
     test('maps native days', () async {
       when(() => api.dailySteps(any())).thenAnswer(
-        (_) async => [NativeDay(localDate: '2026-09-28', steps: 6870)],
+        (_) async => NativeDays(
+          timeZoneId: 'Europe/Lisbon',
+          days: [NativeDay(localDate: '2026-09-28', steps: 6870)],
+        ),
       );
 
       final days = await source.dailySteps(
@@ -33,14 +36,18 @@ void main() {
         (
           userId: 'local',
           localDate: LocalDate.parse('2026-09-28'),
-          timezone: 'Europe/Kyiv',
+          timezone: 'Europe/Lisbon',
           steps: 6870,
         ),
       ]);
+      // The zone comes with the days, not from a second call.
+      verifyNever(() => api.timeZoneId());
     });
 
     test('passes the start as epoch ms', () async {
-      when(() => api.dailySteps(any())).thenAnswer((_) async => []);
+      when(() => api.dailySteps(any())).thenAnswer(
+        (_) async => NativeDays(timeZoneId: 'Europe/Kyiv', days: []),
+      );
 
       await source.dailySteps(
         userId: 'local',
@@ -51,7 +58,9 @@ void main() {
     });
 
     test('with no days returns an empty list', () async {
-      when(() => api.dailySteps(any())).thenAnswer((_) async => []);
+      when(() => api.dailySteps(any())).thenAnswer(
+        (_) async => NativeDays(timeZoneId: 'Europe/Kyiv', days: []),
+      );
 
       final days = await source.dailySteps(
         userId: 'local',
