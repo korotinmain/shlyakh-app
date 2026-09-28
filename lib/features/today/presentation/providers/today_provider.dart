@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
+import 'package:shlyakh/features/path/domain/figure_state.dart';
 import 'package:shlyakh/features/path/domain/sky_route.dart';
 import 'package:shlyakh/features/path/domain/star_cost.dart';
 import 'package:shlyakh/features/path/presentation/providers/route_provider.dart';
@@ -43,15 +44,14 @@ TodayView _buildView(List<DailySteps> days, LocalDate today, SkyRoute route) {
   final steps = stepsOn[today] ?? 0;
   final progress = pathProgress(totalXp(days.map((d) => d.steps)), route);
   final next = progress.next;
+  final figure = figureStates(route, progress);
   return (
     steps: steps,
     xp: dailyXp(steps),
     distanceMeters: approximateDistanceMeters(steps),
     progress: progress,
-    constellationId: route
-        .constellations[next?.constellationIndex ??
-            route.constellations.length - 1]
-        .id,
+    constellation: route.constellations[figure.constellationIndex],
+    figure: figure,
     starPercent: next == null ? 100 : next.xpIntoStar * 100 ~/ next.xpForStar,
     week: week,
     weekSteps: week.fold(0, (sum, d) => sum + d.steps),

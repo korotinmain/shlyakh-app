@@ -78,6 +78,15 @@ void main() {
         }
       });
 
+      test('muted text on every sky colour', () {
+        for (final sky in palette.sky) {
+          expect(
+            contrastRatio(palette.onSkyMuted, sky),
+            greaterThanOrEqualTo(4.5),
+          );
+        }
+      });
+
       test('text on the accent', () {
         expect(
           contrastRatio(palette.onAccent, palette.accent),

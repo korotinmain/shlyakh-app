@@ -1,3 +1,5 @@
+import 'package:shlyakh/features/path/domain/figure_state.dart';
+import 'package:shlyakh/features/path/domain/sky_route.dart';
 import 'package:shlyakh/features/path/domain/star_cost.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
 
@@ -18,9 +20,12 @@ typedef TodayView = ({
   /// Stars lit with the XP of all days, and the next one.
   PathProgress progress,
 
-  /// IAU id of the constellation of the next star; the last one on the
-  /// route when every star is lit.
-  String constellationId,
+  /// The constellation of the next star; the last one on the route when
+  /// every star is lit.
+  Constellation constellation,
+
+  /// How that constellation's stars and lines look now.
+  FigureStates figure,
 
   /// How full the next star is, 0–99; 100 when every star is lit.
   int starPercent,

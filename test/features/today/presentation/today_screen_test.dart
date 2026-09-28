@@ -13,6 +13,7 @@ import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
 import 'package:shlyakh/features/steps/domain/steps_repository.dart';
 import 'package:shlyakh/features/today/presentation/providers/steps_repository_provider.dart';
+import 'package:shlyakh/features/today/presentation/widgets/constellation_figure.dart';
 import 'package:shlyakh/features/today/presentation/widgets/progress_ring.dart';
 import 'package:shlyakh/features/today/presentation/widgets/today_card.dart';
 import 'package:shlyakh/features/today/presentation/widgets/week_bars.dart';
@@ -83,7 +84,10 @@ Future<void> _pump(
 
 Future<void> _expandSheet(WidgetTester tester) async {
   // Drag the sheet by its first line: the sheet's own centre is above it.
-  await tester.drag(find.text('You are here'), const Offset(0, -700));
+  await tester.drag(
+    find.textContaining(RegExp(r'^\+[\d,]+ XP today$')),
+    const Offset(0, -700),
+  );
   await tester.pumpAndSettle();
 }
 
@@ -92,10 +96,12 @@ void main() {
     await _pump(tester);
 
     expect(find.text('6,870'), findsOneWidget);
-    expect(find.textContaining('steps today · Monday, September 28'), findsOne);
-    expect(find.text('You are here'), findsOneWidget);
+    expect(find.text('steps today'), findsOneWidget);
+    expect(find.text('Monday, September 28'), findsOneWidget);
     expect(find.text('Vulpecula'), findsOneWidget);
     expect(find.text('24%'), findsOneWidget);
+    expect(find.text('+6,870 XP today'), findsOneWidget);
+    expect(find.text('You are here'), findsNothing);
     expect(find.textContaining('Level'), findsNothing);
   });
 
@@ -110,19 +116,66 @@ void main() {
     await _pump(tester);
 
     final sheet = find.ancestor(
-      of: find.text('Vulpecula'),
+      of: find.text('+6,870 XP today'),
       matching: find.byType(GlassPanel),
     );
     expect(tester.getRect(sheet).bottom, 874);
   });
 
-  testWidgets('the collapsed sheet shows its constellation above the tab bar', (
+  testWidgets('the collapsed sheet shows the day above the tab bar', (
     tester,
   ) async {
     await _pump(tester);
 
     final tabBarTop = tester.getRect(find.byType(FloatingTabBar)).top;
-    expect(tester.getRect(find.text('Vulpecula')).bottom, lessThan(tabBarTop));
+    expect(
+      tester.getRect(find.text('+6,870 XP today')).bottom,
+      lessThan(tabBarTop),
+    );
+    expect(
+      tester.getRect(find.text('Star 24% full')).bottom,
+      lessThan(tabBarTop),
+    );
+  });
+
+  testWidgets('the constellation sits between the card and the sheet', (
+    tester,
+  ) async {
+    await _pump(tester);
+
+    final card = tester.getRect(find.byType(TodayCard));
+    final figure = tester.getRect(find.byType(ConstellationFigure));
+    final sheet = tester.getRect(_sheetPanel());
+    expect(figure.top, greaterThanOrEqualTo(card.bottom));
+    expect(figure.bottom, lessThanOrEqualTo(sheet.top));
+    final name = tester.getRect(find.text('Vulpecula'));
+    expect(name.top, greaterThan(card.bottom));
+    expect(name.bottom, lessThan(sheet.top));
+  });
+
+  testWidgets('with large text the constellation still keeps clear', (
+    tester,
+  ) async {
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await _pump(tester);
+
+    expect(tester.takeException(), isNull);
+    final card = tester.getRect(find.byType(TodayCard));
+    final figure = tester.getRect(find.byType(ConstellationFigure));
+    final sheet = tester.getRect(_sheetPanel());
+    expect(figure.top, greaterThanOrEqualTo(card.bottom));
+    expect(figure.bottom, lessThanOrEqualTo(sheet.top));
+  });
+
+  testWidgets('with the Health hint the constellation starts below it', (
+    tester,
+  ) async {
+    await _pump(tester, days: const []);
+
+    final hint = tester.getRect(find.textContaining('No steps yet?'));
+    final figure = tester.getRect(find.byType(ConstellationFigure));
+    expect(figure.top, greaterThanOrEqualTo(hint.bottom));
   });
 
   testWidgets('the expanded sheet scrolls its last line above the tab bar', (
@@ -135,7 +188,7 @@ void main() {
 
     final tabBarTop = tester.getRect(find.byType(FloatingTabBar)).top;
     expect(
-      tester.getRect(find.text('All history →')).bottom,
+      tester.getRect(find.text('The whole path →')).bottom,
       lessThan(tabBarTop),
     );
   });
@@ -145,7 +198,7 @@ void main() {
     await _expandSheet(tester);
 
     final sheet = find.ancestor(
-      of: find.text('Vulpecula'),
+      of: find.text('+6,870 XP today'),
       matching: find.byType(GlassPanel),
     );
     final cardBottom = tester.getRect(find.byType(TodayCard)).bottom;
@@ -202,7 +255,7 @@ void main() {
 
       final tabBarTop = tester.getRect(find.byType(FloatingTabBar)).top;
       expect(
-        tester.getRect(find.text('Vulpecula')).bottom,
+        tester.getRect(find.text('+6,870 XP today')).bottom,
         lessThan(tabBarTop),
       );
     });
@@ -235,18 +288,16 @@ void main() {
   testWidgets('shows today in Ukrainian', (tester) async {
     await _pump(tester, locales: const [Locale('uk')]);
 
-    expect(find.text('6 870'), findsOneWidget);
-    expect(
-      find.textContaining('кроків сьогодні · понеділок, 28 вересня'),
-      findsOneWidget,
-    );
-    expect(find.text('Зараз тут'), findsOneWidget);
+    expect(find.text('6\u00a0870'), findsOneWidget);
+    expect(find.text('кроків сьогодні'), findsOneWidget);
+    expect(find.text('понеділок, 28 вересня'), findsOneWidget);
+    expect(find.text('+6\u00a0870 XP сьогодні'), findsOneWidget);
     expect(find.text('Лисичка'), findsOneWidget);
     expect(find.text('24\u00a0%'), findsOneWidget);
     expect(find.textContaining('Рівень'), findsNothing);
   });
 
-  testWidgets('the expanded sheet shows the week and the history link', (
+  testWidgets('the expanded sheet shows the week and the Path link', (
     tester,
   ) async {
     await _pump(tester);
@@ -257,6 +308,7 @@ void main() {
       expect(find.text(day), findsOneWidget, reason: day);
     }
     expect(find.text('6,870 steps in total'), findsOneWidget);
+    expect(find.text('The whole path →'), findsOneWidget);
     expect(find.text('≈ 5.1 km'), findsOneWidget);
     expect(find.text('Star 24% full'), findsOneWidget);
     expect(find.text('5,630 XP to the next star'), findsOneWidget);
@@ -266,7 +318,10 @@ void main() {
     tester,
   ) async {
     await _pump(tester, locales: const [Locale('uk')]);
-    await tester.drag(find.text('Зараз тут'), const Offset(0, -700));
+    await tester.drag(
+      find.text('+6\u00a0870 XP сьогодні'),
+      const Offset(0, -700),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Зорю заповнено на 24\u00a0%'), findsOneWidget);
@@ -288,14 +343,14 @@ void main() {
     expect(find.textContaining('to the next star'), findsNothing);
   });
 
-  testWidgets('the history link opens History', (tester) async {
+  testWidgets('the Path link opens Path', (tester) async {
     await _pump(tester);
     await _expandSheet(tester);
 
-    await tester.tap(find.text('All history →'));
+    await tester.tap(find.text('The whole path →'));
     await tester.pumpAndSettle();
 
-    expect(find.text('History is coming soon'), findsOneWidget);
+    expect(find.text('Your path is coming soon'), findsOneWidget);
   });
 
   testWidgets('a week with no steps renders', (tester) async {
@@ -376,7 +431,7 @@ Color _sheetGlass(WidgetTester tester) => tester
       find
           .descendant(
             of: find.ancestor(
-              of: find.text('You are here'),
+              of: find.textContaining(RegExp(r'XP today$')),
               matching: find.byType(GlassPanel),
             ),
             matching: find.byType(ColoredBox),
@@ -384,3 +439,9 @@ Color _sheetGlass(WidgetTester tester) => tester
           .first,
     )
     .color;
+
+/// The sheet's glass panel.
+Finder _sheetPanel() => find.ancestor(
+  of: find.textContaining(RegExp(r'XP today$')),
+  matching: find.byType(GlassPanel),
+);

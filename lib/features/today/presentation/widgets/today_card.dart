@@ -98,13 +98,17 @@ class _Content extends StatelessWidget {
                 ),
               ),
               Text(
-                context.l10n.todayStepsCaption(
-                  view.steps,
-                  context.formatLongDate(
-                    DateTime(today.year, today.month, today.day),
-                  ),
-                ),
+                context.l10n.todayStepsLabel(view.steps),
                 style: AppTypography.footnote,
+              ),
+              Text(
+                context.formatLongDate(
+                  DateTime(today.year, today.month, today.day),
+                ),
+                style: AppTypography.footnote.copyWith(
+                  color: DefaultTextStyle.of(context).style.color
+                      ?.withValues(alpha: GlassStyle.secondaryOpacity),
+                ),
               ),
             ],
           ),

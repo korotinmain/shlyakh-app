@@ -1,20 +1,23 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shlyakh/app/floating_tab_bar.dart';
-import 'package:shlyakh/core/design/app_colors.dart';
 import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/app_spacing.dart';
 import 'package:shlyakh/core/design/app_typography.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
 import 'package:shlyakh/features/steps/presentation/providers/health_access_hint.dart';
-import 'package:shlyakh/features/today/presentation/providers/current_user_provider.dart';
 import 'package:shlyakh/features/today/presentation/providers/today_provider.dart';
-import 'package:shlyakh/features/today/presentation/widgets/placeholder_hills.dart';
+import 'package:shlyakh/features/today/presentation/widgets/constellation_figure.dart';
+import 'package:shlyakh/features/today/presentation/widgets/hills_silhouette.dart';
 import 'package:shlyakh/features/today/presentation/widgets/progress_sheet.dart';
 import 'package:shlyakh/features/today/presentation/widgets/sky_background.dart';
 import 'package:shlyakh/features/today/presentation/widgets/today_card.dart';
 
-/// The Today tab: the sky, the card, the landscape and the sheet.
+/// The Today tab, in zones (docs/DESIGN.md, "Layout"): the card at the
+/// top, the current constellation between the card and the collapsed
+/// sheet, a hills silhouette under it, and the sheet.
 class TodayScreen extends ConsumerWidget {
   const new({super.key});
 
@@ -22,18 +25,20 @@ class TodayScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = context.palette;
     final today = ref.watch(todayProvider);
+    final view = today.value;
+    final clearance = FloatingTabBar.bottomClearance(context);
+    final collapsed = ProgressSheet.collapsedHeight(
+      MediaQuery.sizeOf(context).height,
+      clearance,
+    );
     return Stack(
       children: [
         const Positioned.fill(child: SkyBackground()),
-        Positioned.fill(
-          child: PlaceholderHills(
-            dotColor: memberColorFor(ref.watch(currentUserIdProvider)).color,
-          ),
-        ),
+        const Positioned.fill(child: HillsSilhouette()),
         // The card on top; the sheet takes the space below it, so even
-        // expanded it never covers the card. It runs under the floating
-        // tab bar to the bottom edge; its sizes and content keep clear of
-        // the bar.
+        // expanded it never covers the card. It runs under the floating tab
+        // bar to the bottom edge; its sizes and content keep clear of the
+        // bar. The constellation fills what the collapsed sheet leaves.
         Column(
           children: [
             SafeArea(
@@ -64,9 +69,28 @@ class TodayScreen extends ConsumerWidget {
               ),
             ),
             Expanded(
-              child: ProgressSheet(
-                view: today.value,
-                bottomClearance: FloatingTabBar.bottomClearance(context),
+              child: LayoutBuilder(
+                builder: (context, constraints) => Stack(
+                  children: [
+                    if (view != null)
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: math.max(0, constraints.maxHeight - collapsed),
+                        child: ConstellationFigure(
+                          constellation: view.constellation,
+                          figure: view.figure,
+                        ),
+                      ),
+                    Positioned.fill(
+                      child: ProgressSheet(
+                        view: view,
+                        bottomClearance: clearance,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
