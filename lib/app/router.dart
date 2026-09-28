@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shlyakh/app/app_shell.dart';
+import 'package:shlyakh/app/launch_screen.dart';
 import 'package:shlyakh/features/history/presentation/history_screen.dart';
 import 'package:shlyakh/features/path/presentation/path_screen.dart';
 import 'package:shlyakh/features/steps/domain/journey_start.dart';
@@ -13,6 +14,8 @@ part 'router.g.dart';
 
 /// Paths of the app's routes.
 abstract final class AppRoutes {
+  /// Only the sky, while the journey start loads on launch.
+  static const launch = '/';
   static const today = '/today';
   static const path = '/path';
   static const history = '/history';
@@ -20,17 +23,21 @@ abstract final class AppRoutes {
 }
 
 /// Where to send [location] for the journey state: the access screen until
-/// the journey starts, Today once it has; unchanged while it loads.
+/// the journey starts, Today once it has. While it loads the app stays on
+/// the launch route, which shows only the sky, so a new user never sees
+/// the Today shell before the access screen.
 String? healthAccessRedirect(
   AsyncValue<JourneyStart?> journey,
   String location,
 ) {
   if (!journey.hasValue) return null;
   final started = journey.value != null;
-  final onAccess = location == AppRoutes.healthAccess;
-  if (!started && !onAccess) return AppRoutes.healthAccess;
-  if (started && onAccess) return AppRoutes.today;
-  return null;
+  if (!started) {
+    return location == AppRoutes.healthAccess ? null : AppRoutes.healthAccess;
+  }
+  final waiting =
+      location == AppRoutes.launch || location == AppRoutes.healthAccess;
+  return waiting ? AppRoutes.today : null;
 }
 
 @Riverpod(keepAlive: true)
@@ -46,7 +53,7 @@ GoRouter router(Ref ref) {
       fireImmediately: true,
     );
   final router = GoRouter(
-    initialLocation: AppRoutes.today,
+    initialLocation: AppRoutes.launch,
     refreshListenable: journey,
     redirect: (_, state) =>
         healthAccessRedirect(journey.value, state.matchedLocation),
@@ -57,6 +64,7 @@ GoRouter router(Ref ref) {
 }
 
 final List<RouteBase> _routes = [
+  GoRoute(path: AppRoutes.launch, builder: (_, _) => const LaunchScreen()),
   GoRoute(
     path: AppRoutes.healthAccess,
     builder: (_, _) => const HealthAccessScreen(),
