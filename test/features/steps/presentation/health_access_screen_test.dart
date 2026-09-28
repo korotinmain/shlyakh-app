@@ -88,6 +88,13 @@ void main() {
       final style = button.style!;
       expect(style.backgroundColor!.resolve({}), background);
       expect(style.foregroundColor!.resolve({}), label);
+      // While the prompt is on its way the button is disabled and shows a
+      // spinner in the label colour: it keeps its colours.
+      expect(
+        style.backgroundColor!.resolve({WidgetState.disabled}),
+        background,
+      );
+      expect(style.foregroundColor!.resolve({WidgetState.disabled}), label);
       expect(
         Theme.of(tester.element(find.text('Allow')))
             .extension<AppPalette>()!

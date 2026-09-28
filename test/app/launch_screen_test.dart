@@ -27,6 +27,18 @@ void main() {
             gradient.colors,
       ];
       expect(gradients, contains(palette.sky));
+      if (palette.backdrop == Backdrop.nebula) {
+        final nebula = [
+          for (final box in tester.widgetList<DecoratedBox>(
+            find.byType(DecoratedBox),
+          ))
+            if (box.decoration case BoxDecoration(
+              :final RadialGradient gradient,
+            ))
+              gradient.colors.first,
+        ];
+        expect(nebula, [palette.backdropTint]);
+      }
     });
   }
 }

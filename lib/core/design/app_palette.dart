@@ -25,6 +25,7 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     required this.onGlass,
     required this.grainOpacity,
     required this.backdrop,
+    required this.backdropTint,
   });
 
   /// The night sky with a gold accent.
@@ -40,6 +41,7 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     onGlass: Color(0xFFF4F1EA),
     grainOpacity: 0.12,
     backdrop: Backdrop.nebula,
+    backdropTint: Color(0x526E5AA8),
   );
 
   /// An ink star chart on a pale sky.
@@ -55,6 +57,7 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     onGlass: Color(0xFF1A2440),
     grainOpacity: 0.06,
     backdrop: Backdrop.chart,
+    backdropTint: Color(0x0D3D4F9A),
   );
 
   final Brightness brightness;
@@ -69,6 +72,9 @@ final class AppPalette extends ThemeExtension<AppPalette> {
   final double grainOpacity;
   final Backdrop backdrop;
 
+  /// Colour of the backdrop: the nebula's centre, or the chart grid's ink.
+  final Color backdropTint;
+
   @override
   AppPalette copyWith({
     Brightness? brightness,
@@ -82,6 +88,7 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     Color? onGlass,
     double? grainOpacity,
     Backdrop? backdrop,
+    Color? backdropTint,
   }) => AppPalette(
     brightness: brightness ?? this.brightness,
     sky: sky ?? this.sky,
@@ -94,6 +101,7 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     onGlass: onGlass ?? this.onGlass,
     grainOpacity: grainOpacity ?? this.grainOpacity,
     backdrop: backdrop ?? this.backdrop,
+    backdropTint: backdropTint ?? this.backdropTint,
   );
 
   /// Colours blend; brightness and backdrop switch halfway.
@@ -117,6 +125,7 @@ final class AppPalette extends ThemeExtension<AppPalette> {
       onGlass: mix(onGlass, other.onGlass),
       grainOpacity: grainOpacity + (other.grainOpacity - grainOpacity) * t,
       backdrop: late ? other.backdrop : backdrop,
+      backdropTint: mix(backdropTint, other.backdropTint),
     );
   }
 }

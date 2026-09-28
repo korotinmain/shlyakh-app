@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shlyakh/app/floating_tab_bar.dart';
@@ -6,7 +5,6 @@ import 'package:shlyakh/core/design/app_colors.dart';
 import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/app_spacing.dart';
 import 'package:shlyakh/core/design/app_typography.dart';
-import 'package:shlyakh/core/design/status_bar.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
 import 'package:shlyakh/features/steps/presentation/providers/health_access_hint.dart';
 import 'package:shlyakh/features/today/presentation/providers/current_user_provider.dart';
@@ -24,59 +22,56 @@ class TodayScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = context.palette;
     final today = ref.watch(todayProvider);
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: statusBarStyleFor(palette.brightness),
-      child: Stack(
-        children: [
-          const Positioned.fill(child: SkyBackground()),
-          Positioned.fill(
-            child: PlaceholderHills(
-              dotColor: memberColorFor(ref.watch(currentUserIdProvider)).color,
-            ),
+    return Stack(
+      children: [
+        const Positioned.fill(child: SkyBackground()),
+        Positioned.fill(
+          child: PlaceholderHills(
+            dotColor: memberColorFor(ref.watch(currentUserIdProvider)).color,
           ),
-          // The card on top; the sheet takes the space below it, so even
-          // expanded it never covers the card. It runs under the floating
-          // tab bar to the bottom edge; its sizes and content keep clear of
-          // the bar.
-          Column(
-            children: [
-              SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.screen,
-                    AppSpacing.m,
-                    AppSpacing.screen,
-                    AppSpacing.s,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TodayCard(view: today),
-                      if (ref.watch(healthAccessHintProvider).value ?? false)
-                        Padding(
-                          padding: const EdgeInsets.only(top: AppSpacing.s),
-                          child: Text(
-                            context.l10n.healthAccessHint,
-                            style: AppTypography.footnote.copyWith(
-                              color: palette.onSky,
-                            ),
+        ),
+        // The card on top; the sheet takes the space below it, so even
+        // expanded it never covers the card. It runs under the floating
+        // tab bar to the bottom edge; its sizes and content keep clear of
+        // the bar.
+        Column(
+          children: [
+            SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.screen,
+                  AppSpacing.m,
+                  AppSpacing.screen,
+                  AppSpacing.s,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TodayCard(view: today),
+                    if (ref.watch(healthAccessHintProvider).value ?? false)
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.s),
+                        child: Text(
+                          context.l10n.healthAccessHint,
+                          style: AppTypography.footnote.copyWith(
+                            color: palette.onSky,
                           ),
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
               ),
-              Expanded(
-                child: ProgressSheet(
-                  view: today.value,
-                  bottomClearance: FloatingTabBar.bottomClearance(context),
-                ),
+            ),
+            Expanded(
+              child: ProgressSheet(
+                view: today.value,
+                bottomClearance: FloatingTabBar.bottomClearance(context),
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

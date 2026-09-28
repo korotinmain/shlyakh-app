@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/app_radii.dart';
 import 'package:shlyakh/core/design/app_spacing.dart';
 import 'package:shlyakh/core/design/app_typography.dart';
 import 'package:shlyakh/core/design/glass_panel.dart';
+import 'package:shlyakh/core/design/status_bar.dart';
 import 'package:shlyakh/core/error/failure_message.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
 import 'package:shlyakh/features/steps/presentation/providers/health_access.dart';
@@ -23,43 +25,49 @@ class HealthAccessScreen extends ConsumerWidget {
     final l10n = context.l10n;
     // A Scaffold gives the text its default style, like AppShell does for
     // the tabs; this route sits outside the shell.
-    return Scaffold(
-      body: Stack(
-        children: [
-          const Positioned.fill(child: SkyBackground()),
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(AppSpacing.screen),
-                child: GlassPanel(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppRadii.card),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.l),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          l10n.healthAccessTitle,
-                          style: AppTypography.title,
-                        ),
-                        const SizedBox(height: AppSpacing.s),
-                        Text(l10n.healthAccessBody, style: AppTypography.body),
-                        const SizedBox(height: AppSpacing.l),
-                        _Action(
-                          accent: palette.accent,
-                          onAccent: palette.onAccent,
-                        ),
-                      ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: statusBarStyleFor(palette.brightness),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            const Positioned.fill(child: SkyBackground()),
+            SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(AppSpacing.screen),
+                  child: GlassPanel(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppRadii.card),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.l),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            l10n.healthAccessTitle,
+                            style: AppTypography.title,
+                          ),
+                          const SizedBox(height: AppSpacing.s),
+                          Text(
+                            l10n.healthAccessBody,
+                            style: AppTypography.body,
+                          ),
+                          const SizedBox(height: AppSpacing.l),
+                          _Action(
+                            accent: palette.accent,
+                            onAccent: palette.onAccent,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -95,6 +103,10 @@ class _Action extends ConsumerWidget {
             style: FilledButton.styleFrom(
               backgroundColor: accent,
               foregroundColor: onAccent,
+              // Disabled while the prompt is on its way: the spinner keeps
+              // the button's colours.
+              disabledBackgroundColor: accent,
+              disabledForegroundColor: onAccent,
               textStyle: AppTypography.headline,
               padding: const EdgeInsets.all(AppSpacing.m),
             ),

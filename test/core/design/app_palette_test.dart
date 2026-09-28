@@ -29,6 +29,7 @@ void main() {
       expect(_dark.onGlass, const Color(0xFFF4F1EA));
       expect(_dark.grainOpacity, 0.12);
       expect(_dark.backdrop, Backdrop.nebula);
+      expect(_dark.backdropTint, const Color(0x526E5AA8));
     });
   });
 
@@ -53,6 +54,7 @@ void main() {
       expect(_light.onGlass, const Color(0xFF1A2440));
       expect(_light.grainOpacity, 0.06);
       expect(_light.backdrop, Backdrop.chart);
+      expect(_light.backdropTint, const Color(0x0D3D4F9A));
     });
   });
 
@@ -103,6 +105,10 @@ void main() {
       expect(half.sky, hasLength(3));
       expect(half.hills, hasLength(3));
       expect(half.accent, Color.lerp(_dark.accent, _light.accent, 0.5));
+      expect(
+        half.backdropTint,
+        Color.lerp(_dark.backdropTint, _light.backdropTint, 0.5),
+      );
       expect(half.grainOpacity, closeTo(0.09, 1e-9));
       expect(half.brightness, Brightness.light);
       expect(half.backdrop, Backdrop.chart);
