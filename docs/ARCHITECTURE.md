@@ -91,8 +91,9 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
 - Sky data: `assets/sky/route.json`, built by `tool/sky/build_route.dart`
   from d3-celestial at a pinned commit (ADR 0009): the 16 route
   constellations (13 main, 3 on the branch) with HIP ids, magnitudes,
-  positions projected to a unit box (north up, east left), figure lines
-  and lighting order. The app does not read it yet (constellation path,
+  J2000 positions and positions projected to a unit box (north up, east
+  left), figure lines, a lighting order that always steps along a line,
+  and each constellation's centre and angular span on the sky. The app does not read it yet (constellation path,
   plan 2). The sky-data licences are on the licences page.
 - Local storage: `core/database/app_database.dart` (Drift, schema v2,
   snapshots, steps and migration tests in `drift_schemas/`,
