@@ -34,12 +34,20 @@ Future<void> main() async {
   final figures = parseFigures(lines);
   final catalogue = parseStars(stars);
 
+  final ids = [..._mainRoute, ..._branch]..sort();
+  final Map<String, RouteConstellation> route;
+  try {
+    route = buildRoute(figures, catalogue, ids);
+  } on SkyDataException catch (e) {
+    stderr.writeln('Sky build failed: ${e.message}');
+    exit(1);
+  }
+
   final constellations = <String, Object>{};
   final mismatches = <String>[];
-  for (final id in [..._mainRoute, ..._branch]..sort()) {
-    final polylines = figures[id];
-    if (polylines == null) throw StateError('no figure for $id');
-    final figure = buildFigure(polylines, catalogue);
+  for (final id in ids) {
+    final c = route[id]!;
+    final figure = c.figure;
     if (figure.stars.length != _expectedStars[id]) {
       mismatches.add(
         '$id: expected ${_expectedStars[id]}, got ${figure.stars.length}',
@@ -47,15 +55,19 @@ Future<void> main() async {
     }
     final points = project(figure.stars);
     constellations[id] = {
+      'centre': {'dec': c.centre.dec, 'ra': c.centre.ra},
       'lines': [
         for (final (a, b) in figure.lines) [a, b],
       ],
       'order': figure.lightingOrder,
+      'spanDeg': c.spanDeg,
       'stars': [
         for (final (i, star) in figure.stars.indexed)
           {
+            'dec': star.dec,
             'hip': star.hip,
             'mag': star.mag,
+            'ra': star.ra,
             'x': points[i].$1,
             'y': points[i].$2,
           },
@@ -114,5 +126,6 @@ ${[for (final f in _files) '- https://raw.githubusercontent.com/$_repo/$_sha/$f'
 - Constellation figures: IAU and Sky & Telescope (CC BY 4.0), with line
   modifications by the d3-celestial author.
 - Star positions and magnitudes: XHIP (Anderson & Francis 2012), via
-  d3-celestial.
+  d3-celestial. Positions are J2000 right ascension and declination in
+  degrees.
 ''';

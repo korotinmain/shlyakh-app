@@ -3,6 +3,17 @@
 import 'dart:convert';
 import 'dart:math';
 
+/// The sky data cannot be built: a vertex has no catalogue star, a figure
+/// is missing or not connected. The message names what failed.
+class SkyDataException implements Exception {
+  const new(this.message);
+
+  final String message;
+
+  @override
+  String toString() => 'SkyDataException: $message';
+}
+
 /// A catalogue star: HIP id, right ascension and declination in degrees
 /// (ra 0–360), visual magnitude.
 typedef SkyStar = ({int hip, double ra, double dec, double mag});
@@ -59,7 +70,7 @@ double _ra(double lon) => lon < 0 ? lon + 360 : lon;
 
 /// The catalogue star nearest to a figure [vertex] (lon, lat).
 ///
-/// Throws [StateError] when none is within [toleranceDeg]: the build must
+/// Throws [SkyDataException] when none is within [toleranceDeg]: the build must
 /// never guess a star.
 SkyStar matchStar(
   (double, double) vertex,
@@ -78,7 +89,7 @@ SkyStar matchStar(
     }
   }
   if (best == null || bestDistance > toleranceDeg) {
-    throw StateError('no star within $toleranceDeg° of ($ra, $dec)');
+    throw SkyDataException('no star within $toleranceDeg° of ($ra, $dec)');
   }
   return best;
 }
@@ -107,10 +118,85 @@ Figure buildFigure(
       previous = index;
     }
   }
+  return (stars: stars, lines: lines, lightingOrder: _walk(stars, lines));
+}
+
+/// Star indices in the order they light: from the first star, each next
+/// star is the first one, in stored line order, joined by a line to a star
+/// already lit, so every new star draws a line from the figure.
+///
+/// Throws [SkyDataException] when the figure is not connected.
+List<int> _walk(List<SkyStar> stars, List<(int, int)> lines) {
+  if (stars.isEmpty) return const [];
+  final lit = <int>{0};
+  final order = <int>[0];
+  while (order.length < stars.length) {
+    int? next;
+    for (final (a, b) in lines) {
+      if (lit.contains(a) != lit.contains(b)) {
+        next = lit.contains(a) ? b : a;
+        break;
+      }
+    }
+    if (next == null) {
+      throw const SkyDataException('the figure is not connected');
+    }
+    lit.add(next);
+    order.add(next);
+  }
+  return order;
+}
+
+/// A route constellation: its figure, where it sits on the sky (the
+/// centre, degrees) and its angular size (the largest distance between two
+/// of its stars, degrees).
+typedef RouteConstellation = ({
+  Figure figure,
+  ({double ra, double dec}) centre,
+  double spanDeg,
+});
+
+/// The figures of [ids], each checked and measured. A failure names the
+/// constellation: `SkyDataException('<id>: …')`.
+Map<String, RouteConstellation> buildRoute(
+  Map<String, List<List<(double, double)>>> figures,
+  List<SkyStar> catalogue,
+  List<String> ids,
+) => {for (final id in ids) id: _constellation(id, figures, catalogue)};
+
+RouteConstellation _constellation(
+  String id,
+  Map<String, List<List<(double, double)>>> figures,
+  List<SkyStar> catalogue,
+) {
+  final polylines = figures[id];
+  if (polylines == null) throw SkyDataException('$id: no figure');
+  final Figure figure;
+  try {
+    figure = buildFigure(polylines, catalogue);
+  } on SkyDataException catch (e) {
+    throw SkyDataException('$id: ${e.message}');
+  }
+  final stars = figure.stars;
+  final centre = _normalize(
+    stars
+        .map((s) => _unit(s.ra, s.dec))
+        .reduce((a, b) => (a.$1 + b.$1, a.$2 + b.$2, a.$3 + b.$3)),
+  );
+  var span = 0.0;
+  for (final a in stars) {
+    for (final b in stars) {
+      span = max(span, _angularDistance(a.ra, a.dec, b.ra, b.dec));
+    }
+  }
+  final ra = atan2(centre.$2, centre.$1) * 180 / pi;
   return (
-    stars: stars,
-    lines: lines,
-    lightingOrder: [for (var i = 0; i < stars.length; i++) i],
+    figure: figure,
+    centre: (
+      ra: _round(ra < 0 ? ra + 360 : ra),
+      dec: _round(asin(centre.$3) * 180 / pi),
+    ),
+    spanDeg: _round(span),
   );
 }
 

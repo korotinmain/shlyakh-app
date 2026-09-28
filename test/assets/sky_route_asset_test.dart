@@ -66,4 +66,39 @@ void main() {
     expect(all, hasLength(141));
     expect(all.toSet(), hasLength(140));
   });
+
+  test('every star after the first lights along a line from a lit star', () {
+    for (final MapEntry(key: id, value: c) in constellations.entries) {
+      final order = (c['order']! as List).cast<int>();
+      final lines = [
+        for (final l in (c['lines']! as List).cast<List<Object?>>())
+          l.cast<int>(),
+      ];
+      for (var k = 1; k < order.length; k++) {
+        final earlier = order.sublist(0, k).toSet();
+        final joined = lines.any(
+          (l) =>
+              (l[0] == order[k] && earlier.contains(l[1])) ||
+              (l[1] == order[k] && earlier.contains(l[0])),
+        );
+        expect(joined, isTrue, reason: '$id star ${order[k]}');
+      }
+    }
+  });
+
+  test('constellations carry their place and size on the sky', () {
+    for (final MapEntry(key: id, value: c) in constellations.entries) {
+      final centre = c['centre']! as Map;
+      expect(centre['ra']! as num, inInclusiveRange(0, 360), reason: id);
+      expect(centre['dec']! as num, inInclusiveRange(-90, 90), reason: id);
+      expect(
+        starsOf(id).every((s) => s['ra'] != null && s['dec'] != null),
+        isTrue,
+        reason: id,
+      );
+    }
+    // Sagitta is a few degrees across, Sagittarius several tens.
+    expect(constellations['Sge']!['spanDeg']! as num, lessThan(10));
+    expect(constellations['Sgr']!['spanDeg']! as num, greaterThan(20));
+  });
 }

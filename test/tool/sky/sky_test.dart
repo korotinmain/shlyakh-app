@@ -57,7 +57,10 @@ void main() {
   });
 
   test('matchStar fails when no star is close enough', () {
-    expect(() => matchStar((30.0, 40.0), catalogue), throwsStateError);
+    expect(
+      () => matchStar((30.0, 40.0), catalogue),
+      throwsA(isA<SkyDataException>()),
+    );
   });
 
   test('buildFigure dedupes stars and keeps each segment once', () {
@@ -79,12 +82,16 @@ void main() {
   });
 
   test('project keeps a figure across 0h contiguous', () {
-    final stars = buildFigure(figures['Zer']!, catalogue).stars;
-    final points = project(stars);
+    // RA 359°, 0°, 1°: a naive flat projection would put them 358° apart.
+    final points = project([
+      (hip: 1, ra: 359.0, dec: 10.0, mag: 1.0),
+      (hip: 2, ra: 0.0, dec: 10.0, mag: 1.0),
+      (hip: 3, ra: 1.0, dec: 11.0, mag: 1.0),
+    ]);
 
-    expect(points, hasLength(2));
-    // Two degrees apart on the sky: the whole box width, not wrapped.
-    expect((points[0].$1 - points[1].$1).abs(), closeTo(1, 1e-3));
+    expect(points[1].$1, closeTo(0.5, 0.05));
+    // RA 1° is east of RA 359°: on the left.
+    expect(points[2].$1, lessThan(points[0].$1));
   });
 
   test('project puts east on the left, north up, inside the unit box', () {
@@ -100,5 +107,45 @@ void main() {
     // Star 4 (dec 25) is north of star 1 (dec 20): smaller y (screen up).
     expect(points[3].$2, lessThan(points[0].$2));
     expect(points.map((p) => max(p.$1, p.$2)).reduce(max), closeTo(1, 1e-3));
+  });
+
+  test('the lighting order only steps along lines', () {
+    // A-B, then D-C, then B-C: by first appearance D would light before
+    // C with no line to anything lit.
+    final figure = buildFigure([
+      [(10.0, 20.0), (12.0, 21.0)],
+      [(11.0, 25.0), (14.0, 23.0)],
+      [(12.0, 21.0), (14.0, 23.0)],
+    ], catalogue);
+
+    expect(figure.stars.map((s) => s.hip), [1, 2, 4, 3]);
+    expect(figure.lightingOrder, [0, 1, 3, 2]);
+  });
+
+  test('buildRoute names the constellation when a star is missing', () {
+    final broken = parseFigures(
+      _lines.replaceFirst('[11.0, 25.0]', '[40.0, 40.0]'),
+    );
+
+    expect(
+      () => buildRoute(broken, catalogue, ['Aaa']),
+      throwsA(
+        isA<SkyDataException>().having(
+          (e) => e.message,
+          'message',
+          startsWith('Aaa: '),
+        ),
+      ),
+    );
+  });
+
+  test('buildRoute records sky positions, centre and span', () {
+    final route = buildRoute(figures, catalogue, ['Aaa']);
+    final aaa = route['Aaa']!;
+
+    expect(aaa.figure.stars.first.ra, 10.0);
+    expect(aaa.centre.dec, inInclusiveRange(20.0, 25.0));
+    // Star 1 (10°, 20°) to star 4 (11°, 25°) or 3 (14°, 23°): a few degrees.
+    expect(aaa.spanDeg, inInclusiveRange(4.0, 6.0));
   });
 }
