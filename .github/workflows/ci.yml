@@ -40,6 +40,10 @@ jobs:
       - name: Generate code
         run: dart run build_runner build --delete-conflicting-outputs
 
+      # Pigeon's Dart output is not committed (ADR 0001).
+      - name: Generate native bridge
+        run: dart run pigeon --input pigeons/steps_api.dart
+
       # dart analyze, not flutter analyze: only it reports riverpod_lint.
       # --fatal-infos: riverpod_lint reports at info level.
       - name: Analyze
