@@ -33,29 +33,33 @@ class TodayScreen extends ConsumerWidget {
               dotColor: memberColorFor(ref.watch(currentUserIdProvider)).color,
             ),
           ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.screen,
-                AppSpacing.m,
-                AppSpacing.screen,
-                0,
+          // The card on top; the sheet takes the space below it, so even
+          // expanded it never covers the card. It runs under the floating
+          // tab bar to the bottom edge; its sizes and content keep clear of
+          // the bar.
+          Column(
+            children: [
+              SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.screen,
+                    AppSpacing.m,
+                    AppSpacing.screen,
+                    AppSpacing.s,
+                  ),
+                  child: TodayCard(view: today, palette: palette),
+                ),
               ),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: TodayCard(view: today, palette: palette),
+              Expanded(
+                child: ProgressSheet(
+                  view: today.value,
+                  palette: palette,
+                  gender: ref.watch(grammaticalGenderProvider),
+                  bottomClearance: FloatingTabBar.bottomClearance(context),
+                ),
               ),
-            ),
-          ),
-          // The sheet runs under the floating tab bar to the bottom edge;
-          // its sizes and content keep clear of the bar.
-          Positioned.fill(
-            child: ProgressSheet(
-              view: today.value,
-              palette: palette,
-              gender: ref.watch(grammaticalGenderProvider),
-              bottomClearance: FloatingTabBar.bottomClearance(context),
-            ),
+            ],
           ),
         ],
       ),

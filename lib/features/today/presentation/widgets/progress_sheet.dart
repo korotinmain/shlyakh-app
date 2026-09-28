@@ -16,10 +16,10 @@ import 'package:shlyakh/features/today/presentation/providers/today_view.dart';
 import 'package:shlyakh/features/today/presentation/widgets/text_placeholder.dart';
 import 'package:shlyakh/features/today/presentation/widgets/week_bars.dart';
 
-/// Sheet heights as fractions of the space above the tab bar: collapsed
-/// shows the level, expanded the rest (spec, "ProgressSheet").
+/// Collapsed height as a fraction of the screen above the tab bar: it
+/// shows the level (spec, "ProgressSheet"). Expanded fills the space it
+/// is given, which ends below the Today card.
 const double _collapsedSize = 0.18;
-const double _expandedSize = 0.85;
 
 /// Width of the loading placeholders, in logical pixels.
 const double _placeholderWidth = 160;
@@ -40,29 +40,31 @@ class ProgressSheet extends StatelessWidget {
   final GrammaticalGender gender;
 
   /// Height at the bottom covered by the floating tab bar. The sheet runs
-  /// under it to the screen edge; sizes and content are measured above it.
+  /// under it to the screen edge; its collapsed height and its content are
+  /// measured above it.
   final double bottomClearance;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final height = constraints.maxHeight;
-      double size(double aboveTabBar) =>
-          (aboveTabBar * (height - bottomClearance) + bottomClearance) / height;
-      return _sheet(
-        collapsed: size(_collapsedSize),
-        expanded: size(_expandedSize),
-      );
-    },
-  );
+  Widget build(BuildContext context) {
+    final screen = MediaQuery.sizeOf(context).height;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final height = constraints.maxHeight;
+        final collapsed =
+            _collapsedSize * (screen - bottomClearance) + bottomClearance;
+        // With very large text the card leaves less room than the
+        // collapsed height: the sheet then cannot be dragged.
+        return _sheet(collapsed: (collapsed / height).clamp(0.0, 1.0));
+      },
+    );
+  }
 
-  Widget _sheet({required double collapsed, required double expanded}) {
+  Widget _sheet({required double collapsed}) {
     final foreground = GlassStyle.onGlass(palette.surfaceTone);
     final track = foreground.withValues(alpha: GlassStyle.trackOpacity);
     return DraggableScrollableSheet(
       initialChildSize: collapsed,
       minChildSize: collapsed,
-      maxChildSize: expanded,
       snap: true,
       builder: (context, controller) => GlassPanel(
         tone: palette.surfaceTone,

@@ -105,8 +105,11 @@ typedef TodayView = ({
     `palette.accent`, fraction `xpIntoLevel / xpForNextLevel`, round caps)
     and today's steps (`AppTypography.display`, tabular) with the caption
     "{steps} today · {weekday, date}".
-  - `ProgressSheet`: `DraggableScrollableSheet` snapping at 0.18 and 0.85;
-    glass with top radius `AppRadii.sheet`. Collapsed: "Level {n} ·
+  - `ProgressSheet`: `DraggableScrollableSheet` below the card, running
+    under the tab bar to the bottom edge. Collapsed: 0.18 of the screen
+    above the tab bar; expanded: up to `AppSpacing.s` under the card, never
+    covering it. Content fades out where the tab bar starts. Glass with
+    top radius `AppRadii.sheet`. Collapsed: "Level {n} ·
     {chapter}", title, progress bar, "{xp} XP to level {n + 1}". Expanded
     adds the XP range, the Today row (steps, XP, "≈ {km} km"), `WeekBars`
     with the week total, and "All history →" (goes to `/history`).

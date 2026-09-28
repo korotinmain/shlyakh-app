@@ -133,6 +133,34 @@ void main() {
     );
   });
 
+  testWidgets('the expanded sheet stops below the card', (tester) async {
+    await _pump(tester);
+    await _expandSheet(tester);
+
+    final sheet = find.ancestor(
+      of: find.text('Pathfinder'),
+      matching: find.byType(GlassPanel),
+    );
+    final cardBottom = tester.getRect(find.byType(TodayCard)).bottom;
+    expect(tester.getRect(sheet).top, greaterThan(cardBottom));
+  });
+
+  testWidgets('with large text the expanded sheet still stops below the card', (
+    tester,
+  ) async {
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await _pump(tester);
+    await _expandSheet(tester);
+
+    final sheet = find.ancestor(
+      of: find.byType(ListView),
+      matching: find.byType(GlassPanel),
+    );
+    final cardBottom = tester.getRect(find.byType(TodayCard)).bottom;
+    expect(tester.getRect(sheet).top, greaterThan(cardBottom));
+  });
+
   testWidgets('status bar icons are dark under the day sky', (tester) async {
     await _pump(tester);
 
