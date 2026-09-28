@@ -5,59 +5,42 @@ The visual language of Shlyakh. Values here are the design tokens in
 needs an update in the same PR. Product principles are in
 `docs/PRODUCT.md` ("Design principles", "Today screen content").
 
-The constellation path (`docs/superpowers/specs/2026-09-28-constellation-path-design.md`)
-replaces the time-of-day sky with light and dark themes and the landscape
-with constellations. Until its plan 3 lands, the Sky section and the
-landscape notes below describe the code as it is.
-
 ## Principles
 
-- The illustrated landscape is the hero; interface elements sit on it
-  and stay quiet.
-- One strong accent per screen, taken from the sky; restrained type.
+- The sky and its constellations are the hero; interface elements sit on
+  it and stay quiet.
+- One strong accent per screen, from the theme; restrained type.
 - Calm and fair: rewards feel pleasant, never pushy.
 - No template look: no generic dashboard cards, default gradients or
   stock icon grids.
 
-## Sky
+## Themes
 
-The sky follows the real time of day through seven keyframes. Between two
-keyframes every colour is interpolated in OkLCh (lightness and chroma
-linearly, hue along the shorter arc), so warm-to-cool transitions keep
-their colour instead of passing through grey. The gradient places its
-three colours at 0%, 55% and 100% of the height. Text drawn directly on
-the sky uses its keyframe's text colour and meets WCAG AA (4.5:1) against
-the top sky colour; put it in the upper part of the sky. A 12% overlay grain sits
-on top.
+The app follows the system appearance (`ThemeMode.system`); there is no
+in-app toggle and no sky that follows the time of day. Dark is a night
+sky; light is an ink star chart on a pale background. Tokens live in
+`AppPalette` (`lib/core/design/app_palette.dart`), a `ThemeExtension`
+read as `context.palette`; a change of appearance animates between the
+two palettes.
 
-| Keyframe | Sky top → bottom | Hills far → near | Accent | Text on sky | Glass |
-|---|---|---|---|---|---|
-| Pre-dawn | `#2E345E` `#5D5F8E` `#9A8FAE` | `#7A7597` `#565673` `#34364F` | `#B8A4D9` | white | dark |
-| Dawn | `#545784` `#CF98A2` `#F2C7A8` | `#C29AAB` `#8B7790` `#4F4D63` | `#F2A98A` | white | dark |
-| Morning | `#7EA8CF` `#BCD6E6` `#F2EBDD` | `#B7D0C6` `#8CB392` `#5B8C64` | `#F0C27A` | `#18293A` | light |
-| Day | `#6C9DCC` `#A2C8E5` `#E0EEF1` | `#AECFC2` `#7EAF85` `#4D8259` | `#E9B44C` | `#18293A` | light |
-| Golden hour | `#D38A6C` `#EEB385` `#F7DCB0` | `#DCA689` `#A8786A` `#634448` | `#F29A5B` | `#18293A` | dark |
-| Blue hour | `#2C3868` `#546A9C` `#A2B0CF` | `#5C6A92` `#3C4870` `#252D4A` | `#A9B8E8` | white | dark |
-| Night | `#121831` `#222B54` `#364378` | `#323C6C` `#222A4D` `#141A35` | `#C8D2F0` | white | dark |
+| Token | Dark | Light |
+|---|---|---|
+| `sky` (top, 55 %, bottom) | `#070B1E` `#161E46` `#2C3670` | `#DCE6F4` `#EEF1F6` `#F6F1E8` |
+| `hills` (far → near) | `#1B2250` `#141A40` `#0E1333` | `#E6ECF2` `#DCE4EC` `#C9D5DF` |
+| `accent` | `#F3D9A0` gold | `#3D4F9A` ink blue |
+| `onAccent` | `#1A2440` | `#FFFFFF` |
+| `onSky` | `#F4F1EA` | `#1A2440` |
+| `onSkyMuted` | `#C8D2F0` | `#3D4F9A` |
+| `glass` | `#121836` at 72 % | white at 68 % |
+| `onGlass` | `#F4F1EA` | `#1A2440` |
+| grain | 12 % | 6 % |
+| backdrop | violet nebula (`#6E5AA8` at 32 %, fading) | star-chart grid (24 pt, ink at 5 %, top two thirds) |
 
-When each keyframe applies, relative to local sunrise `S`, solar noon `N`
-and sunset `E`:
-
-| Keyframe | Time |
-|---|---|
-| Pre-dawn | `S − 60 min` |
-| Dawn | `S` |
-| Morning | `S + 90 min` |
-| Day | `N` |
-| Golden hour | `E − 60 min` |
-| Blue hour | `E + 20 min` |
-| Night | `E + 90 min`, held until 60 min before the next pre-dawn, then blending into it |
-
-Sun times come from the NOAA Solar Calculator equations for Kyiv
-(50.45° N, 30.52° E) until location is a deliberate privacy decision; the
-error anywhere in Ukraine is minutes. Code: `skyAt(...)` in
-`lib/core/design/sky/sky_palette.dart`, always called with the injected
-clock's time.
+Contrast (WCAG 2, pinned by `test/core/design/app_palette_test.dart`):
+text on every sky colour, on the accent and on glass over the sky is at
+least 4.5:1; the accent on glass (ring, bar, active tab) at least 3:1.
+The status bar has light icons in the dark theme and dark icons in the
+light theme.
 
 ## Members
 
@@ -87,9 +70,10 @@ Numbers use tabular figures (`tabular(style)`) and locale formatting
 
 ## Surfaces
 
-Matte glass: light tint white at 68% over morning and day skies, dark
-tint `#161C38` at 72% otherwise; backdrop blur sigma 12; no border;
-shadow `0 6 18` black at 16%. No user setting for materials.
+Matte glass: the theme's `glass` tint over a backdrop blur of sigma 12;
+text and icons in `onGlass`; no border; shadow `0 6 18` black at 16 %.
+Tracks use `onGlass` at 18 %, secondary marks at 28 %. No user setting
+for materials.
 
 ## Spacing, radii, motion
 
@@ -98,14 +82,12 @@ shadow `0 6 18` black at 16%. No user setting for materials.
   rounded.
 - Motion: 150 / 300 / 600 ms, curve `easeOutCubic`. Animations are phase F.
 
-## Delivering art (phase D)
+## Delivering art
 
-- One file per layer: far hills, middle hills, near hills, path, trees
-  or bushes. No sky (it is drawn in code).
-- SVG, or PNG at @3x with transparency.
-- Monochrome (values only) or a neutral daylight version, so each time of
-  day can tint it; art with baked-in lighting would need a version per
-  time of day.
-- One style for all layers; ideally a variant per chapter (home land,
-  beaten road, steppe, Carpathians, starry night).
+- Art is animated in Rive; it never contains text (all text is Flutter
+  and l10n). The contract for the constellation artboards comes with the
+  star moment (constellation path, plan 6).
+- Art works in both themes: either one monochrome version tinted in code,
+  or a dark and a light version.
+- SVG for import into Rive, or PNG at @3x with transparency.
 - A licence that allows use in the app.
