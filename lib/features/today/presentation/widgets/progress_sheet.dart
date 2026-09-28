@@ -30,6 +30,7 @@ class ProgressSheet extends StatelessWidget {
     required this.view,
     required this.palette,
     required this.gender,
+    required this.bottomClearance,
     super.key,
   });
 
@@ -38,14 +39,30 @@ class ProgressSheet extends StatelessWidget {
   final SkyPalette palette;
   final GrammaticalGender gender;
 
+  /// Height at the bottom covered by the floating tab bar. The sheet runs
+  /// under it to the screen edge; sizes and content are measured above it.
+  final double bottomClearance;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final height = constraints.maxHeight;
+      double size(double aboveTabBar) =>
+          (aboveTabBar * (height - bottomClearance) + bottomClearance) / height;
+      return _sheet(
+        collapsed: size(_collapsedSize),
+        expanded: size(_expandedSize),
+      );
+    },
+  );
+
+  Widget _sheet({required double collapsed, required double expanded}) {
     final foreground = GlassStyle.onGlass(palette.surfaceTone);
     final track = foreground.withValues(alpha: GlassStyle.trackOpacity);
     return DraggableScrollableSheet(
-      initialChildSize: _collapsedSize,
-      minChildSize: _collapsedSize,
-      maxChildSize: _expandedSize,
+      initialChildSize: collapsed,
+      minChildSize: collapsed,
+      maxChildSize: expanded,
       snap: true,
       builder: (context, controller) => GlassPanel(
         tone: palette.surfaceTone,
@@ -54,35 +71,38 @@ class ProgressSheet extends StatelessWidget {
             top: Radius.circular(AppRadii.sheet),
           ),
         ),
-        child: ListView(
-          controller: controller,
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.screen,
-            AppSpacing.xs,
-            AppSpacing.screen,
-            AppSpacing.l,
-          ),
-          children: [
-            Center(
-              child: Container(
-                width: AppSpacing.xl,
-                height: AppSpacing.xxs,
-                decoration: BoxDecoration(
-                  color: track,
-                  borderRadius: BorderRadius.circular(AppRadii.bar),
+        child: _FadeAboveTabBar(
+          clearance: bottomClearance,
+          child: ListView(
+            controller: controller,
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.screen,
+              AppSpacing.xs,
+              AppSpacing.screen,
+              AppSpacing.l + bottomClearance,
+            ),
+            children: [
+              Center(
+                child: Container(
+                  width: AppSpacing.xl,
+                  height: AppSpacing.xxs,
+                  decoration: BoxDecoration(
+                    color: track,
+                    borderRadius: BorderRadius.circular(AppRadii.bar),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.s),
-            if (view case final view?)
-              ..._content(context, view, track, foreground)
-            else
-              TextPlaceholder(
-                style: AppTypography.title,
-                width: _placeholderWidth,
-                color: track,
-              ),
-          ],
+              const SizedBox(height: AppSpacing.s),
+              if (view case final view?)
+                ..._content(context, view, track, foreground)
+              else
+                TextPlaceholder(
+                  style: AppTypography.title,
+                  width: _placeholderWidth,
+                  color: track,
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -173,6 +193,36 @@ class ProgressSheet extends StatelessWidget {
       ),
     ];
   }
+}
+
+/// Fades [child] out where the floating tab bar starts, so only the glass
+/// shows under and beside the bar, however far the sheet is dragged.
+class _FadeAboveTabBar extends StatelessWidget {
+  const new({required this.clearance, required this.child});
+
+  final double clearance;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => ShaderMask(
+    blendMode: BlendMode.dstIn,
+    shaderCallback: (bounds) {
+      final height = bounds.height;
+      final fadeStart = ((height - clearance) / height).clamp(0.0, 1.0);
+      final fadeEnd = ((height - clearance + AppSpacing.s) / height).clamp(
+        0.0,
+        1.0,
+      );
+      return LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        // Only alpha matters with dstIn: opaque keeps, transparent hides.
+        colors: const [Colors.white, Colors.white, Colors.transparent],
+        stops: [0, fadeStart, fadeEnd],
+      ).createShader(bounds);
+    },
+    child: child,
+  );
 }
 
 class _Stat extends StatelessWidget {

@@ -1,7 +1,10 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shlyakh/app/floating_tab_bar.dart';
+import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/error/failure.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
 import 'package:shlyakh/features/steps/domain/daily_steps.dart';
@@ -40,8 +43,11 @@ final List<DailySteps> _days = [
   _day('2026-09-28', 6870),
 ];
 
-List<Override> _overrides(Stream<List<DailySteps>> Function() stream) => [
-  clockProvider.overrideWithValue(Clock.fixed(DateTime(2026, 9, 28, 12))),
+List<Override> _overrides(
+  Stream<List<DailySteps>> Function() stream,
+  DateTime now,
+) => [
+  clockProvider.overrideWithValue(Clock.fixed(now)),
   stepsRepositoryProvider.overrideWithValue(_Repository(stream)),
 ];
 
@@ -50,15 +56,20 @@ Future<void> _pump(
   List<Locale> locales = const [Locale('en')],
   List<DailySteps>? days,
   Stream<List<DailySteps>> Function()? stream,
+  DateTime? now,
 }) async {
-  // iPhone 16 Pro.
+  // iPhone 16 Pro, with its status bar and home indicator insets.
   tester.view.physicalSize = const Size(1206, 2622);
   tester.view.devicePixelRatio = 3;
+  tester.view.padding = const FakeViewPadding(top: 186, bottom: 102);
   addTearDown(tester.view.reset);
   await pumpApp(
     tester,
     systemLocales: locales,
-    overrides: _overrides(stream ?? () => Stream.value(days ?? _days)),
+    overrides: _overrides(
+      stream ?? () => Stream.value(days ?? _days),
+      now ?? DateTime(2026, 9, 28, 12),
+    ),
   );
 }
 
@@ -86,6 +97,52 @@ void main() {
 
     final card = tester.getSize(find.byType(TodayCard));
     expect(card.height, lessThan(874 / 4));
+  });
+
+  testWidgets('the sheet reaches the bottom of the screen', (tester) async {
+    await _pump(tester);
+
+    final sheet = find.ancestor(
+      of: find.text('Pathfinder'),
+      matching: find.byType(GlassPanel),
+    );
+    expect(tester.getRect(sheet).bottom, 874);
+  });
+
+  testWidgets('the collapsed sheet shows its level above the tab bar', (
+    tester,
+  ) async {
+    await _pump(tester);
+
+    final tabBarTop = tester.getRect(find.byType(FloatingTabBar)).top;
+    expect(tester.getRect(find.text('Pathfinder')).bottom, lessThan(tabBarTop));
+  });
+
+  testWidgets('the expanded sheet scrolls its last line above the tab bar', (
+    tester,
+  ) async {
+    await _pump(tester);
+    await _expandSheet(tester);
+    await tester.drag(find.text('This week'), const Offset(0, -700));
+    await tester.pumpAndSettle();
+
+    final tabBarTop = tester.getRect(find.byType(FloatingTabBar)).top;
+    expect(
+      tester.getRect(find.text('All history →')).bottom,
+      lessThan(tabBarTop),
+    );
+  });
+
+  testWidgets('status bar icons are dark under the day sky', (tester) async {
+    await _pump(tester);
+
+    expect(_statusBarBrightness(tester), Brightness.light);
+  });
+
+  testWidgets('status bar icons are light under the night sky', (tester) async {
+    await _pump(tester, now: DateTime(2026, 9, 28, 22));
+
+    expect(_statusBarBrightness(tester), Brightness.dark);
   });
 
   testWidgets('shows today in Ukrainian', (tester) async {
@@ -155,3 +212,12 @@ void main() {
     );
   });
 }
+
+/// The iOS status bar brightness the Today screen asks for: `light` means a
+/// light background, so the icons are dark.
+Brightness? _statusBarBrightness(WidgetTester tester) => tester
+    .widget<AnnotatedRegion<SystemUiOverlayStyle>>(
+      find.byType(AnnotatedRegion<SystemUiOverlayStyle>).first,
+    )
+    .value
+    .statusBarBrightness;
