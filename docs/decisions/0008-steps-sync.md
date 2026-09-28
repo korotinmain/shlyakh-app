@@ -58,10 +58,14 @@ end date, which had added tomorrow as a zero day (fixed in #19).
 - On the travel day a slice of steps can be counted twice or missed, and
   a westward flight can create a partial day dated before the start's
   local date. Accepted; the UI tolerates it.
-- The iOS prompt says background access needs Background App Refresh;
-  without it the app syncs only on launch and in the foreground, and
-  Today can be up to the last open behind. The hint a day after the start
-  with no steps covers denied read access, which iOS never reports.
+- The iOS prompt mentions Background App Refresh, but HealthKit delivery
+  needs no `UIBackgroundModes`: the app is not listed there, and the
+  probe was woken in the background all the same. Whether the
+  system-wide switch or Low Power Mode stops the wakeups is not verified;
+  without wakeups the app syncs on launch and in the foreground only.
+- The hint a day after the start with no steps covers denied read access,
+  which iOS never reports; it points to the Health app (profile → Apps),
+  a path that works on every iOS version.
 - Not verified: a relaunch after a force-quit or a reboot, and a sync
   while the device is locked (it fails with `HealthDataLocked` and the
   next trigger retries).

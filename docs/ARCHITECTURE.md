@@ -46,13 +46,16 @@ presentation ──► domain ◄── data
 ## 2. Current state [built]
 
 ```
-main.dart ── ProviderScope
-               └── App (MaterialApp.router, theme, l10n delegates)
-                     └── routerProvider (go_router)
-                           └── AppShell (tabs + FloatingTabBar)
-                                 ├── /today   TodayScreen
-                                 ├── /path    PathScreen (placeholder)
-                                 └── /history HistoryScreen (placeholder)
+main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
+               └── UncontrolledProviderScope
+                     └── App (MaterialApp.router, theme, l10n delegates)
+                           └── routerProvider (go_router, redirect on the journey start)
+                                 ├── /               LaunchScreen (sky only, while the start loads)
+                                 ├── /health-access  HealthAccessScreen (until the journey starts)
+                                 └── AppShell (tabs + FloatingTabBar)
+                                       ├── /today   TodayScreen
+                                       ├── /path    PathScreen (placeholder)
+                                       └── /history HistoryScreen (placeholder)
 ```
 
 - Today screen: `features/today/presentation/`. `skyProvider` (the sky
@@ -177,8 +180,10 @@ Decided by the stage 1 spike (ADR 0007):
 - **[built]** Dart runs in a HealthKit background relaunch (ADR 0008):
   `FlutterImplicitEngineDelegate` creates the engine without a scene,
   the wakeup sent before Dart registers its handler is buffered by the
-  channel, and a sync takes tens of milliseconds. iOS gives background
-  HealthKit access only with Background App Refresh on.
+  channel, and a sync takes tens of milliseconds. The app does not need
+  `UIBackgroundModes` and is not listed under Background App Refresh;
+  whether the system-wide switch or Low Power Mode stops the wakeups is
+  not verified.
 
 ## 5. Cross-cutting concerns
 
