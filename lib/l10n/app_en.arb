@@ -410,5 +410,9 @@
   "healthAccessAllow": "Allow",
   "@healthAccessAllow": {
     "description": "Button that shows the system Health access prompt and starts the journey"
+  },
+  "healthAccessHint": "No steps yet? Allow Shlyakh to read Steps in Settings → Health → Data Access & Devices.",
+  "@healthAccessHint": {
+    "description": "Shown on Today a day after the journey starts when no steps arrived, which usually means read access to Steps was denied"
   }
 }

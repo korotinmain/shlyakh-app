@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shlyakh/app/floating_tab_bar.dart';
 import 'package:shlyakh/core/design/app_colors.dart';
 import 'package:shlyakh/core/design/app_spacing.dart';
+import 'package:shlyakh/core/design/app_typography.dart';
 import 'package:shlyakh/core/design/sky_status_bar.dart';
+import 'package:shlyakh/core/l10n/l10n_extension.dart';
 import 'package:shlyakh/features/progress/presentation/providers/level_title.dart';
+import 'package:shlyakh/features/steps/presentation/providers/health_access_hint.dart';
 import 'package:shlyakh/features/today/presentation/providers/current_user_provider.dart';
 import 'package:shlyakh/features/today/presentation/providers/sky_provider.dart';
 import 'package:shlyakh/features/today/presentation/providers/today_provider.dart';
@@ -48,7 +51,22 @@ class TodayScreen extends ConsumerWidget {
                     AppSpacing.screen,
                     AppSpacing.s,
                   ),
-                  child: TodayCard(view: today, palette: palette),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TodayCard(view: today, palette: palette),
+                      if (ref.watch(healthAccessHintProvider).value ?? false)
+                        Padding(
+                          padding: const EdgeInsets.only(top: AppSpacing.s),
+                          child: Text(
+                            context.l10n.healthAccessHint,
+                            style: AppTypography.footnote.copyWith(
+                              color: palette.onSky.color,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
