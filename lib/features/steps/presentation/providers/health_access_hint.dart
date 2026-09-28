@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
 import 'package:shlyakh/features/steps/presentation/providers/steps_providers.dart';
@@ -20,14 +22,19 @@ Stream<bool> healthAccessHint(Ref ref) async* {
     return;
   }
   final clock = ref.watch(clockProvider);
+  final due = start.startedAt.add(_hintAfter);
+  final untilDue = due.difference(clock.now());
+  if (untilDue > Duration.zero) {
+    // A sync that changes nothing emits nothing; recompute when the day
+    // has passed, so a denied user sees the hint without waiting for the
+    // next new day.
+    final timer = Timer(untilDue, ref.invalidateSelf);
+    ref.onDispose(timer.cancel);
+  }
   final days = ref
       .watch(stepsRepositoryProvider)
       .watchDays(userId: ref.watch(currentUserIdProvider));
-  // The clock is read per emission, so the hint appears on the next
-  // update after the 24 hours pass.
   yield* days.map(
-    (days) =>
-        !clock.now().isBefore(start.startedAt.add(_hintAfter)) &&
-        days.every((day) => day.steps == 0),
+    (days) => !clock.now().isBefore(due) && days.every((day) => day.steps == 0),
   );
 }

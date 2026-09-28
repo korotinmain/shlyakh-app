@@ -73,4 +73,33 @@ void main() {
       isFalse,
     );
   });
+
+  testWidgets('appears when 24 hours pass without a new day', (tester) async {
+    var now = startedAt.add(const Duration(hours: 23));
+    await tester.runAsync(
+      () => db.journeyStartDao.insertOnce((
+        userId: 'local',
+        startedAt: startedAt,
+        timezone: 'Europe/Kyiv',
+      )),
+    );
+    final container = ProviderContainer(
+      overrides: [
+        ...stepsTestOverrides(db: db, api: MockStepsHostApi()),
+        clockProvider.overrideWithValue(Clock(() => now)),
+      ],
+    );
+    addTearDown(container.dispose);
+    final hint = container.listen(healthAccessHintProvider, (_, _) {});
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pump();
+    expect(hint.read().value, isFalse);
+
+    now = startedAt.add(const Duration(hours: 24, minutes: 1));
+    await tester.pump(const Duration(hours: 1));
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pump();
+
+    expect(hint.read().value, isTrue);
+  });
 }
