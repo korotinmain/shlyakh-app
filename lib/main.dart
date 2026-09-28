@@ -11,7 +11,7 @@ import 'package:shlyakh/features/steps/presentation/steps_events_handler.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  registerFontLicenses();
+  registerLicenses();
   // Created before runApp so unhandled errors are logged from the start.
   final container = ProviderContainer();
   final logger = container.read(loggerProvider);
