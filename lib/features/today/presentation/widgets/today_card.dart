@@ -89,6 +89,7 @@ class _Content extends StatelessWidget {
         const SizedBox(width: AppSpacing.m),
         Expanded(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FittedBox(
@@ -130,6 +131,7 @@ class _Loading extends StatelessWidget {
       ),
       const SizedBox(width: AppSpacing.m),
       Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextPlaceholder(

@@ -8,6 +8,7 @@ import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
 import 'package:shlyakh/features/steps/domain/steps_repository.dart';
 import 'package:shlyakh/features/today/presentation/providers/steps_repository_provider.dart';
+import 'package:shlyakh/features/today/presentation/widgets/today_card.dart';
 import 'package:shlyakh/features/today/presentation/widgets/week_bars.dart';
 
 import '../../../helpers/pump_app.dart';
@@ -78,6 +79,13 @@ void main() {
     expect(find.textContaining('steps today · Monday, September 28'), findsOne);
     expect(find.textContaining('Level 4 · '), findsOneWidget);
     expect(find.text('Pathfinder'), findsOneWidget);
+  });
+
+  testWidgets('the card hugs its content', (tester) async {
+    await _pump(tester);
+
+    final card = tester.getSize(find.byType(TodayCard));
+    expect(card.height, lessThan(874 / 4));
   });
 
   testWidgets('shows today in Ukrainian', (tester) async {
