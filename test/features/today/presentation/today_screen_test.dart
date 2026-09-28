@@ -247,8 +247,8 @@ void main() {
 
     expect(
       find.text(
-        'No steps yet? Allow Shlyakh to read Steps in Settings → Health → '
-        'Data Access & Devices.',
+        'No steps yet? Allow Shlyakh to read Steps in the Health app: '
+        'your profile → Apps → Shlyakh.',
       ),
       findsOneWidget,
     );
@@ -259,8 +259,8 @@ void main() {
 
     expect(
       find.text(
-        'Кроків досі немає? Дозвольте Шляху читати кроки: Параметри → '
-        "Здоров'я → Доступ до даних і пристрої.",
+        "Кроків досі немає? Дозвольте Шляху читати кроки в застосунку Здоров'я: "
+        'ваш профіль → Програми → Шлях.',
       ),
       findsOneWidget,
     );
