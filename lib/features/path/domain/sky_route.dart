@@ -70,7 +70,7 @@ final class Constellation {
 ///
 /// A star that is in two figures (Elnath in Auriga and Taurus) lights once,
 /// in the first constellation on the route that has it.
-final class Route {
+final class SkyRoute {
   /// Throws [RouteException] when the data is inconsistent.
   factory({
     required List<Constellation> constellations,
@@ -108,7 +108,7 @@ final class Route {
       }
       ownOrders.add(List.unmodifiable(own));
     }
-    return Route._(
+    return SkyRoute._(
       List.unmodifiable(constellations),
       mainLength,
       List.unmodifiable(stars),

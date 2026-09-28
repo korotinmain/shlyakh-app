@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:shlyakh/core/design/app_colors.dart';
+import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/app_typography.dart';
-import 'package:shlyakh/core/design/sky/sky_keyframes.dart';
 
-/// App theme from the design tokens (docs/DESIGN.md). Sky-aware screens
-/// take colours from `skyAt`; this scheme covers everything else.
-ThemeData buildAppTheme() => ThemeData(
-  fontFamily: 'Geologica',
-  textTheme: appTextTheme(),
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: skyKeyframes[SkyKeyframe.day]!.accent.color,
-  ),
-);
+/// App theme for [brightness] from the design tokens (docs/DESIGN.md);
+/// screens read the colours through `context.palette`.
+ThemeData buildAppTheme(Brightness brightness) {
+  final palette = brightness == Brightness.dark
+      ? AppPalette.dark
+      : AppPalette.light;
+  return ThemeData(
+    brightness: brightness,
+    fontFamily: 'Geologica',
+    textTheme: appTextTheme(),
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: palette.accent,
+      brightness: brightness,
+    ),
+    extensions: [palette],
+  );
+}

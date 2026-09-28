@@ -1,4 +1,4 @@
-import 'package:shlyakh/features/path/domain/route.dart';
+import 'package:shlyakh/features/path/domain/sky_route.dart';
 
 SkyPoint _star(int hip) => (hip: hip, x: 0, y: 0, mag: 1, ra: 0, dec: 0);
 
@@ -22,7 +22,7 @@ Constellation testConstellation(
 /// Five route stars: A (hip 1, 2, 3), B (hip 3 shared with A, 4), then the
 /// branch C (hip 5). Cumulative star costs: 1 500, 4 500, 9 000, 15 000,
 /// 22 500 XP.
-Route smallRoute() => Route(
+SkyRoute smallRoute() => SkyRoute(
   constellations: [
     testConstellation('A', [1, 2, 3]),
     testConstellation('B', [3, 4]),

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:shlyakh/core/design/app_colors.dart';
-import 'package:shlyakh/core/design/sky/sky_keyframes.dart';
+import 'package:shlyakh/core/design/app_palette.dart';
 
 // Placeholder geometry until the illustrated landscape (phase D), as
 // fractions of the screen: where each hill's ridge starts, peaks and ends.
@@ -14,16 +13,15 @@ const double _pathOpacity = 0.6;
 const double _dotRadius = 7;
 const double _dotRingWidth = 2;
 
-/// Three hills in [palette]'s colours, a path, and the user's dot.
+/// Three hills in the theme's colours, a path, and the user's dot.
 class PlaceholderHills extends StatelessWidget {
-  const new({required this.palette, required this.dotColor, super.key});
+  const new({required this.dotColor, super.key});
 
-  final SkyPalette palette;
   final Color dotColor;
 
   @override
   Widget build(BuildContext context) => CustomPaint(
-    painter: _HillsPainter(palette, dotColor),
+    painter: _HillsPainter(context.palette, dotColor),
     size: Size.infinite,
   );
 }
@@ -31,7 +29,7 @@ class PlaceholderHills extends StatelessWidget {
 class _HillsPainter extends CustomPainter {
   new(this.palette, this.dotColor);
 
-  final SkyPalette palette;
+  final AppPalette palette;
   final Color dotColor;
 
   @override
@@ -48,7 +46,7 @@ class _HillsPainter extends CustomPainter {
         ..lineTo(size.width, size.height)
         ..lineTo(0, size.height)
         ..close();
-      canvas.drawPath(path, Paint()..color = palette.hills[i].color);
+      canvas.drawPath(path, Paint()..color = palette.hills[i]);
     }
 
     // A path winding up the nearest hill, with the user's dot on it.
@@ -63,7 +61,7 @@ class _HillsPainter extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = _pathStrokeWidth
-          ..color = palette.onSky.color.withValues(alpha: _pathOpacity),
+          ..color = palette.onSky.withValues(alpha: _pathOpacity),
       )
       ..drawCircle(end, _dotRadius, Paint()..color = dotColor)
       ..drawCircle(
@@ -72,7 +70,7 @@ class _HillsPainter extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = _dotRingWidth
-          ..color = palette.onSky.color,
+          ..color = palette.onSky,
       );
   }
 

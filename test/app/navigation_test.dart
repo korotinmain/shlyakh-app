@@ -1,4 +1,6 @@
 import 'package:clock/clock.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/app/floating_tab_bar.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
@@ -37,4 +39,38 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('History is coming soon'), findsNothing);
   });
+
+  for (final (brightness, icons) in [
+    (Brightness.dark, Brightness.dark),
+    (Brightness.light, Brightness.light),
+  ]) {
+    testWidgets(
+      'the Path tab sets the status bar in the ${brightness.name} theme',
+      (tester) async {
+        await pumpApp(
+          tester,
+          brightness: brightness,
+          overrides: [
+            clockProvider.overrideWithValue(
+              Clock.fixed(DateTime(2026, 9, 28, 12)),
+            ),
+          ],
+        );
+        await tester.tap(_tab('Path'));
+        await tester.pumpAndSettle();
+
+        final region = tester.widget<AnnotatedRegion<SystemUiOverlayStyle>>(
+          find
+              .ancestor(
+                of: find.text('Your path is coming soon'),
+                matching: find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
+              )
+              .first,
+        );
+        // statusBarBrightness is the brightness of what is behind the bar:
+        // dark means light icons.
+        expect(region.value.statusBarBrightness, icons);
+      },
+    );
+  }
 }

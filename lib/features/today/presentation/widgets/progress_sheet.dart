@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shlyakh/app/router.dart';
-import 'package:shlyakh/core/design/app_colors.dart';
+import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/app_radii.dart';
 import 'package:shlyakh/core/design/app_spacing.dart';
 import 'package:shlyakh/core/design/app_typography.dart';
 import 'package:shlyakh/core/design/glass.dart';
 import 'package:shlyakh/core/design/glass_panel.dart';
-import 'package:shlyakh/core/design/sky/sky_keyframes.dart';
 import 'package:shlyakh/core/l10n/format_extension.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
 import 'package:shlyakh/features/path/presentation/providers/constellation_name.dart';
@@ -26,16 +25,10 @@ const double _placeholderWidth = 160;
 /// The bottom sheet: the current constellation and star; expanded, today
 /// and the week.
 class ProgressSheet extends StatelessWidget {
-  const new({
-    required this.view,
-    required this.palette,
-    required this.bottomClearance,
-    super.key,
-  });
+  const new({required this.view, required this.bottomClearance, super.key});
 
   /// Null while loading or on error (the card shows the error).
   final TodayView? view;
-  final SkyPalette palette;
 
   /// Height at the bottom covered by the floating tab bar. The sheet runs
   /// under it to the screen edge; its collapsed height and its content are
@@ -52,20 +45,19 @@ class ProgressSheet extends StatelessWidget {
             _collapsedSize * (screen - bottomClearance) + bottomClearance;
         // With very large text the card leaves less room than the
         // collapsed height: the sheet then cannot be dragged.
-        return _sheet(collapsed: (collapsed / height).clamp(0.0, 1.0));
+        return _sheet(context, collapsed: (collapsed / height).clamp(0.0, 1.0));
       },
     );
   }
 
-  Widget _sheet({required double collapsed}) {
-    final foreground = GlassStyle.onGlass(palette.surfaceTone);
+  Widget _sheet(BuildContext context, {required double collapsed}) {
+    final foreground = context.palette.onGlass;
     final track = foreground.withValues(alpha: GlassStyle.trackOpacity);
     return DraggableScrollableSheet(
       initialChildSize: collapsed,
       minChildSize: collapsed,
       snap: true,
       builder: (context, controller) => GlassPanel(
-        tone: palette.surfaceTone,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(AppRadii.sheet),
@@ -116,7 +108,7 @@ class ProgressSheet extends StatelessWidget {
   ) {
     final l10n = context.l10n;
     final next = view.progress.next;
-    final accent = palette.accent.color;
+    final accent = context.palette.accent;
     return [
       Text(l10n.nowHere, style: AppTypography.footnote),
       Text(

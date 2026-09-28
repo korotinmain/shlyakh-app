@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shlyakh/features/path/domain/route.dart';
+import 'package:shlyakh/features/path/domain/sky_route.dart';
 
 import '../../../helpers/small_route.dart';
 
@@ -15,7 +15,7 @@ void main() {
     );
   });
 
-  group('Route', () {
+  group('SkyRoute', () {
     test('lists every star once in lighting order', () {
       final stars = smallRoute().stars;
 
@@ -53,7 +53,7 @@ void main() {
     });
 
     test('follows the lighting order, not the star list', () {
-      final route = Route(
+      final route = SkyRoute(
         constellations: [
           testConstellation(
             'A',
@@ -72,7 +72,7 @@ void main() {
     group('rejects', () {
       test('no constellations', () {
         expect(
-          () => Route(constellations: const [], mainLength: 0),
+          () => SkyRoute(constellations: const [], mainLength: 0),
           throwsA(isA<RouteException>()),
         );
       });
@@ -82,18 +82,18 @@ void main() {
           testConstellation('A', [1]),
         ];
         expect(
-          () => Route(constellations: list, mainLength: 0),
+          () => SkyRoute(constellations: list, mainLength: 0),
           throwsA(isA<RouteException>()),
         );
         expect(
-          () => Route(constellations: list, mainLength: 2),
+          () => SkyRoute(constellations: list, mainLength: 2),
           throwsA(isA<RouteException>()),
         );
       });
 
       test('a duplicate id', () {
         expect(
-          () => Route(
+          () => SkyRoute(
             constellations: [
               testConstellation('A', [1]),
               testConstellation('A', [2]),
@@ -106,7 +106,7 @@ void main() {
 
       test('a constellation without stars', () {
         expect(
-          () => Route(
+          () => SkyRoute(
             constellations: [testConstellation('Empty', const [])],
             mainLength: 1,
           ),
@@ -121,7 +121,7 @@ void main() {
       ]) {
         test('an order with $name', () {
           expect(
-            () => Route(
+            () => SkyRoute(
               constellations: [
                 testConstellation('Bad', [1, 2, 3], order: order),
               ],
@@ -134,7 +134,7 @@ void main() {
 
       test('a line index out of range', () {
         expect(
-          () => Route(
+          () => SkyRoute(
             constellations: [
               testConstellation('Bad', [1, 2], lines: [(0, 2)]),
             ],
@@ -146,7 +146,7 @@ void main() {
 
       test('a line from a star to itself', () {
         expect(
-          () => Route(
+          () => SkyRoute(
             constellations: [
               testConstellation('Bad', [1, 2], lines: [(1, 1)]),
             ],
@@ -158,7 +158,7 @@ void main() {
 
       test('a constellation whose stars were all lit earlier', () {
         expect(
-          () => Route(
+          () => SkyRoute(
             constellations: [
               testConstellation('A', [1, 2]),
               testConstellation('Echo', [2, 1]),

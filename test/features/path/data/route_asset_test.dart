@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/features/path/data/route_asset.dart';
-import 'package:shlyakh/features/path/domain/route.dart';
+import 'package:shlyakh/features/path/domain/sky_route.dart';
 import 'package:shlyakh/features/path/domain/star_cost.dart';
 
 import '../../../helpers/route_fixture.dart';

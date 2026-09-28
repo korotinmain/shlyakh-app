@@ -36,7 +36,7 @@ It replaces the earlier levels, titles, time-of-day sky and landscape
 - [x] 1. ADR 0009 and the bundled sky data (`assets/sky/route.json`)
 - [x] 2. Domain: route, star cost, path progress, ETA, star moment;
       remove levels and titles
-- [ ] 3. Light and dark themes; remove the time-of-day sky
+- [x] 3. Light and dark themes; remove the time-of-day sky
 - [ ] 4. Today: the current constellation above a hills silhouette
 - [ ] 5. Path: constellation pages with swipe, route strip, Milky Way map
 - [ ] 6. Star moment and the Rive contract (art has no text)

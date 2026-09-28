@@ -16,6 +16,7 @@ import 'steps_test_overrides.dart';
 /// The app gets an in-memory [db] and a mock HealthKit [api] unless the
 /// test passes its own; with [journeyStarted] the `'local'` journey has
 /// begun, so the app opens on Today. [overrides] win over the defaults.
+/// [brightness] is the system appearance (light unless given).
 Future<void> pumpApp(
   WidgetTester tester, {
   List<Locale> systemLocales = const [Locale('en')],
@@ -23,9 +24,12 @@ Future<void> pumpApp(
   AppDatabase? db,
   StepsHostApi? api,
   bool journeyStarted = true,
+  Brightness brightness = Brightness.light,
 }) async {
   tester.platformDispatcher.localesTestValue = systemLocales;
   addTearDown(tester.platformDispatcher.clearLocalesTestValue);
+  tester.platformDispatcher.platformBrightnessTestValue = brightness;
+  addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
 
   final database = db ?? memoryDatabase();
   if (db == null) addTearDown(database.close);

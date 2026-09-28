@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
-import 'package:shlyakh/features/path/domain/route.dart';
+import 'package:shlyakh/features/path/domain/sky_route.dart';
 import 'package:shlyakh/features/path/domain/star_cost.dart';
 import 'package:shlyakh/features/path/presentation/providers/route_provider.dart';
 import 'package:shlyakh/features/progress/domain/xp_rules.dart';
@@ -29,7 +29,7 @@ Stream<TodayView> today(Ref ref) async* {
       );
 }
 
-TodayView _buildView(List<DailySteps> days, LocalDate today, Route route) {
+TodayView _buildView(List<DailySteps> days, LocalDate today, SkyRoute route) {
   final stepsOn = {for (final d in days) d.localDate: d.steps};
   final monday = today.addDays(1 - today.weekday);
   final week = <WeekDay>[

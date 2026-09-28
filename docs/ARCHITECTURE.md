@@ -50,7 +50,7 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
                └── UncontrolledProviderScope
                      └── App (MaterialApp.router, theme, l10n delegates)
                            └── routerProvider (go_router, redirect on the journey start)
-                                 ├── /               LaunchScreen (sky only, while the start loads)
+                                 ├── /               LaunchScreen (the theme's sky, while the start loads)
                                  ├── /health-access  HealthAccessScreen (until the journey starts)
                                  └── AppShell (tabs + FloatingTabBar)
                                        ├── /today   TodayScreen
@@ -58,16 +58,15 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
                                        └── /history HistoryScreen (placeholder)
 ```
 
-- Today screen: `features/today/presentation/`. `skyProvider` (the sky
-  palette for the injected clock, updated every minute) and
-  `todayProvider` (today's steps, XP, star progress on the route, week
+- Today screen: `features/today/presentation/`. The theme's palette
+  (`context.palette`) and `todayProvider` (today's steps, XP, star progress on the route, week
   and approximate distance from `routeProvider` and
   `StepsRepository.watchDays`) feed the widgets: sky with grain,
   placeholder hills, glass `TodayCard` with the current star's
   `ProgressRing`, `ProgressSheet` (collapsed: the current constellation
   and star; expanded today, week, history link;
   below the card, under the tab bar) and a status bar that follows the
-  sky.
+  theme's brightness.
 - Steps: `features/steps/domain/` holds `DailySteps`, `LocalDate`,
   `JourneyStart`, the sync rules and the `StepsRepository` interface;
   `DriftStepsRepository` implements it.
@@ -86,21 +85,23 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
 - Time: `clockProvider` is the only source of "now" (ADR 0002).
 - Domain: `features/progress/domain/` holds the XP rules (`dailyXp`,
   `totalXp`). `features/path/domain/` holds the constellation path:
-  `Route` and `Constellation` (`route.dart`; validated, a shared star
+  `SkyRoute` and `Constellation` (`sky_route.dart`; validated, a shared star
   lights once in the first constellation that has it), `starCost`,
   `xpToLight` and `pathProgress` (`star_cost.dart`), `daysToNextStar`
   (`eta.dart`, the pace of the last 14 full days) and `starMoment`
   (`star_moment.dart`). All pure functions of daily steps.
-- Design tokens: `core/design/` (sky keyframes and `skyAt`, Oklab/OkLCh
-  blending, NOAA sun times, member colours, Geologica typography, spacing,
-  radii, glass, motion); `app/theme.dart` is built from them.
+- Design tokens: `core/design/` (`AppPalette`, a light and a dark
+  palette as a `ThemeExtension`; member colours, Geologica typography,
+  spacing, radii, glass, motion). `app/theme.dart` builds a light and a
+  dark `ThemeData` from them; `App` follows the system appearance
+  (`ThemeMode.system`).
 - Sky data: `assets/sky/route.json`, built by `tool/sky/build_route.dart`
   from d3-celestial at a pinned commit (ADR 0009): the 16 route
   constellations (13 main, 3 on the branch) with HIP ids, magnitudes,
   J2000 positions and positions projected to a unit box (north up, east
   left), figure lines, a lighting order that always steps along a line,
   and each constellation's centre and angular span on the sky.
-  `features/path/data/route_asset.dart` parses it into a `Route`;
+  `features/path/data/route_asset.dart` parses it into a `SkyRoute`;
   `routeProvider` (keepAlive) loads it once. The sky-data licences are on
   the licences page.
 - Local storage: `core/database/app_database.dart` (Drift, schema v2,
@@ -209,7 +210,7 @@ Decided by the stage 1 spike (ADR 0007):
 | Models | freezed + json_serializable | [decided] |
 | Local storage | Drift: one `AppDatabase` in `core/database/`, tables per feature, migrations from schema v1 | [built] |
 | Backend | Supabase: auth, Postgres with RLS on every table, Realtime | [decided] |
-| Design tokens | `lib/core/design/`: time-of-day sky, member colours, Geologica type scale, spacing, radii, matte glass, motion (`docs/DESIGN.md`) | [built] |
+| Design tokens | `lib/core/design/`: light and dark palettes, member colours, Geologica type scale, spacing, radii, matte glass, motion (`docs/DESIGN.md`) | [built] |
 | Error handling | sealed `Failure` thrown by repositories, `AsyncValue.error`, `failureMessage` in the UI; unhandled errors to the logger (ADR 0005) | [built] |
 | Logging | `AppLogger` with typed `LogEvent`s only; failures and errors by type, never by message; debug builds only (ADR 0006) | [built] |
 

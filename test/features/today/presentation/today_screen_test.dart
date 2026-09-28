@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/app/floating_tab_bar.dart';
+import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/error/failure.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
@@ -12,6 +13,7 @@ import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
 import 'package:shlyakh/features/steps/domain/steps_repository.dart';
 import 'package:shlyakh/features/today/presentation/providers/steps_repository_provider.dart';
+import 'package:shlyakh/features/today/presentation/widgets/progress_ring.dart';
 import 'package:shlyakh/features/today/presentation/widgets/today_card.dart';
 import 'package:shlyakh/features/today/presentation/widgets/week_bars.dart';
 
@@ -61,6 +63,7 @@ Future<void> _pump(
   List<DailySteps>? days,
   Stream<List<DailySteps>> Function()? stream,
   DateTime? now,
+  Brightness brightness = Brightness.light,
 }) async {
   // iPhone 16 Pro, with its status bar and home indicator insets.
   tester.view.physicalSize = const Size(1206, 2622);
@@ -70,6 +73,7 @@ Future<void> _pump(
   await pumpApp(
     tester,
     systemLocales: locales,
+    brightness: brightness,
     overrides: _overrides(
       stream ?? () => Stream.value(days ?? _days),
       now ?? DateTime(2026, 9, 28, 12),
@@ -164,15 +168,67 @@ void main() {
     expect(tester.getRect(sheet).top, greaterThan(cardBottom));
   });
 
-  testWidgets('status bar icons are dark under the day sky', (tester) async {
+  testWidgets('status bar icons are dark in the light theme', (tester) async {
     await _pump(tester);
 
     expect(_statusBarBrightness(tester), Brightness.light);
   });
 
-  testWidgets('status bar icons are light under the night sky', (tester) async {
-    await _pump(tester, now: DateTime(2026, 9, 28, 22));
+  testWidgets('status bar icons are light in the dark theme', (tester) async {
+    await _pump(tester, brightness: Brightness.dark);
 
+    expect(_statusBarBrightness(tester), Brightness.dark);
+  });
+
+  for (final (brightness, palette) in [
+    (Brightness.dark, AppPalette.dark),
+    (Brightness.light, AppPalette.light),
+  ]) {
+    testWidgets('the ${brightness.name} theme colours the glass and ring', (
+      tester,
+    ) async {
+      await _pump(tester, brightness: brightness);
+
+      expect(_sheetGlass(tester), palette.glass);
+      expect(
+        tester.widget<ProgressRing>(find.byType(ProgressRing)).arc,
+        palette.accent,
+      );
+    });
+
+    testWidgets('the collapsed sheet keeps its text above the tab bar '
+        'in the ${brightness.name} theme', (tester) async {
+      await _pump(tester, brightness: brightness);
+
+      final tabBarTop = tester.getRect(find.byType(FloatingTabBar)).top;
+      expect(
+        tester.getRect(find.text('Vulpecula')).bottom,
+        lessThan(tabBarTop),
+      );
+    });
+
+    testWidgets(
+      'large text does not overflow in the ${brightness.name} theme',
+      (tester) async {
+        tester.platformDispatcher.textScaleFactorTestValue = 2;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+        await _pump(tester, brightness: brightness);
+        await _expandSheet(tester);
+
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  testWidgets('switching the system theme recolours Today', (tester) async {
+    await _pump(tester);
+    expect(_sheetGlass(tester), AppPalette.light.glass);
+
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    await tester.pumpAndSettle();
+
+    expect(_sheetGlass(tester), AppPalette.dark.glass);
     expect(_statusBarBrightness(tester), Brightness.dark);
   });
 
@@ -313,3 +369,18 @@ Brightness? _statusBarBrightness(WidgetTester tester) => tester
     )
     .value
     .statusBarBrightness;
+
+/// The tint of the sheet's glass.
+Color _sheetGlass(WidgetTester tester) => tester
+    .widget<ColoredBox>(
+      find
+          .descendant(
+            of: find.ancestor(
+              of: find.text('You are here'),
+              matching: find.byType(GlassPanel),
+            ),
+            matching: find.byType(ColoredBox),
+          )
+          .first,
+    )
+    .color;

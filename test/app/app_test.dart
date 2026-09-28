@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/app/floating_tab_bar.dart';
+import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
 
 import '../helpers/pump_app.dart';
@@ -18,6 +19,20 @@ void main() {
 
     expect(Theme.of(context).textTheme.bodyMedium!.fontFamily, 'Geologica');
   });
+
+  for (final (brightness, palette) in [
+    (Brightness.dark, AppPalette.dark),
+    (Brightness.light, AppPalette.light),
+  ]) {
+    testWidgets('follows the system ${brightness.name} appearance', (
+      tester,
+    ) async {
+      await pumpApp(tester, overrides: _overrides, brightness: brightness);
+      final context = tester.element(find.byType(FloatingTabBar));
+
+      expect(Theme.of(context).extension<AppPalette>(), same(palette));
+    });
+  }
 
   group('App locale resolution', () {
     final cases = <(String, List<Locale>, String)>[

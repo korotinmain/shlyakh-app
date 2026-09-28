@@ -1,7 +1,7 @@
 // The stars to celebrate since the last celebration
 // (docs/superpowers/specs/2026-09-28-constellation-path-design.md,
 // "New-star moment").
-import 'package:shlyakh/features/path/domain/route.dart';
+import 'package:shlyakh/features/path/domain/sky_route.dart';
 
 /// Newly lit stars in lighting order and the constellations they complete.
 typedef StarMoment = ({
@@ -17,7 +17,7 @@ typedef StarMoment = ({
 StarMoment? starMoment({
   required int celebratedStars,
   required int currentStars,
-  required Route route,
+  required SkyRoute route,
 }) {
   if (celebratedStars < 0) {
     throw ArgumentError.value(celebratedStars, 'celebratedStars', 'negative');

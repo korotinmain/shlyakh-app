@@ -14,7 +14,10 @@ class App extends ConsumerWidget {
     ref.watch(syncTriggersProvider);
     return MaterialApp.router(
       onGenerateTitle: (context) => context.l10n.appTitle,
-      theme: buildAppTheme(),
+      theme: buildAppTheme(Brightness.light),
+      // themeMode defaults to ThemeMode.system: the app follows the
+      // system appearance.
+      darkTheme: buildAppTheme(Brightness.dark),
       routerConfig: ref.watch(routerProvider),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
