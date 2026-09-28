@@ -22,8 +22,8 @@ making any change. They override convenience.**
 - Navigation: go_router
 - Models: freezed + json_serializable
 - Local storage: Drift (SQLite)
-- Health data: `health` package; background delivery via native Swift
-  (`HKObserverQuery`) exposed through Pigeon
+- Health data: native Swift (HealthKit) exposed to Dart through Pigeon
+  (`pigeons/steps_api.dart`); no `health` plugin
 - Backend: Supabase (auth, Postgres with RLS, Realtime)
 - Animation: Rive (landscape), CustomPainter (progress ring), flutter_animate
 - i18n: gen-l10n with ARB files (uk, en)
@@ -32,7 +32,7 @@ making any change. They override convenience.**
 ## Library versions
 
 Dependencies are newer than most model training data: Riverpod 3,
-go_router 18, freezed 3, health 13, pigeon 29, Dart 3.13 (e.g. the
+go_router 18, freezed 3, pigeon 29, Dart 3.13 (e.g. the
 `new(...)` constructor syntax that `very_good_analysis` enforces). Do not
 write API calls from memory. Check the exact version in `pubspec.lock`,
 then read the signatures in the package source (`~/.pub-cache/hosted/pub.dev/`
@@ -44,6 +44,7 @@ API. If an API looks different from what you expect, trust the source.
 ```bash
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs
+dart run pigeon --input pigeons/steps_api.dart   # then dart format its .g.dart output
 dart run drift_dev make-migrations   # after a schema change + schemaVersion bump; commit its output
 flutter gen-l10n
 dart format --output=none --set-exit-if-changed .

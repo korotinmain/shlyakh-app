@@ -24,6 +24,11 @@ void main() {
         "Дані про здоров'я недоступні на цьому пристрої.",
       ),
       (
+        const HealthDataLocked(),
+        'Unlock your iPhone to update your steps.',
+        'Розблокуйте iPhone, щоб оновити кроки.',
+      ),
+      (
         const StorageFailure(),
         "Couldn't save your data on this device. Try restarting the app.",
         'Не вдалося зберегти дані на пристрої. Спробуйте перезапустити '
@@ -48,6 +53,7 @@ void main() {
     final variants = <(Failure, String)>[
       (const HealthAccessDenied(), 'HealthAccessDenied'),
       (const HealthUnavailable(), 'HealthUnavailable'),
+      (const HealthDataLocked(), 'HealthDataLocked'),
       (const StorageFailure(), 'StorageFailure'),
       (const UnexpectedFailure(), 'UnexpectedFailure'),
     ];

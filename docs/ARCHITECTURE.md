@@ -91,9 +91,16 @@ main.dart ── ProviderScope
   `grammaticalGenderProvider`).
 - Localization: gen-l10n, `en` template and fallback, `uk` translation,
   `CFBundleLocalizations` for the iOS per-app language (ADR 0004).
-- Native: `AppDelegate` is the Flutter template; no native code in `main`
-  yet. The HealthKit probe lives only on the throwaway `spike/healthkit`
-  branch.
+- Native: `ios/Runner/Steps/` holds the HealthKit layer behind Pigeon
+  (`pigeons/steps_api.dart`): `StepsHost` (`StepsHostApi`: availability,
+  access prompt, daily totals from any start instant, time zone),
+  `StepsObserver` (registered in `didFinishLaunching`, hourly background
+  delivery) and `StepsEventsRelay` (HealthKit's completion only after
+  Dart's `onStepsChanged` replies, or after 20 s). Pure helpers
+  (`StepsDays`, `OnceCompletion`) have XCTest in `RunnerTests`, run
+  locally only (CI is Linux). `HealthKitStepsSource` in
+  `features/steps/data/healthkit/` wraps the host API and maps its error
+  codes to failures. Nothing in the app calls it yet.
 
 ## 3. Target data flow [decided]
 
@@ -127,24 +134,34 @@ Invariants the flow must keep (details in `docs/AGENT_RULES.md`):
 
 Decided by the stage 1 spike (ADR 0007):
 
-- **[decided]** Daily totals come from a statistics query
-  (`health` plugin `getTotalStepsInInterval`, i.e. `HKStatisticsQuery`
-  with cumulative sum). HealthKit deduplicates iPhone and Apple Watch by
+- **[built]** Daily totals come from a native `HKStatisticsCollectionQuery`
+  (cumulative sum, daily intervals anchored at local midnight,
+  `.strictStartDate`) through Pigeon; the `health` plugin is not used. HealthKit deduplicates iPhone and Apple Watch by
   source priority; the result matches the Health app exactly, including
   truncated fractional steps. Summing raw samples double counts and is
   not allowed. The app does no deduplication of its own.
-- **[decided]** Background delivery needs native Swift: `HKObserverQuery`
-  registered in `didFinishLaunching`, `enableBackgroundDelivery`, exposed to
-  Dart through Pigeon. The `health` plugin has no API for it.
-- **[decided]** Entitlements: `com.apple.developer.healthkit` and
+- **[built]** Background delivery: `HKObserverQuery` registered in
+  `didFinishLaunching` and again after the access prompt,
+  `enableBackgroundDelivery` at `.hourly`, `onStepsChanged` to Dart
+  through Pigeon.
+- **[built]** Native errors reach Dart as codes only, never messages:
+  `unavailable` → `HealthUnavailable`, `locked` (device locked) →
+  `HealthDataLocked`, `healthkit` (with HealthKit's code) →
+  `UnexpectedFailure`; an undocumented code is a bug and is rethrown.
+- **[built]** Entitlements: `com.apple.developer.healthkit` and
   `…healthkit.background-delivery`. Not `…healthkit.access` (health
   records), which a Personal Team cannot sign.
 - **[decided]** iOS wakes the app in the background about once an hour
   while new steps arrive, and not at all while none do. Data refreshes on
   app launch, on return to the foreground and on an observer callback;
   other members' steps can be up to about an hour old.
-- **[open]** Whether Dart gets enough time in a background wakeup to read
-  HealthKit and write to Drift; checked when the sync is built.
+- **[open]** Whether Dart runs at all in a background wakeup, and for long
+  enough to read HealthKit and write to Drift. Risk: with the scene
+  lifecycle the Flutter engine is created when a scene connects, and a
+  HealthKit background relaunch connects none, so `onStepsChanged` may
+  never reach Dart (the wakeup then ends by the 20 s timeout). Checked on
+  the device before the sync (PR 2) relies on it; fallbacks are a
+  headless engine for background launches or reading the totals natively.
 
 ## 5. Cross-cutting concerns
 
