@@ -3,7 +3,12 @@
 The visual language of Shlyakh. Values here are the design tokens in
 `lib/core/design/`; when they disagree, the code is right and this file
 needs an update in the same PR. Product principles are in
-`docs/PRODUCT.md` ("Design principles", "Main screen content").
+`docs/PRODUCT.md` ("Design principles", "Today screen content").
+
+The constellation path (`docs/superpowers/specs/2026-09-28-constellation-path-design.md`)
+replaces the time-of-day sky with light and dark themes and the landscape
+with constellations. Until its plan 3 lands, the Sky section and the
+landscape notes below describe the code as it is.
 
 ## Principles
 
