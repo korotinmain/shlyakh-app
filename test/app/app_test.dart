@@ -27,9 +27,7 @@ void main() {
     testWidgets('follows the system ${brightness.name} appearance', (
       tester,
     ) async {
-      tester.platformDispatcher.platformBrightnessTestValue = brightness;
-      addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
-      await pumpApp(tester, overrides: _overrides);
+      await pumpApp(tester, overrides: _overrides, brightness: brightness);
       final context = tester.element(find.byType(FloatingTabBar));
 
       expect(Theme.of(context).extension<AppPalette>(), same(palette));

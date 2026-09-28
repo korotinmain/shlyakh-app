@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shlyakh/core/design/app_colors.dart';
+import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/app_radii.dart';
 import 'package:shlyakh/core/design/app_spacing.dart';
 import 'package:shlyakh/core/design/app_typography.dart';
 import 'package:shlyakh/core/design/glass.dart';
 import 'package:shlyakh/core/design/glass_panel.dart';
-import 'package:shlyakh/core/design/sky/sky_keyframes.dart';
 import 'package:shlyakh/core/error/failure_message.dart';
 import 'package:shlyakh/core/l10n/format_extension.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
@@ -23,17 +22,16 @@ const double _captionPlaceholderWidth = 180;
 
 /// The glass card: the current star's ring and today's steps.
 class TodayCard extends StatelessWidget {
-  const new({required this.view, required this.palette, super.key});
+  const new({required this.view, super.key});
 
   final AsyncValue<TodayView> view;
-  final SkyPalette palette;
 
   @override
   Widget build(BuildContext context) {
-    final foreground = GlassStyle.onGlass(palette.surfaceTone);
+    final palette = context.palette;
+    final foreground = palette.onGlass;
     final track = foreground.withValues(alpha: GlassStyle.trackOpacity);
     return GlassPanel(
-      tone: palette.surfaceTone,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadii.card),
       ),
@@ -48,7 +46,7 @@ class TodayCard extends StatelessWidget {
           ),
           AsyncValue(:final value?) => _Content(
             view: value,
-            accent: palette.accent.color,
+            accent: palette.accent,
             track: track,
           ),
           _ => _Loading(track: track),

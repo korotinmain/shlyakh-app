@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shlyakh/core/design/app_colors.dart';
+import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/app_spacing.dart';
 import 'package:shlyakh/core/design/app_typography.dart';
-import 'package:shlyakh/core/design/glass.dart';
 import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
-import 'package:shlyakh/features/today/presentation/providers/sky_provider.dart';
 
 /// The floating glass tab bar: Today, Path, History.
-class FloatingTabBar extends ConsumerWidget {
+class FloatingTabBar extends StatelessWidget {
   const new({required this.index, required this.onSelect, super.key});
 
   /// Height of the bar, in logical pixels. Labels do not grow with the
@@ -30,20 +27,19 @@ class FloatingTabBar extends ConsumerWidget {
   final ValueChanged<int> onSelect;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final sky = ref.watch(skyProvider);
+  Widget build(BuildContext context) {
+    final palette = context.palette;
     final l10n = context.l10n;
     final tabs = [
       (Icons.wb_sunny_outlined, l10n.tabToday),
       (Icons.route_outlined, l10n.tabPath),
       (Icons.history, l10n.tabHistory),
     ];
-    final idle = GlassStyle.onGlass(sky.surfaceTone);
+    final idle = palette.onGlass;
     return MediaQuery.withNoTextScaling(
       child: SizedBox(
         height: height,
         child: GlassPanel(
-          tone: sky.surfaceTone,
           shape: const StadiumBorder(),
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -58,7 +54,7 @@ class FloatingTabBar extends ConsumerWidget {
                     icon: icon,
                     label: label,
                     selected: i == index,
-                    color: i == index ? sky.accent.color : idle,
+                    color: i == index ? palette.accent : idle,
                     onTap: () => onSelect(i),
                   ),
               ],

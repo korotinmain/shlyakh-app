@@ -1,26 +1,21 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/widgets.dart';
+import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/glass.dart';
-import 'package:shlyakh/core/design/sky/sky_keyframes.dart';
 
-/// A matte glass surface of [shape] over the sky: blur, tint and text
-/// colour follow the sky's [tone] (docs/DESIGN.md).
+/// A matte glass surface of [shape] over the sky: blur, and the tint and
+/// text colour of the theme's palette (docs/DESIGN.md).
 class GlassPanel extends StatelessWidget {
-  const new({
-    required this.tone,
-    required this.shape,
-    required this.child,
-    super.key,
-  });
+  const new({required this.shape, required this.child, super.key});
 
-  final SurfaceTone tone;
   final ShapeBorder shape;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final foreground = GlassStyle.onGlass(tone);
+    final palette = context.palette;
+    final foreground = palette.onGlass;
     return DecoratedBox(
       decoration: ShapeDecoration(
         shape: shape,
@@ -34,7 +29,7 @@ class GlassPanel extends StatelessWidget {
             sigmaY: GlassStyle.blurSigma,
           ),
           child: ColoredBox(
-            color: GlassStyle.tintFor(tone),
+            color: palette.glass,
             child: DefaultTextStyle.merge(
               style: TextStyle(color: foreground),
               child: IconTheme.merge(
