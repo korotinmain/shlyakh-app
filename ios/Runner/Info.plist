@@ -19,6 +19,8 @@
 		<string>en</string>
 		<string>uk</string>
 	</array>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Shlyakh reads your step count to turn your walks into progress along the path. It never writes to Health.</string>
 	<key>CFBundleName</key>
 	<string>shlyakh</string>
 	<key>CFBundlePackageType</key>
