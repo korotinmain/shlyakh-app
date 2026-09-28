@@ -4,263 +4,6 @@
   "@appTitle": {
     "description": "App name shown on the home screen"
   },
-  "levelTitle1": "{gender, select, other{Newcomer}}",
-  "@levelTitle1": {
-    "description": "Title of level 1; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle2": "{gender, select, other{Passer-by}}",
-  "@levelTitle2": {
-    "description": "Title of level 2; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle3": "{gender, select, other{Wanderer}}",
-  "@levelTitle3": {
-    "description": "Title of level 3; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle4": "{gender, select, other{Pathfinder}}",
-  "@levelTitle4": {
-    "description": "Title of level 4; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle5": "{gender, select, other{Local Guide}}",
-  "@levelTitle5": {
-    "description": "Title of level 5; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle6": "{gender, select, other{Traveller}}",
-  "@levelTitle6": {
-    "description": "Title of level 6; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle7": "{gender, select, other{Pilgrim}}",
-  "@levelTitle7": {
-    "description": "Title of level 7; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle8": "{gender, select, other{Swift-foot}}",
-  "@levelTitle8": {
-    "description": "Title of level 8; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle9": "{gender, select, other{Messenger}}",
-  "@levelTitle9": {
-    "description": "Title of level 9; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle10": "{gender, select, other{Road Warden}}",
-  "@levelTitle10": {
-    "description": "Title of level 10; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle11": "{gender, select, other{Drover}}",
-  "@levelTitle11": {
-    "description": "Title of level 11; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle12": "{gender, select, other{Salt Trader}}",
-  "@levelTitle12": {
-    "description": "Title of level 12; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle13": "{gender, select, other{Seasoned Trader}}",
-  "@levelTitle13": {
-    "description": "Title of level 13; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle14": "{gender, select, other{Steppe-wise}}",
-  "@levelTitle14": {
-    "description": "Title of level 14; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle15": "{gender, select, other{Caravan Chief}}",
-  "@levelTitle15": {
-    "description": "Title of level 15; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle16": "{gender, select, other{Highlander}}",
-  "@levelTitle16": {
-    "description": "Title of level 16; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle17": "{gender, select, other{Meadow Shepherd}}",
-  "@levelTitle17": {
-    "description": "Title of level 17; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle18": "{gender, select, other{Highland Daredevil}}",
-  "@levelTitle18": {
-    "description": "Title of level 18; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle19": "{gender, select, other{Pass Conqueror}}",
-  "@levelTitle19": {
-    "description": "Title of level 19; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle20": "{gender, select, other{Lord of the Peaks}}",
-  "@levelTitle20": {
-    "description": "Title of level 20; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle21": "{gender, select, other{Stargazer}}",
-  "@levelTitle21": {
-    "description": "Title of level 21; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle22": "{gender, select, other{Night Wanderer}}",
-  "@levelTitle22": {
-    "description": "Title of level 22; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle23": "{gender, select, other{Star Guide}}",
-  "@levelTitle23": {
-    "description": "Title of level 23; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle24": "{gender, select, other{Keeper of the Way}}",
-  "@levelTitle24": {
-    "description": "Title of level 24; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTitle25": "{gender, select, other{Star Wanderer}}",
-  "@levelTitle25": {
-    "description": "Title of level 25; gender selects the grammatical form (feminine, other)",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "levelChapter1": "Home Land",
-  "@levelChapter1": {
-    "description": "Name of chapter 1 of the path (levels 1-5)"
-  },
-  "levelChapter2": "The Beaten Road",
-  "@levelChapter2": {
-    "description": "Name of chapter 2 of the path (levels 6-10)"
-  },
-  "levelChapter3": "The Salt Road",
-  "@levelChapter3": {
-    "description": "Name of chapter 3 of the path (levels 11-15)"
-  },
-  "levelChapter4": "Peaks and Passes",
-  "@levelChapter4": {
-    "description": "Name of chapter 4 of the path (levels 16-20)"
-  },
-  "levelChapter5": "The Milky Way",
-  "@levelChapter5": {
-    "description": "Name of chapter 5 of the path (levels 21-25)"
-  },
-  "levelTitleContinuation": "{title} {degree}",
-  "@levelTitleContinuation": {
-    "description": "Title after the main path: the last title and a Roman degree, e.g. Star Wanderer II",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "degree": {
-        "type": "String"
-      }
-    }
-  },
   "errorHealthAccessDenied": "Shlyakh can't read your steps. Allow access to Steps in the Health settings.",
   "@errorHealthAccessDenied": {
     "description": "HealthKit read access was not granted or was revoked"
@@ -309,41 +52,40 @@
       }
     }
   },
-  "levelLabel": "Level {level} · {chapter}",
-  "@levelLabel": {
-    "description": "Current level number and its chapter name",
+  "percentValue": "{value}%",
+  "@percentValue": {
+    "description": "A percentage",
     "placeholders": {
-      "level": {
+      "value": {
         "type": "int"
-      },
-      "chapter": {
+      }
+    }
+  },
+  "nowHere": "You are here",
+  "@nowHere": {
+    "description": "Label above the current constellation on the Today sheet"
+  },
+  "starFilled": "Star {percent} full",
+  "@starFilled": {
+    "description": "How much of the next star is earned; percent is a formatted percentValue",
+    "placeholders": {
+      "percent": {
         "type": "String"
       }
     }
   },
-  "xpToNextLevel": "{xp} XP to level {level}",
-  "@xpToNextLevel": {
-    "description": "XP left to the next level; xp is formatted",
+  "xpToNextStar": "{xp} XP to the next star",
+  "@xpToNextStar": {
+    "description": "XP left until the next star lights; xp is a formatted number",
     "placeholders": {
       "xp": {
         "type": "String"
-      },
-      "level": {
-        "type": "int"
       }
     }
   },
-  "xpRange": "{from} → {to} XP",
-  "@xpRange": {
-    "description": "Total XP where the current level starts and the next begins; both formatted",
-    "placeholders": {
-      "from": {
-        "type": "String"
-      },
-      "to": {
-        "type": "String"
-      }
-    }
+  "routeComplete": "The whole route is lit",
+  "@routeComplete": {
+    "description": "Shown when every star of the route is lit"
   },
   "todayHeading": "Today",
   "@todayHeading": {
@@ -414,5 +156,69 @@
   "healthAccessHint": "No steps yet? Allow Shlyakh to read Steps in the Health app: your profile → Apps → Shlyakh.",
   "@healthAccessHint": {
     "description": "Shown on Today a day after the journey starts when no steps arrived, which usually means read access to Steps was denied"
+  },
+  "constellationSge": "Sagitta",
+  "@constellationSge": {
+    "description": "Name of the constellation Sagitta (Sge) on the route"
+  },
+  "constellationVul": "Vulpecula",
+  "@constellationVul": {
+    "description": "Name of the constellation Vulpecula (Vul) on the route"
+  },
+  "constellationCyg": "Cygnus",
+  "@constellationCyg": {
+    "description": "Name of the constellation Cygnus (Cyg) on the route"
+  },
+  "constellationLac": "Lacerta",
+  "@constellationLac": {
+    "description": "Name of the constellation Lacerta (Lac) on the route"
+  },
+  "constellationCep": "Cepheus",
+  "@constellationCep": {
+    "description": "Name of the constellation Cepheus (Cep) on the route"
+  },
+  "constellationCas": "Cassiopeia",
+  "@constellationCas": {
+    "description": "Name of the constellation Cassiopeia (Cas) on the route"
+  },
+  "constellationPer": "Perseus",
+  "@constellationPer": {
+    "description": "Name of the constellation Perseus (Per) on the route"
+  },
+  "constellationAur": "Auriga",
+  "@constellationAur": {
+    "description": "Name of the constellation Auriga (Aur) on the route"
+  },
+  "constellationTau": "Taurus",
+  "@constellationTau": {
+    "description": "Name of the constellation Taurus (Tau) on the route"
+  },
+  "constellationGem": "Gemini",
+  "@constellationGem": {
+    "description": "Name of the constellation Gemini (Gem) on the route"
+  },
+  "constellationOri": "Orion",
+  "@constellationOri": {
+    "description": "Name of the constellation Orion (Ori) on the route"
+  },
+  "constellationMon": "Monoceros",
+  "@constellationMon": {
+    "description": "Name of the constellation Monoceros (Mon) on the route"
+  },
+  "constellationCMa": "Canis Major",
+  "@constellationCMa": {
+    "description": "Name of the constellation Canis Major (CMa) on the route"
+  },
+  "constellationAql": "Aquila",
+  "@constellationAql": {
+    "description": "Name of the constellation Aquila (Aql) on the route"
+  },
+  "constellationSct": "Scutum",
+  "@constellationSct": {
+    "description": "Name of the constellation Scutum (Sct) on the route"
+  },
+  "constellationSgr": "Sagittarius",
+  "@constellationSgr": {
+    "description": "Name of the constellation Sagittarius (Sgr) on the route"
   }
 }
