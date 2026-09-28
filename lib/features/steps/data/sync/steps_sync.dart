@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:drift/isolate.dart' show DriftRemoteException;
 import 'package:drift/native.dart';
 import 'package:shlyakh/core/error/failure.dart';
 import 'package:shlyakh/core/logging/app_logger.dart';
@@ -58,6 +59,11 @@ final class StepsSync {
       _logger.failure(failure);
     } on SqliteException catch (e) {
       _logger.failure(StorageFailure(cause: e));
+    } on DriftRemoteException catch (e) {
+      // The app's database runs on a background isolate (drift_flutter),
+      // which wraps SQLite errors; anything else stays a bug.
+      if (e.remoteCause is! SqliteException) rethrow;
+      _logger.failure(StorageFailure(cause: e));
     }
   }
 
@@ -70,7 +76,8 @@ final class StepsSync {
     final from = syncFrom(
       start: start,
       now: _clock.now(),
-      hasStoredDays: stored.isNotEmpty,
+      // watchForUser is oldest first.
+      lastStoredDate: stored.lastOrNull?.localDate,
     );
     final fetched = await _source.dailySteps(userId: _userId, from: from);
     final fromDate = LocalDate.fromDateTime(from.toLocal());

@@ -90,10 +90,12 @@ main.dart ── ProviderScope
   with `JourneyStartDao`.
 - Steps sync: `features/steps/data/sync/steps_sync.dart` — `StepsSync`
   runs one sync at a time (a burst of calls gives at most two runs):
-  from the journey start on the first sync, then the last 7 days
-  (`syncFrom`); `mergeDays` in `domain/sync_rules.dart` writes new and
+  from the journey start on the first sync, then the last 7 days, or
+  from the last stored day after a longer gap (`syncFrom`); `mergeDays` in `domain/sync_rules.dart` writes new and
   changed days and keeps days counted in another time zone. Failures are
-  logged, never thrown (`StepsSyncCompleted` on success).
+  logged, never thrown (`StepsSyncCompleted` on success); SQLite errors,
+  also wrapped in `DriftRemoteException` by the background isolate,
+  become `StorageFailure`.
   `DriftStepsRepository` serves `StepsRepository` from Drift. Nothing
   calls the sync yet, and the app still reads `DemoStepsRepository`
   (PR 3 switches it).

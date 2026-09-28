@@ -22,7 +22,7 @@ void main() {
       final startedAt = DateTime.utc(2026, 9, 1, 8);
 
       expect(
-        syncFrom(start: _start(startedAt), now: now, hasStoredDays: false),
+        syncFrom(start: _start(startedAt), now: now, lastStoredDate: null),
         startedAt,
       );
     });
@@ -32,7 +32,7 @@ void main() {
         syncFrom(
           start: _start(DateTime.utc(2026, 9)),
           now: now,
-          hasStoredDays: true,
+          lastStoredDate: LocalDate.parse('2026-09-27'),
         ),
         DateTime(2026, 9, 21),
       );
@@ -42,7 +42,11 @@ void main() {
       final startedAt = DateTime.utc(2026, 9, 26, 7, 20);
 
       expect(
-        syncFrom(start: _start(startedAt), now: now, hasStoredDays: true),
+        syncFrom(
+          start: _start(startedAt),
+          now: now,
+          lastStoredDate: LocalDate.parse('2026-09-27'),
+        ),
         startedAt,
       );
     });
@@ -52,9 +56,35 @@ void main() {
         syncFrom(
           start: _start(DateTime.utc(2026, 9)),
           now: DateTime(2026, 10, 27, 9),
-          hasStoredDays: true,
+          lastStoredDate: LocalDate.parse('2026-10-26'),
         ),
         DateTime(2026, 10, 20),
+      );
+    });
+  });
+
+  group('syncFrom after a gap', () {
+    test('a gap longer than the window starts at the last stored day', () {
+      expect(
+        syncFrom(
+          start: _start(DateTime.utc(2026, 9)),
+          now: now,
+          lastStoredDate: LocalDate.parse('2026-09-16'),
+        ),
+        DateTime(2026, 9, 16),
+      );
+    });
+
+    test('never before the journey start', () {
+      final startedAt = DateTime.utc(2026, 9, 16, 10);
+
+      expect(
+        syncFrom(
+          start: _start(startedAt),
+          now: now,
+          lastStoredDate: LocalDate.parse('2026-09-16'),
+        ),
+        startedAt,
       );
     });
   });

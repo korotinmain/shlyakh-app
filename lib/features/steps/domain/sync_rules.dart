@@ -1,5 +1,6 @@
 import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/journey_start.dart';
+import 'package:shlyakh/features/steps/domain/local_date.dart';
 
 /// Days re-queried on every sync after the first: Watch data can arrive
 /// late and samples can be deleted in Health.
@@ -7,19 +8,27 @@ const int syncWindowDays = 7;
 
 /// The instant a sync queries HealthKit from.
 ///
-/// The journey start on the first sync (no day stored yet); otherwise
-/// the later of the journey start and local midnight [windowDays] days
-/// before [now], which is local wall-clock time.
+/// The journey start on the first sync ([lastStoredDate] is null).
+/// Otherwise local midnight [windowDays] days before [now] (local
+/// wall-clock time), or local midnight of [lastStoredDate] when that is
+/// earlier, so days missed while no sync succeeded are filled; never
+/// before the journey start.
 DateTime syncFrom({
   required JourneyStart start,
   required DateTime now,
-  required bool hasStoredDays,
+  required LocalDate? lastStoredDate,
   int windowDays = syncWindowDays,
 }) {
-  if (!hasStoredDays) return start.startedAt;
+  if (lastStoredDate == null) return start.startedAt;
   // DateTime(y, m, d - n) is local midnight, correct across DST.
   final windowStart = DateTime(now.year, now.month, now.day - windowDays);
-  return windowStart.isAfter(start.startedAt) ? windowStart : start.startedAt;
+  final lastStored = DateTime(
+    lastStoredDate.year,
+    lastStoredDate.month,
+    lastStoredDate.day,
+  );
+  final from = lastStored.isBefore(windowStart) ? lastStored : windowStart;
+  return from.isAfter(start.startedAt) ? from : start.startedAt;
 }
 
 /// The [fetched] days to write, in fetched order.

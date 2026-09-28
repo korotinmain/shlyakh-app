@@ -128,7 +128,11 @@ closed, offline and without an account.
    today; the first day is partial.
 2. **Later syncs**: from `syncFrom(start, now, 7 days)`. The last seven
    days are re-queried every time: Watch data can arrive hours or days
-   late and the user can delete samples in Health. Upsert replaces, also
+   late and the user can delete samples in Health. When the last stored
+   day is older than the window (no sync succeeded for more than a week,
+   e.g. background reads failed while the phone was locked), the query
+   starts at that day instead, so the gap is filled; never before the
+   journey start. Upsert replaces, also
    with a lower count (HealthKit is the source of truth; the app never
    edits counts).
 3. **Time zones**: every day is stored with the zone it was counted in.

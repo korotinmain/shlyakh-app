@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:clock/clock.dart';
 import 'package:drift/native.dart';
@@ -99,12 +100,23 @@ void main() {
 
   test('a later sync queries seven days back', () async {
     await start(DateTime.utc(2026, 9));
-    await db.dailyStepsDao.upsert(_day('2026-09-02', 100));
+    await db.dailyStepsDao.upsert(_day('2026-09-27', 100));
     answer(_native({}));
 
     await sync.sync();
 
     verify(() => api.dailySteps(DateTime(2026, 9, 21).millisecondsSinceEpoch))
+        .called(1);
+  });
+
+  test('a gap longer than the window is filled', () async {
+    await start(DateTime.utc(2026, 9));
+    await db.dailyStepsDao.upsert(_day('2026-09-16', 100));
+    answer(_native({}));
+
+    await sync.sync();
+
+    verify(() => api.dailySteps(DateTime(2026, 9, 16).millisecondsSinceEpoch))
         .called(1);
   });
 
@@ -165,6 +177,39 @@ void main() {
 
     expect(logger.failures.single, isA<StorageFailure>());
   });
+
+  test(
+    'a storage error on a background connection becomes StorageFailure',
+    () async {
+      // The app opens Drift on a background isolate (drift_flutter), where
+      // errors arrive wrapped in DriftRemoteException.
+      final dir = await Directory.systemTemp.createTemp('steps_sync_test');
+      addTearDown(() => dir.delete(recursive: true));
+      final background = AppDatabase(
+        NativeDatabase.createInBackground(File('${dir.path}/db.sqlite')),
+      );
+      addTearDown(background.close);
+      await background.journeyStartDao.insertOnce((
+        userId: 'local',
+        startedAt: DateTime.utc(2026, 9, 26),
+        timezone: 'Europe/Kyiv',
+      ));
+      answer(_native({'2026-09-27': 5000}));
+      await background.customStatement('DROP TABLE daily_steps');
+      final backgroundSync = StepsSync(
+        source: HealthKitStepsSource(api),
+        starts: background.journeyStartDao,
+        days: background.dailyStepsDao,
+        clock: Clock.fixed(now),
+        logger: logger,
+        userId: 'local',
+      );
+
+      await backgroundSync.sync();
+
+      expect(logger.failures.single, isA<StorageFailure>());
+    },
+  );
 
   test('a burst of calls runs twice', () async {
     await start(DateTime.utc(2026, 9, 26));
