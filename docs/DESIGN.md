@@ -33,12 +33,19 @@ two palettes.
 | `onSkyMuted` | `#C8D2F0` | `#3D4F9A` |
 | `glass` | `#121836` at 72 % | white at 68 % |
 | `onGlass` | `#F4F1EA` | `#1A2440` |
+| `star` | `#FFFFFF` | `#3D4F9A` |
+| `starGlow` | `#F3E3BE` at 22 % | none |
+| `starLine` | `#F3E3BE` at 80 % | `#3D4F9A` at 70 % |
+| `starAhead` | `#C8D2F0` at 45 % | `#3D4F9A` at 38 % |
+| `aheadLine` | `#C8D2F0` at 30 % | `#3D4F9A` at 25 % |
+| `marker` | `#FFE9B8` | `#3D4F9A` |
 | grain | 12 % | 6 % |
 | backdrop | violet nebula (`#6E5AA8` at 32 %, fading) | star-chart grid (24 pt, ink at 5 %, top two thirds) |
 
 Contrast (WCAG 2, pinned by `test/core/design/app_palette_test.dart`):
 text on every sky colour, on the accent and on glass over the sky is at
-least 4.5:1; the accent on glass (ring, bar, active tab) at least 3:1.
+least 4.5:1; the accent on glass (ring, bar, active tab) and the stars and the
+marker on the sky at least 3:1.
 The status bar has light icons in the dark theme and dark icons in the
 light theme.
 
