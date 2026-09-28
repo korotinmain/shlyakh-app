@@ -1,4 +1,4 @@
-import 'package:shlyakh/features/progress/domain/level_curve.dart';
+import 'package:shlyakh/features/path/domain/star_cost.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
 
 /// One day of the Monday–Sunday week shown on the Today screen.
@@ -15,14 +15,15 @@ typedef TodayView = ({
   /// Approximate distance of today's steps, in metres.
   int distanceMeters,
 
-  /// Level from the XP of all days.
-  LevelProgress level,
+  /// Stars lit with the XP of all days, and the next one.
+  PathProgress progress,
 
-  /// Total XP at which [level] starts.
-  int levelStartXp,
+  /// IAU id of the constellation of the next star; the last one on the
+  /// route when every star is lit.
+  String constellationId,
 
-  /// Total XP at which the next level starts.
-  int nextLevelXp,
+  /// How full the next star is, 0–99; 100 when every star is lit.
+  int starPercent,
 
   /// Monday..Sunday of the current week, 7 entries; missing days are 0.
   List<WeekDay> week,

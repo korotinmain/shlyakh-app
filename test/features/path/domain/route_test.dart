@@ -8,6 +8,13 @@ Matcher _throwsNaming(String text) => throwsA(
 );
 
 void main() {
+  test('RouteException describes itself with its message', () {
+    expect(
+      const RouteException('Sge: no stars').toString(),
+      'RouteException: Sge: no stars',
+    );
+  });
+
   group('Route', () {
     test('lists every star once in lighting order', () {
       final stars = smallRoute().stars;
@@ -26,6 +33,10 @@ void main() {
       expect(route.ownOrder(1), [1]);
       expect(route.ownerOf(3), 0);
       expect(route.ownerOf(4), 1);
+    });
+
+    test('rejects a star that is not on the route', () {
+      expect(() => smallRoute().ownerOf(99), throwsArgumentError);
     });
 
     test('keeps the main route length', () {

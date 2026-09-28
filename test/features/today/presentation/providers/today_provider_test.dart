@@ -2,7 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
-import 'package:shlyakh/features/progress/domain/level_curve.dart';
+import 'package:shlyakh/features/path/presentation/providers/route_provider.dart';
 import 'package:shlyakh/features/progress/domain/xp_rules.dart';
 import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
@@ -11,6 +11,8 @@ import 'package:shlyakh/features/today/presentation/providers/current_user_provi
 import 'package:shlyakh/features/today/presentation/providers/steps_repository_provider.dart';
 import 'package:shlyakh/features/today/presentation/providers/today_provider.dart';
 import 'package:shlyakh/features/today/presentation/providers/today_view.dart';
+
+import '../../../../helpers/route_fixture.dart';
 
 final class _FakeRepository implements StepsRepository {
   new(this.days);
@@ -46,6 +48,7 @@ Future<TodayView> _view(
   final container = ProviderContainer(
     overrides: [
       clockProvider.overrideWithValue(Clock.fixed(now)),
+      routeProvider.overrideWith((ref) async => testRoute()),
       stepsRepositoryProvider.overrideWithValue(
         repository ?? _FakeRepository(days),
       ),
@@ -119,29 +122,43 @@ void main() {
     });
   });
 
-  group('the level', () {
-    test('comes from the XP of all days', () async {
+  group('the path', () {
+    test('lights stars with the XP of all days', () async {
+      // 16 870 XP: Стріла's 4 stars (15 000) and 1 870 of Лисичка's first
+      // star (7 500).
+      final view = await _view(DateTime(2026, 9, 28, 12), [
+        _day('2026-09-27', 10000),
+        _day('2026-09-28', 6870),
+      ]);
+
+      expect(view.progress.starsLit, 4);
+      expect(view.constellationId, 'Vul');
+      expect(view.starPercent, 24);
+    });
+
+    test('starts at the first star of Sagitta with no days', () async {
+      final view = await _view(DateTime(2026, 9, 28, 12), const []);
+
+      expect(view.progress.starsLit, 0);
+      expect(view.constellationId, 'Sge');
+      expect(view.starPercent, 0);
+      expect(view.steps, 0);
+      expect(view.weekSteps, 0);
+    });
+
+    test('stays on Sagittarius when the whole route is lit', () async {
+      // 400 days at the daily cap: 8 000 000 XP, more than the route.
       final days = [
-        for (var i = 0; i < 30; i++)
-          _day(_d('2026-08-30').addDays(i).toIsoString(), 11000),
+        for (var i = 0; i < 400; i++)
+          _day(_d('2025-08-01').addDays(i).toIsoString(), 30000),
       ];
 
       final view = await _view(DateTime(2026, 9, 28, 12), days);
-      final expected = levelProgress(totalXp(days.map((d) => d.steps)));
 
-      expect(view.level, expected);
-      expect(view.levelStartXp, xpToReachLevel(expected.level));
-      expect(view.nextLevelXp, xpToReachLevel(expected.level + 1));
-      expect(view.nextLevelXp - view.levelStartXp, expected.xpForNextLevel);
-    });
-
-    test('is 1 with no days at all', () async {
-      final view = await _view(DateTime(2026, 9, 28, 12), const []);
-
-      expect(view.level.level, 1);
-      expect(view.levelStartXp, 0);
-      expect(view.steps, 0);
-      expect(view.weekSteps, 0);
+      expect(view.progress.starsLit, 177);
+      expect(view.progress.next, isNull);
+      expect(view.constellationId, 'Sgr');
+      expect(view.starPercent, 100);
     });
   });
 

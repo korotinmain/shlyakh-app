@@ -10,26 +10,25 @@ import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/design/sky/sky_keyframes.dart';
 import 'package:shlyakh/core/l10n/format_extension.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
-import 'package:shlyakh/features/progress/domain/level_titles.dart';
-import 'package:shlyakh/features/progress/presentation/providers/level_title.dart';
+import 'package:shlyakh/features/path/presentation/providers/constellation_name.dart';
 import 'package:shlyakh/features/today/presentation/providers/today_view.dart';
 import 'package:shlyakh/features/today/presentation/widgets/text_placeholder.dart';
 import 'package:shlyakh/features/today/presentation/widgets/week_bars.dart';
 
 /// Collapsed height as a fraction of the screen above the tab bar: it
-/// shows the level (spec, "ProgressSheet"). Expanded fills the space it
-/// is given, which ends below the Today card.
+/// shows the current constellation (spec, "ProgressSheet"). Expanded
+/// fills the space it is given, which ends below the Today card.
 const double _collapsedSize = 0.18;
 
 /// Width of the loading placeholders, in logical pixels.
 const double _placeholderWidth = 160;
 
-/// The bottom sheet: level and title; expanded, today and the week.
+/// The bottom sheet: the current constellation and star; expanded, today
+/// and the week.
 class ProgressSheet extends StatelessWidget {
   const new({
     required this.view,
     required this.palette,
-    required this.gender,
     required this.bottomClearance,
     super.key,
   });
@@ -37,7 +36,6 @@ class ProgressSheet extends StatelessWidget {
   /// Null while loading or on error (the card shows the error).
   final TodayView? view;
   final SkyPalette palette;
-  final GrammaticalGender gender;
 
   /// Height at the bottom covered by the floating tab bar. The sheet runs
   /// under it to the screen edge; its collapsed height and its content are
@@ -117,39 +115,39 @@ class ProgressSheet extends StatelessWidget {
     Color foreground,
   ) {
     final l10n = context.l10n;
-    final level = view.level;
+    final next = view.progress.next;
     final accent = palette.accent.color;
     return [
+      Text(l10n.nowHere, style: AppTypography.footnote),
       Text(
-        l10n.levelLabel(level.level, levelChapter(l10n, level.level)),
-        style: AppTypography.footnote,
-      ),
-      Text(levelTitle(l10n, level.level, gender), style: AppTypography.title),
-      const SizedBox(height: AppSpacing.xs),
-      ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadii.bar),
-        child: LinearProgressIndicator(
-          value: level.xpIntoLevel / level.xpForNextLevel,
-          minHeight: AppSpacing.xs,
-          color: accent,
-          backgroundColor: track,
-        ),
+        constellationName(l10n, view.constellationId),
+        style: AppTypography.title,
       ),
       const SizedBox(height: AppSpacing.xs),
-      Text(
-        l10n.xpToNextLevel(
-          context.formatInt(level.xpForNextLevel - level.xpIntoLevel),
-          level.level + 1,
+      if (next == null)
+        Text(l10n.routeComplete, style: AppTypography.footnote)
+      else ...[
+        ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadii.bar),
+          child: LinearProgressIndicator(
+            value: next.xpIntoStar / next.xpForStar,
+            minHeight: AppSpacing.xs,
+            color: accent,
+            backgroundColor: track,
+          ),
         ),
-        style: AppTypography.footnote,
-      ),
-      Text(
-        l10n.xpRange(
-          context.formatInt(view.levelStartXp),
-          context.formatInt(view.nextLevelXp),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          l10n.starFilled(l10n.percentValue(view.starPercent)),
+          style: AppTypography.footnote,
         ),
-        style: AppTypography.footnote,
-      ),
+        Text(
+          l10n.xpToNextStar(
+            context.formatInt(next.xpForStar - next.xpIntoStar),
+          ),
+          style: AppTypography.footnote,
+        ),
+      ],
       const SizedBox(height: AppSpacing.l),
       Text(l10n.todayHeading, style: AppTypography.headline),
       const SizedBox(height: AppSpacing.xs),

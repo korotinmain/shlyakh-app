@@ -7,7 +7,6 @@ import 'package:shlyakh/core/design/app_spacing.dart';
 import 'package:shlyakh/core/design/app_typography.dart';
 import 'package:shlyakh/core/design/sky_status_bar.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
-import 'package:shlyakh/features/progress/presentation/providers/level_title.dart';
 import 'package:shlyakh/features/steps/presentation/providers/health_access_hint.dart';
 import 'package:shlyakh/features/today/presentation/providers/current_user_provider.dart';
 import 'package:shlyakh/features/today/presentation/providers/sky_provider.dart';
@@ -73,7 +72,6 @@ class TodayScreen extends ConsumerWidget {
                 child: ProgressSheet(
                   view: today.value,
                   palette: palette,
-                  gender: ref.watch(grammaticalGenderProvider),
                   bottomClearance: FloatingTabBar.bottomClearance(context),
                 ),
               ),

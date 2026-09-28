@@ -7,6 +7,7 @@ import 'package:shlyakh/app/floating_tab_bar.dart';
 import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/error/failure.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
+import 'package:shlyakh/features/path/presentation/providers/route_provider.dart';
 import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
 import 'package:shlyakh/features/steps/domain/steps_repository.dart';
@@ -15,6 +16,7 @@ import 'package:shlyakh/features/today/presentation/widgets/today_card.dart';
 import 'package:shlyakh/features/today/presentation/widgets/week_bars.dart';
 
 import '../../../helpers/pump_app.dart';
+import '../../../helpers/route_fixture.dart';
 
 final class _Repository implements StepsRepository {
   new(this._stream);
@@ -36,8 +38,9 @@ DailySteps _day(String iso, int steps) => (
   steps: steps,
 );
 
-// 16 870 XP in total: level 4 (15 600 – 27 800).
-// 2026-09-27 is the Sunday before this week: in the level, not the week.
+// 16 870 XP in total: Стріла's 4 stars (15 000 XP) and 1 870 of the
+// 7 500 XP of Лисичка's first star (24 %).
+// 2026-09-27 is the Sunday before this week: in the path, not the week.
 final List<DailySteps> _days = [
   _day('2026-09-27', 10000),
   _day('2026-09-28', 6870),
@@ -48,6 +51,7 @@ List<Override> _overrides(
   DateTime now,
 ) => [
   clockProvider.overrideWithValue(Clock.fixed(now)),
+  routeProvider.overrideWith((ref) async => testRoute()),
   stepsRepositoryProvider.overrideWithValue(_Repository(stream)),
 ];
 
@@ -74,11 +78,8 @@ Future<void> _pump(
 }
 
 Future<void> _expandSheet(WidgetTester tester) async {
-  // Drag the sheet by its level line: the sheet's own centre is above it.
-  await tester.drag(
-    find.textContaining(RegExp(r'^Level \d+ · ')),
-    const Offset(0, -700),
-  );
+  // Drag the sheet by its first line: the sheet's own centre is above it.
+  await tester.drag(find.text('You are here'), const Offset(0, -700));
   await tester.pumpAndSettle();
 }
 
@@ -88,8 +89,10 @@ void main() {
 
     expect(find.text('6,870'), findsOneWidget);
     expect(find.textContaining('steps today · Monday, September 28'), findsOne);
-    expect(find.textContaining('Level 4 · '), findsOneWidget);
-    expect(find.text('Pathfinder'), findsOneWidget);
+    expect(find.text('You are here'), findsOneWidget);
+    expect(find.text('Vulpecula'), findsOneWidget);
+    expect(find.text('24%'), findsOneWidget);
+    expect(find.textContaining('Level'), findsNothing);
   });
 
   testWidgets('the card hugs its content', (tester) async {
@@ -103,19 +106,19 @@ void main() {
     await _pump(tester);
 
     final sheet = find.ancestor(
-      of: find.text('Pathfinder'),
+      of: find.text('Vulpecula'),
       matching: find.byType(GlassPanel),
     );
     expect(tester.getRect(sheet).bottom, 874);
   });
 
-  testWidgets('the collapsed sheet shows its level above the tab bar', (
+  testWidgets('the collapsed sheet shows its constellation above the tab bar', (
     tester,
   ) async {
     await _pump(tester);
 
     final tabBarTop = tester.getRect(find.byType(FloatingTabBar)).top;
-    expect(tester.getRect(find.text('Pathfinder')).bottom, lessThan(tabBarTop));
+    expect(tester.getRect(find.text('Vulpecula')).bottom, lessThan(tabBarTop));
   });
 
   testWidgets('the expanded sheet scrolls its last line above the tab bar', (
@@ -138,7 +141,7 @@ void main() {
     await _expandSheet(tester);
 
     final sheet = find.ancestor(
-      of: find.text('Pathfinder'),
+      of: find.text('Vulpecula'),
       matching: find.byType(GlassPanel),
     );
     final cardBottom = tester.getRect(find.byType(TodayCard)).bottom;
@@ -181,8 +184,10 @@ void main() {
       find.textContaining('кроків сьогодні · понеділок, 28 вересня'),
       findsOneWidget,
     );
-    expect(find.textContaining('Рівень 4 · '), findsOneWidget);
-    expect(find.text('Шукач стежок'), findsOneWidget);
+    expect(find.text('Зараз тут'), findsOneWidget);
+    expect(find.text('Лисичка'), findsOneWidget);
+    expect(find.text('24\u00a0%'), findsOneWidget);
+    expect(find.textContaining('Рівень'), findsNothing);
   });
 
   testWidgets('the expanded sheet shows the week and the history link', (
@@ -197,7 +202,34 @@ void main() {
     }
     expect(find.text('6,870 steps in total'), findsOneWidget);
     expect(find.text('≈ 5.1 km'), findsOneWidget);
-    expect(find.text('15,600 → 27,800 XP'), findsOneWidget);
+    expect(find.text('Star 24% full'), findsOneWidget);
+    expect(find.text('5,630 XP to the next star'), findsOneWidget);
+  });
+
+  testWidgets('the expanded sheet shows star progress in Ukrainian', (
+    tester,
+  ) async {
+    await _pump(tester, locales: const [Locale('uk')]);
+    await tester.drag(find.text('Зараз тут'), const Offset(0, -700));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Зорю заповнено на 24\u00a0%'), findsOneWidget);
+    expect(find.text('Ще 5\u00a0630 XP до наступної зорі'), findsOneWidget);
+  });
+
+  testWidgets('with the whole route lit the sheet says so', (tester) async {
+    final days = [
+      for (var i = 0; i < 400; i++)
+        _day(LocalDate.parse('2025-08-01').addDays(i).toIsoString(), 30000),
+    ];
+    await _pump(tester, days: days);
+    await _expandSheet(tester);
+
+    expect(find.text('Sagittarius'), findsOneWidget);
+    expect(find.text('100%'), findsOneWidget);
+    expect(find.text('The whole route is lit'), findsOneWidget);
+    expect(find.byType(LinearProgressIndicator), findsNothing);
+    expect(find.textContaining('to the next star'), findsNothing);
   });
 
   testWidgets('the history link opens History', (tester) async {

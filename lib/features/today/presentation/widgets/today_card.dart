@@ -11,17 +11,17 @@ import 'package:shlyakh/core/error/failure_message.dart';
 import 'package:shlyakh/core/l10n/format_extension.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
 import 'package:shlyakh/features/today/presentation/providers/today_view.dart';
-import 'package:shlyakh/features/today/presentation/widgets/level_ring.dart';
+import 'package:shlyakh/features/today/presentation/widgets/progress_ring.dart';
 import 'package:shlyakh/features/today/presentation/widgets/text_placeholder.dart';
 
-/// Diameter of the level ring, in logical pixels.
+/// Diameter of the progress ring, in logical pixels.
 const double _ringSize = 72;
 
 /// Width of the loading placeholders, in logical pixels.
 const double _numberPlaceholderWidth = 120;
 const double _captionPlaceholderWidth = 180;
 
-/// The glass card: level ring and today's steps.
+/// The glass card: the current star's ring and today's steps.
 class TodayCard extends StatelessWidget {
   const new({required this.view, required this.palette, super.key});
 
@@ -68,19 +68,18 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final today = view.week.firstWhere((d) => d.isToday).date;
-    final level = view.level;
     return Row(
       children: [
         SizedBox.square(
           dimension: _ringSize,
-          child: LevelRing(
-            fraction: level.xpIntoLevel / level.xpForNextLevel,
+          child: ProgressRing(
+            fraction: view.starPercent / 100,
             arc: accent,
             track: track,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                context.formatInt(level.level),
+                context.l10n.percentValue(view.starPercent),
                 style: tabular(AppTypography.headline),
               ),
             ),
@@ -127,7 +126,7 @@ class _Loading extends StatelessWidget {
     children: [
       SizedBox.square(
         dimension: _ringSize,
-        child: LevelRing(fraction: 0, arc: track, track: track),
+        child: ProgressRing(fraction: 0, arc: track, track: track),
       ),
       const SizedBox(width: AppSpacing.m),
       Column(

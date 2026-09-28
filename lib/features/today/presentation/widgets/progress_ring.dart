@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart';
 /// Stroke width of the ring, in logical pixels.
 const double _strokeWidth = 8;
 
-/// Progress through the current level: a [track] circle with an [arc]
+/// Progress through the current star: a [track] circle with an [arc]
 /// from the top, clockwise, covering [fraction] (clamped to 0..1).
-class LevelRing extends StatelessWidget {
+class ProgressRing extends StatelessWidget {
   const new({
     required this.fraction,
     required this.arc,
