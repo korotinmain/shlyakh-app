@@ -72,7 +72,7 @@ final class Constellation {
 /// in the first constellation on the route that has it.
 final class Route {
   /// Throws [RouteException] when the data is inconsistent.
-  factory ({
+  factory({
     required List<Constellation> constellations,
     required int mainLength,
   }) {
