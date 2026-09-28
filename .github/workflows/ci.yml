@@ -37,14 +37,15 @@ jobs:
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed .
 
-      - name: Generate code
-        run: dart run build_runner build --delete-conflicting-outputs
-
-      # Pigeon's Dart output is not committed (ADR 0001).
+      # Pigeon's Dart output is not committed (ADR 0001). It runs first:
+      # Riverpod providers use its types, so build_runner needs it.
       - name: Generate native bridge
         run: |
           dart run pigeon --input pigeons/steps_api.dart
           dart format lib/features/steps/data/healthkit/steps_api.g.dart
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
 
       # dart analyze, not flutter analyze: only it reports riverpod_lint.
       # --fatal-infos: riverpod_lint reports at info level.

@@ -239,6 +239,38 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('no steps a day after the start shows the Health hint', (
+    tester,
+  ) async {
+    await _pump(tester, days: const []);
+
+    expect(
+      find.text(
+        'No steps yet? Allow Shlyakh to read Steps in the Health app: '
+        'your profile → Apps → Shlyakh.',
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('shows the Health hint in Ukrainian', (tester) async {
+    await _pump(tester, days: const [], locales: const [Locale('uk')]);
+
+    expect(
+      find.text(
+        'Кроків досі немає? Дозвольте Шляху читати кроки в застосунку '
+        "Здоров'я: ваш профіль → Програми → Шлях.",
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('steps hide the Health hint', (tester) async {
+    await _pump(tester);
+
+    expect(find.textContaining('No steps yet?'), findsNothing);
+  });
 }
 
 /// The iOS status bar brightness the Today screen asks for: `light` means a

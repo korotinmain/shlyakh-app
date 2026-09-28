@@ -53,5 +53,9 @@
   "weekTotal": "Разом {count, plural, one{{steps} крок} few{{steps} кроки} many{{steps} кроків} other{{steps} кроку}}",
   "historyLink": "Уся історія →",
   "pathPlaceholder": "Тут скоро буде твій шлях",
-  "historyPlaceholder": "Тут скоро буде історія"
+  "historyPlaceholder": "Тут скоро буде історія",
+  "healthAccessTitle": "Кожен крок рахується",
+  "healthAccessBody": "Шлях читає ваші кроки зі Здоров'я, разом з Apple Watch, і перетворює їх на поступ шляхом. Він нічого не записує в Здоров'я. Ваш шлях почнеться, щойно ви дозволите доступ.",
+  "healthAccessAllow": "Дозволити",
+  "healthAccessHint": "Кроків досі немає? Дозвольте Шляху читати кроки в застосунку Здоров'я: ваш профіль → Програми → Шлях."
 }

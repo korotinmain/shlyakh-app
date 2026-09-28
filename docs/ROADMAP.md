@@ -25,7 +25,7 @@ validated first, visual polish comes last. No deadlines.
 - [x] Choose level names
 - [x] Pure Dart XP/level logic with unit tests
 - [x] Drift schema for daily steps
-- [ ] Repository: HealthKit to Drift sync
+- [x] Repository: HealthKit to Drift sync
 
 ## 3. Design
 - [x] A. Main screen content decisions (PRODUCT.md "Main screen content")
@@ -47,7 +47,7 @@ validated first, visual polish comes last. No deadlines.
 - [ ] Static landscape (placeholder hills only; the art is design phase D)
 - [x] Progress ring (CustomPainter, design phase C)
 - [x] Bottom sheet with today's stats and level (design phase C)
-- [ ] Wired to real data (after the HealthKit → Drift sync)
+- [x] Wired to real data
 
 ## 5. Backend
 - [ ] Supabase project, schema, RLS policies

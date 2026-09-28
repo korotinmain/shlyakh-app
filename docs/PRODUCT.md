@@ -24,7 +24,9 @@ titles ("Мандрівник" / "Мандрівниця").
 ## Goals
 
 - Steps are imported from HealthKit automatically, with no manual entry and
-  no Shortcuts-style automations.
+  no Shortcuts-style automations. The journey starts when the user allows
+  Health access: only steps after that moment count, so the first day is
+  partial, and no earlier history is imported (decided 2026-09-28).
 - Apple Watch steps are counted correctly (no double counting with iPhone).
 - XP is earned from steps and raises levels; every level has a name.
 - Main screen follows the "postcard" concept: illustrated landscape,
