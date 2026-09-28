@@ -23,8 +23,8 @@ opening the app's code. Candidates, checked at their sources:
 
 ## Decision
 
-- Use d3-celestial `constellations.lines.json`, `stars.6.json` and
-  `starnames.json`, pinned at commit
+- Use d3-celestial `constellations.lines.json` and `stars.6.json`,
+  pinned at commit
   `7e720a3de062059d4c5400a379146a601d9010e0` (2022-07-05).
 - A Dart tool, `tool/sky/build_route.dart`, downloads those files at the
   pinned commit (cached in `.dart_tool/sky/`, never committed), matches

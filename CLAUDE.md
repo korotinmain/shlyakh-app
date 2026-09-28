@@ -46,6 +46,7 @@ flutter pub get
 dart run pigeon --input pigeons/steps_api.dart   # first; then dart format its .g.dart output
 dart run build_runner build --delete-conflicting-outputs
 dart run drift_dev make-migrations   # after a schema change + schemaVersion bump; commit its output
+dart run tool/sky/build_route.dart   # after changing the pinned sky data (ADR 0009); commit assets/sky
 flutter gen-l10n
 dart format --output=none --set-exit-if-changed .
 dart analyze --fatal-infos

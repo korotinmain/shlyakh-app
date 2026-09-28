@@ -63,6 +63,7 @@ flutter:
   generate: true
   assets:
     - assets/fonts/geologica/OFL.txt
+    - assets/sky/route.json
   fonts:
     - family: Geologica
       fonts:
