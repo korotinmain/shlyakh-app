@@ -34,7 +34,7 @@ It replaces the earlier levels, titles, time-of-day sky and landscape
 
 - [x] Today screen skeleton wired to real data (glass card, week, sheet)
 - [x] 1. ADR 0009 and the bundled sky data (`assets/sky/route.json`)
-- [ ] 2. Domain: route, star cost, path progress, ETA, star moment;
+- [x] 2. Domain: route, star cost, path progress, ETA, star moment;
       remove levels and titles
 - [ ] 3. Light and dark themes; remove the time-of-day sky
 - [ ] 4. Today: the current constellation above a hills silhouette

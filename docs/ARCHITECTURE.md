@@ -17,7 +17,7 @@ lib/
 ├── app/                  bootstrap: App, routerProvider, theme
 ├── core/                 shared utilities (l10n extension, clockProvider)
 ├── features/<feature>/
-│   ├── domain/           pure Dart: entities, rules (XP, levels), repository interfaces
+│   ├── domain/           pure Dart: entities, rules (XP, stars), repository interfaces
 │   ├── data/             repository implementations, data sources
 │   └── presentation/
 │       ├── providers/    Riverpod providers and notifiers (state, derived values)
@@ -60,10 +60,12 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
 
 - Today screen: `features/today/presentation/`. `skyProvider` (the sky
   palette for the injected clock, updated every minute) and
-  `todayProvider` (today's steps, XP, level, week and approximate
-  distance from `StepsRepository.watchDays`) feed the widgets: sky with
-  grain, placeholder hills, glass `TodayCard` with the level ring,
-  `ProgressSheet` (collapsed level; expanded today, week, history link;
+  `todayProvider` (today's steps, XP, star progress on the route, week
+  and approximate distance from `routeProvider` and
+  `StepsRepository.watchDays`) feed the widgets: sky with grain,
+  placeholder hills, glass `TodayCard` with the current star's
+  `ProgressRing`, `ProgressSheet` (collapsed: the current constellation
+  and star; expanded today, week, history link;
   below the card, under the tab bar) and a status bar that follows the
   sky.
 - Steps: `features/steps/domain/` holds `DailySteps`, `LocalDate`,
@@ -83,8 +85,12 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   router can later depend on auth state and be overridden in tests.
 - Time: `clockProvider` is the only source of "now" (ADR 0002).
 - Domain: `features/progress/domain/` holds the XP rules (`dailyXp`,
-  `totalXp`) and the level curve (`xpToReachLevel`, `levelProgress`), pure
-  functions with 100% test coverage. Nothing reads real steps yet.
+  `totalXp`). `features/path/domain/` holds the constellation path:
+  `Route` and `Constellation` (`route.dart`; validated, a shared star
+  lights once in the first constellation that has it), `starCost`,
+  `xpToLight` and `pathProgress` (`star_cost.dart`), `daysToNextStar`
+  (`eta.dart`, the pace of the last 14 full days) and `starMoment`
+  (`star_moment.dart`). All pure functions of daily steps.
 - Design tokens: `core/design/` (sky keyframes and `skyAt`, Oklab/OkLCh
   blending, NOAA sun times, member colours, Geologica typography, spacing,
   radii, glass, motion); `app/theme.dart` is built from them.
@@ -93,8 +99,10 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   constellations (13 main, 3 on the branch) with HIP ids, magnitudes,
   J2000 positions and positions projected to a unit box (north up, east
   left), figure lines, a lighting order that always steps along a line,
-  and each constellation's centre and angular span on the sky. The app does not read it yet (constellation path,
-  plan 2). The sky-data licences are on the licences page.
+  and each constellation's centre and angular span on the sky.
+  `features/path/data/route_asset.dart` parses it into a `Route`;
+  `routeProvider` (keepAlive) loads it once. The sky-data licences are on
+  the licences page.
 - Local storage: `core/database/app_database.dart` (Drift, schema v2,
   snapshots, steps and migration tests in `drift_schemas/`,
   `app_database.steps.dart` and `test/drift/`) with the `daily_steps` table
@@ -114,10 +122,8 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   also wrapped in `DriftRemoteException` by the background isolate,
   become `StorageFailure`.
   `DriftStepsRepository` serves `StepsRepository` from Drift.
-- Level titles: `features/progress/domain/level_titles.dart` (chapters,
-  continuation degree, `GrammaticalGender`) and
-  `presentation/providers/level_title.dart` (maps a level to its ARB string;
-  `grammaticalGenderProvider`).
+- Constellation names: `features/path/presentation/providers/constellation_name.dart`
+  maps an IAU id to its ARB string (uk, en).
 - Localization: gen-l10n, `en` template and fallback, `uk` translation,
   `CFBundleLocalizations` for the iOS per-app language (ADR 0004).
 - Native: `ios/Runner/Steps/` holds the HealthKit layer behind Pigeon
@@ -138,7 +144,7 @@ flowchart LR
   HK[HealthKit] -->|daily totals<br/>statistics query| SR[data: StepsRepository]
   OBS[Swift HKObserverQuery<br/>via Pigeon] -->|"steps changed"| SR
   SR -->|upsert user_id + local_date| DB[(Drift / SQLite<br/>local source of truth<br/>built)]
-  DB --> XP[domain: XP and levels<br/>pure functions of daily steps<br/>built]
+  DB --> XP[domain: XP and stars<br/>pure functions of daily steps<br/>built]
   DB --> SYNC[data: sync]
   SYNC <-->|upsert, RLS| SB[(Supabase Postgres)]
   SB -->|Realtime| MEMBERS[Спільно members' positions]
@@ -244,9 +250,6 @@ Generated files are not committed and are regenerated by
   and assumes no fixed number of users.
 - Background wake-up frequency (section 4) and the resulting sync
   schedule.
-- Where the grammatical gender is stored before registration exists
-  (`grammaticalGenderProvider` defaults to masculine for now).
-- What the dot's position on the landscape represents (`docs/PRODUCT.md`).
 - The main app and the spike share the bundle id
   `com.denyskorotin.shlyakh`: while the spike build is on the iPhone, the
   main app is tested on the simulator only.
