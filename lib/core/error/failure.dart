@@ -35,6 +35,15 @@ final class HealthUnavailable extends Failure {
   String get variantName => 'HealthUnavailable';
 }
 
+/// HealthKit data is encrypted while the device is locked; a background
+/// read failed.
+final class HealthDataLocked extends Failure {
+  const new({super.cause});
+
+  @override
+  String get variantName => 'HealthDataLocked';
+}
+
 /// The local database failed (disk full, corrupt file).
 final class StorageFailure extends Failure {
   const new({super.cause});

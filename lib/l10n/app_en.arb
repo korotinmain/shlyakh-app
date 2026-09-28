@@ -269,6 +269,10 @@
   "@errorHealthUnavailable": {
     "description": "HealthKit is not available on this device"
   },
+  "errorHealthDataLocked": "Unlock your iPhone to update your steps.",
+  "@errorHealthDataLocked": {
+    "description": "A background step update failed because the iPhone was locked"
+  },
   "errorStorage": "Couldn't save your data on this device. Try restarting the app.",
   "@errorStorage": {
     "description": "The local database failed"

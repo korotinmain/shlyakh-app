@@ -8,6 +8,7 @@ String failureMessage(AppLocalizations l10n, Object error) => switch (error) {
   final Failure failure => switch (failure) {
     HealthAccessDenied() => l10n.errorHealthAccessDenied,
     HealthUnavailable() => l10n.errorHealthUnavailable,
+    HealthDataLocked() => l10n.errorHealthDataLocked,
     StorageFailure() => l10n.errorStorage,
     UnexpectedFailure() => l10n.errorUnexpected,
   },
