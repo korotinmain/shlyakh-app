@@ -49,8 +49,8 @@ dart run drift_dev make-migrations   # after a schema change + schemaVersion bum
 flutter gen-l10n
 dart format --output=none --set-exit-if-changed .
 dart analyze --fatal-infos
-flutter test
-flutter test --coverage
+TZ=Europe/Kyiv flutter test
+TZ=Europe/Kyiv flutter test --coverage
 dart run tool/coverage/check_coverage.dart
 flutter run
 ```
@@ -60,6 +60,9 @@ task done. `dart analyze` includes the `riverpod_lint` analyzer plugin
 (`flutter analyze` silently skips plugin lints), and `--fatal-infos` makes
 its info-level lints fail the exit code. `flutter pub get` regenerates l10n
 files; `flutter test` does not.
+Tests run with `TZ=Europe/Kyiv` so local-time tests (DST, local
+midnight) mean the same on every machine; `test/time_zone_test.dart`
+fails otherwise.
 Testing rules and coverage thresholds: `docs/AGENT_RULES.md`, section 8.
 CI (`.github/workflows/ci.yml`) runs format check, analyze, tests and the
 coverage thresholds check on every PR to `main`; merging requires it to

@@ -52,7 +52,11 @@ jobs:
       - name: Analyze
         run: dart analyze --fatal-infos
 
+      # Local-time tests (DST, local midnight) need a zone with DST; the
+      # runner is UTC. test/time_zone_test.dart fails without it.
       - name: Test
+        env:
+          TZ: Europe/Kyiv
         run: flutter test --coverage
 
       # Floors from docs/AGENT_RULES.md 8.5; fails on untested files too.
