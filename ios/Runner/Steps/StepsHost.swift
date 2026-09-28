@@ -19,6 +19,8 @@ final class StepsHost: StepsHostApi {
     } catch {
       throw Self.pigeonError(error)
     }
+    // An observer started before access was granted has failed (ADR 0007).
+    await StepsObserver.shared.start()
   }
 
   func dailySteps(fromEpochMs: Int64) async throws -> [NativeDay] {
