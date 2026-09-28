@@ -43,11 +43,11 @@ validated first, visual polish comes last. No deadlines.
       idle label colour)
 
 ## 4. Main screen
-- [ ] Theme and tokens in code
-- [ ] Static landscape
-- [ ] Progress ring (CustomPainter)
-- [ ] Bottom sheet with today's stats and level
-- [ ] Wired to real data
+- [x] Theme and tokens in code (design phase B)
+- [ ] Static landscape (placeholder hills only; the art is design phase D)
+- [x] Progress ring (CustomPainter, design phase C)
+- [x] Bottom sheet with today's stats and level (design phase C)
+- [ ] Wired to real data (after the HealthKit → Drift sync)
 
 ## 5. Backend
 - [ ] Supabase project, schema, RLS policies
