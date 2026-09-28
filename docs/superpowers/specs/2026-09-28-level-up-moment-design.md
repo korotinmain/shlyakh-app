@@ -116,7 +116,7 @@ the way" are joined with ", ".
   - line: white round dots along a smooth curve through the node centres;
   - "you are here": a dark pill with a caret pointing at the current node;
   - "Continue": a pill button in the accent raised on its shade.
-  The shade is the accent darker in OkLCh (a lightness step token); halo
+  The shade is the accent with a lower Oklab lightness (a lightness step token); halo
   and upcoming-node opacities, dot size and spacing, node sizes and the
   raise offset are tokens in `lib/core/design/trail_tokens.dart`.
 
