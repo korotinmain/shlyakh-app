@@ -57,10 +57,7 @@ void main() {
   });
 
   test('at 25 hours with only zero days', () async {
-    expect(
-      await hint(after: const Duration(hours: 25), steps: [0, 0]),
-      isTrue,
-    );
+    expect(await hint(after: const Duration(hours: 25), steps: [0, 0]), isTrue);
   });
 
   test('not with a day that has steps', () async {
