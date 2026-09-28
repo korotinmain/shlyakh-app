@@ -1,13 +1,16 @@
 # Level-up moment (design phase E, part 1) — design
 
 Date: 2026-09-28
-Status: approved in chat (visual companion: form "A · full-screen scene", copy for three cases), pending spec review
+Status: approved in chat (visual companion: form "A · full-screen scene", copy for three cases, trail "3 · both places"), pending spec review
 
 ## Goal
 
 When the level rises, the user sees it: a full-screen scene over the app
-with the new level, its chapter and title, the levels passed on the way,
-and a single "Continue". It works for several levels at once (a big first
+showing a stretch of the trail (Duolingo-style: levels as nodes, grouped
+in chapters) with the node just reached lit and marked "you are here",
+the level's chapter and title, the levels passed on the way, and a single
+"Continue". The same `Trail` widget later draws the whole path on the
+Path tab (phase E, part 3, its own spec). It works for several levels at once (a big first
 day reaches level 4) and marks a new chapter and the end of the main
 path. History is part 2 of phase E, a separate spec. Motion, count-up and
 haptics are phase F.
@@ -34,7 +37,8 @@ after it is merged.
 
 | Topic | Decision |
 |---|---|
-| Form | "A": full-screen scene over the app; the sky dims, the new level is large in the centre with its chapter and title, one "Continue" button |
+| Form | "A": full-screen scene over the app; the sky dims; in the centre a stretch of the trail around the new node, with the chapter and title above and one "Continue" button |
+| Trail | "3": one `Trail` widget, a stretch in the scene and the whole path on the Path tab (part 3). Drawn in code now (dashed winding line, nodes: passed filled, current lit with "you are here", upcoming dashed); chapter art from phase D slots in later without changing its API |
 | When | Every level-up, as soon as the foreground UI sees a level above the last celebrated one; a level reached by a background sync shows at the next open |
 | Several levels | One scene: the final level and "Along the way: …" with the passed levels and titles |
 | New chapter | "B": the same scene with a "New chapter · …" line above the level (levels 6, 11, 16, 21). Level 25 has its own line about the end of the main path |
@@ -52,6 +56,7 @@ after it is merged.
 | `levelUpPassedLevel` (one item) | "{level} · {title}" | "{level} · {title}" |
 | `levelUpMainPathDone` | "Мільйон кроків. Головний шлях пройдено — далі новий шлях." | "A million steps. The main path is done — a new trail begins." |
 | `levelUpContinue` | "Далі" | "Continue" |
+| `trailYouAreHere` | "ти тут" | "you are here" |
 
 Level 25's kicker is the chapter name alone ("Чумацький Шлях" / "The Milky
 Way"). Titles and chapter names come from the existing ARB keys with the
@@ -81,6 +86,22 @@ the way" are joined with ", ".
 - `JourneyStartDao.markCelebrated(String userId, int level)` — sets
   `celebrated_level = MAX(celebrated_level, level)`; no-op without a row.
 
+### Trail (`lib/features/progress/presentation/widgets/trail.dart`)
+
+- Pure layout in the domain (`lib/features/progress/domain/trail_layout.dart`):
+  `TrailNode trailNode(int level)` → `(level, chapter, side)` where `side`
+  alternates left / centre / right / centre so the line winds, and chapter
+  starts (1, 6, 11, 16, 21) are marked; continuation levels (26+) keep
+  the pattern in the last chapter. 100% tested.
+- `Trail` widget: `Trail({required int current, required int firstLevel,
+  required int lastLevel, required SkyPalette palette, int? highlight})`
+  draws nodes `firstLevel … lastLevel` bottom-up with a `CustomPainter`
+  for the dashed line; node states from `current` (below: passed, equal:
+  here, above: upcoming); chapter labels between chapters; sizes, colours
+  and dash from tokens (new trail tokens in `lib/core/design/`).
+- Art slot: `Trail` takes an optional `backgroundFor(chapter)` builder,
+  unused now; phase D fills it with chapter art.
+
 ### Presentation
 
 - `levelUpProvider` (`features/progress/presentation/providers/`) —
@@ -89,11 +110,12 @@ the way" are joined with ", ".
   current level uses `levelProgress(totalXp(...))`, the same as Today.
 - `LevelUpScene` (`features/progress/presentation/level_up_scene.dart`) —
   full-screen: current `SkyBackground`, a dim overlay (a new token in
-  `lib/core/design/`), centred kicker, optional chapter line (accent
-  background), level number (`AppTypography.hero`), title
-  (`AppTypography.title`), optional main-path line or "Along the way"
-  (`AppTypography.footnote`), "Continue" button in the accent. Scrolls
-  with large text.
+  `lib/core/design/`); top: kicker, optional chapter line (accent
+  background), title (`AppTypography.title`), optional main-path line or
+  "Along the way" (`AppTypography.footnote`); centre: `Trail` from
+  `max(1, from - 1)` to `to + 2` with `current: to`, the reached node lit
+  and labelled "you are here" (its level number inside the node); bottom:
+  "Continue" in the accent. Scrolls with large text.
 - `AppShell` puts the scene on top of the tabs and the tab bar while
   `levelUpProvider` has a value. "Continue" → a notifier calls
   `markCelebrated(userId, to)`; the provider then emits null and the scene
@@ -125,6 +147,9 @@ the way" are joined with ", ".
 - **Provider:** days worth level 4 with celebrated 1 → `LevelUp(1, 4)`;
   after `markCelebrated(4)` → null; no start → null; days worth level 2
   with celebrated 3 → null.
+- **Trail:** `trailNode` for 1–7, 25, 26 (sides, chapter starts);
+  widget: node states for `current` below / at / above, the "you are
+  here" label only on `current`, chapter label at a chapter start.
 - **Widgets:** the scene over Today for the three copy cases in uk and en,
   masculine and feminine; "Continue" hides it and stores the level; large
   text without overflow; a failing write shows the message and the button
@@ -141,5 +166,6 @@ the way" are joined with ", ".
 ## Out of scope
 
 - History (phase E, part 2).
+- The Path tab with the whole trail (phase E, part 3; reuses `Trail`).
 - Count-up, motion, haptics (phase F); level-up notifications (stage 6).
 - Illustrated chapter scenes (phase D).
