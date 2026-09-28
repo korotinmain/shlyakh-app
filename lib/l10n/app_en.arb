@@ -414,5 +414,69 @@
   "healthAccessHint": "No steps yet? Allow Shlyakh to read Steps in the Health app: your profile → Apps → Shlyakh.",
   "@healthAccessHint": {
     "description": "Shown on Today a day after the journey starts when no steps arrived, which usually means read access to Steps was denied"
+  },
+  "constellationSge": "Sagitta",
+  "@constellationSge": {
+    "description": "Name of the constellation Sagitta (Sge) on the route"
+  },
+  "constellationVul": "Vulpecula",
+  "@constellationVul": {
+    "description": "Name of the constellation Vulpecula (Vul) on the route"
+  },
+  "constellationCyg": "Cygnus",
+  "@constellationCyg": {
+    "description": "Name of the constellation Cygnus (Cyg) on the route"
+  },
+  "constellationLac": "Lacerta",
+  "@constellationLac": {
+    "description": "Name of the constellation Lacerta (Lac) on the route"
+  },
+  "constellationCep": "Cepheus",
+  "@constellationCep": {
+    "description": "Name of the constellation Cepheus (Cep) on the route"
+  },
+  "constellationCas": "Cassiopeia",
+  "@constellationCas": {
+    "description": "Name of the constellation Cassiopeia (Cas) on the route"
+  },
+  "constellationPer": "Perseus",
+  "@constellationPer": {
+    "description": "Name of the constellation Perseus (Per) on the route"
+  },
+  "constellationAur": "Auriga",
+  "@constellationAur": {
+    "description": "Name of the constellation Auriga (Aur) on the route"
+  },
+  "constellationTau": "Taurus",
+  "@constellationTau": {
+    "description": "Name of the constellation Taurus (Tau) on the route"
+  },
+  "constellationGem": "Gemini",
+  "@constellationGem": {
+    "description": "Name of the constellation Gemini (Gem) on the route"
+  },
+  "constellationOri": "Orion",
+  "@constellationOri": {
+    "description": "Name of the constellation Orion (Ori) on the route"
+  },
+  "constellationMon": "Monoceros",
+  "@constellationMon": {
+    "description": "Name of the constellation Monoceros (Mon) on the route"
+  },
+  "constellationCMa": "Canis Major",
+  "@constellationCMa": {
+    "description": "Name of the constellation Canis Major (CMa) on the route"
+  },
+  "constellationAql": "Aquila",
+  "@constellationAql": {
+    "description": "Name of the constellation Aquila (Aql) on the route"
+  },
+  "constellationSct": "Scutum",
+  "@constellationSct": {
+    "description": "Name of the constellation Scutum (Sct) on the route"
+  },
+  "constellationSgr": "Sagittarius",
+  "@constellationSgr": {
+    "description": "Name of the constellation Sagittarius (Sgr) on the route"
   }
 }

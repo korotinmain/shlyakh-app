@@ -57,5 +57,21 @@
   "healthAccessTitle": "Кожен крок рахується",
   "healthAccessBody": "Шлях читає ваші кроки зі Здоров'я, разом з Apple Watch, і перетворює їх на поступ шляхом. Він нічого не записує в Здоров'я. Ваш шлях почнеться, щойно ви дозволите доступ.",
   "healthAccessAllow": "Дозволити",
-  "healthAccessHint": "Кроків досі немає? Дозвольте Шляху читати кроки в застосунку Здоров'я: ваш профіль → Програми → Шлях."
+  "healthAccessHint": "Кроків досі немає? Дозвольте Шляху читати кроки в застосунку Здоров'я: ваш профіль → Програми → Шлях.",
+  "constellationSge": "Стріла",
+  "constellationVul": "Лисичка",
+  "constellationCyg": "Лебідь",
+  "constellationLac": "Ящірка",
+  "constellationCep": "Цефей",
+  "constellationCas": "Кассіопея",
+  "constellationPer": "Персей",
+  "constellationAur": "Візничий",
+  "constellationTau": "Телець",
+  "constellationGem": "Близнята",
+  "constellationOri": "Оріон",
+  "constellationMon": "Єдиноріг",
+  "constellationCMa": "Великий Пес",
+  "constellationAql": "Орел",
+  "constellationSct": "Щит",
+  "constellationSgr": "Стрілець"
 }
