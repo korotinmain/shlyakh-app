@@ -51,7 +51,7 @@ final class StepsHost: StepsHostApi {
     }
 
     var days: [NativeDay] = []
-    collection.enumerateStatistics(from: range.dayStart, to: range.end) { stats, _ in
+    collection.enumerateStatistics(from: range.dayStart, to: range.lastDayStart) { stats, _ in
       let sum = stats.sumQuantity()?.doubleValue(for: .count()) ?? 0
       days.append(
         NativeDay(
