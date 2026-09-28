@@ -280,5 +280,119 @@
   "errorGeneric": "Something went wrong.",
   "@errorGeneric": {
     "description": "A bug: an error that is not a known failure"
+  },
+  "tabToday": "Today",
+  "@tabToday": {
+    "description": "Label of the Today tab"
+  },
+  "tabPath": "Path",
+  "@tabPath": {
+    "description": "Label of the Path tab"
+  },
+  "tabHistory": "History",
+  "@tabHistory": {
+    "description": "Label of the History tab"
+  },
+  "todayStepsCaption": "{count, plural, one{step} other{steps}} today · {date}",
+  "@todayStepsCaption": {
+    "description": "Caption under today's step count; count picks the plural of \"step\", date is the formatted weekday and date",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "levelLabel": "Level {level} · {chapter}",
+  "@levelLabel": {
+    "description": "Current level number and its chapter name",
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "chapter": {
+        "type": "String"
+      }
+    }
+  },
+  "xpToNextLevel": "{xp} XP to level {level}",
+  "@xpToNextLevel": {
+    "description": "XP left to the next level; xp is formatted",
+    "placeholders": {
+      "xp": {
+        "type": "String"
+      },
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "xpRange": "{from} → {to} XP",
+  "@xpRange": {
+    "description": "Total XP where the current level starts and the next begins; both formatted",
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "todayHeading": "Today",
+  "@todayHeading": {
+    "description": "Heading of today's numbers in the expanded sheet"
+  },
+  "stepsUnit": "{count, plural, one{step} other{steps}}",
+  "@stepsUnit": {
+    "description": "The word \"steps\" after a count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "xpUnit": "XP",
+  "@xpUnit": {
+    "description": "Unit after an XP amount"
+  },
+  "distanceApprox": "≈ {km} km",
+  "@distanceApprox": {
+    "description": "Approximate distance from steps; km is formatted with one decimal",
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "weekHeading": "This week",
+  "@weekHeading": {
+    "description": "Heading of the week bars"
+  },
+  "weekTotal": "{count, plural, one{{steps} step} other{{steps} steps}} in total",
+  "@weekTotal": {
+    "description": "Total steps this week; count picks the plural, steps is the formatted number",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "steps": {
+        "type": "String"
+      }
+    }
+  },
+  "historyLink": "All history →",
+  "@historyLink": {
+    "description": "Link from the sheet to the History tab"
+  },
+  "pathPlaceholder": "Your path is coming soon",
+  "@pathPlaceholder": {
+    "description": "Placeholder of the Path tab"
+  },
+  "historyPlaceholder": "History is coming soon",
+  "@historyPlaceholder": {
+    "description": "Placeholder of the History tab"
   }
 }

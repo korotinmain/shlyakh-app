@@ -48,9 +48,26 @@ presentation ──► domain ◄── data
 ```
 main.dart ── ProviderScope
                └── App (MaterialApp.router, theme, l10n delegates)
-                     └── routerProvider (go_router, route '/')
-                           └── HomeScreen (placeholder: localized title)
+                     └── routerProvider (go_router)
+                           └── AppShell (tabs + FloatingTabBar)
+                                 ├── /today   TodayScreen
+                                 ├── /path    PathScreen (placeholder)
+                                 └── /history HistoryScreen (placeholder)
 ```
+
+- Today screen: `features/today/presentation/`. `skyProvider` (the sky
+  palette for the injected clock, updated every minute) and
+  `todayProvider` (today's steps, XP, level, week and approximate
+  distance from `StepsRepository.watchDays`) feed the widgets: sky with
+  grain, placeholder hills, glass `TodayCard` with the level ring,
+  `ProgressSheet` (collapsed level; expanded today, week, history link;
+  below the card, under the tab bar) and a status bar that follows the
+  sky.
+- Steps: `features/steps/domain/` holds `DailySteps`, `LocalDate` and the
+  `StepsRepository` interface. The only implementation is
+  `data/demo/DemoStepsRepository` (120 deterministic days ending today),
+  used until the HealthKit → Drift repository exists; it must not reach
+  TestFlight.
 
 - Navigation: `routerProvider` (keepAlive) returns a `GoRouter`, so the
   router can later depend on auth state and be overridden in tests.

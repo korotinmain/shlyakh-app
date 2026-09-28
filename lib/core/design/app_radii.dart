@@ -5,4 +5,7 @@ abstract final class AppRadii {
 
   /// Top corners of the bottom sheet.
   static const double sheet = 24;
+
+  /// Small marks: progress bars, week bars.
+  static const double bar = 4;
 }

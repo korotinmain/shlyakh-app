@@ -32,13 +32,15 @@ validated first, visual polish comes last. No deadlines.
 - [x] B. Design foundation: sky palettes per time of day, accents,
       typography with Cyrillic, spacing, radii, glass material;
       `docs/DESIGN.md` and tokens in `lib/core/`
-- [ ] C. Main screen skeleton: live sky, glass card with ring, collapsed /
+- [x] C. Main screen skeleton: live sky, glass card with ring, collapsed /
       expanded bottom sheet, floating tab bar; placeholder hills
 - [ ] D. Illustration (waits for art): layered hills with atmospheric
       perspective, grain, parallax, path and member dots, night sky with
       the Milky Way growing with progress
 - [ ] E. Level-up moment (several levels at once) and history
-- [ ] F. Motion and haptics (walking dots, count-up, level-up haptics)
+- [ ] F. Motion and haptics (walking dots, count-up, level-up haptics);
+      a clearer active tab at night (the night accent is close to the
+      idle label colour)
 
 ## 4. Main screen
 - [ ] Theme and tokens in code

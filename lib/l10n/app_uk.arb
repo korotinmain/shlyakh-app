@@ -36,5 +36,21 @@
   "errorHealthUnavailable": "Дані про здоров'я недоступні на цьому пристрої.",
   "errorStorage": "Не вдалося зберегти дані на пристрої. Спробуйте перезапустити застосунок.",
   "errorUnexpected": "Під час читання даних щось пішло не так.",
-  "errorGeneric": "Щось пішло не так."
+  "errorGeneric": "Щось пішло не так.",
+  "tabToday": "Сьогодні",
+  "tabPath": "Шлях",
+  "tabHistory": "Історія",
+  "todayStepsCaption": "{count, plural, one{крок} few{кроки} many{кроків} other{кроку}} сьогодні · {date}",
+  "levelLabel": "Рівень {level} · {chapter}",
+  "xpToNextLevel": "{xp} XP до рівня {level}",
+  "xpRange": "{from} → {to} XP",
+  "todayHeading": "Сьогодні",
+  "stepsUnit": "{count, plural, one{крок} few{кроки} many{кроків} other{кроку}}",
+  "xpUnit": "XP",
+  "distanceApprox": "≈ {km} км",
+  "weekHeading": "Цей тиждень",
+  "weekTotal": "Разом {count, plural, one{{steps} крок} few{{steps} кроки} many{{steps} кроків} other{{steps} кроку}}",
+  "historyLink": "Уся історія →",
+  "pathPlaceholder": "Тут скоро буде твій шлях",
+  "historyPlaceholder": "Тут скоро буде історія"
 }
