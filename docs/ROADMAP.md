@@ -1,6 +1,6 @@
 # Roadmap
 
-Current stage: **0 — Foundation**
+Current stage: **3 — Design**
 
 Stages are ordered by risk: the riskiest technical part (HealthKit) is
 validated first, visual polish comes last. No deadlines.
@@ -14,11 +14,11 @@ validated first, visual polish comes last. No deadlines.
 - [ ] Apple Developer account
 
 ## 1. HealthKit spike (throwaway code allowed)
-- [ ] Request HealthKit permissions
-- [ ] Read daily step counts on a real iPhone
-- [ ] Verify Apple Watch steps are included without double counting
-- [ ] Prototype background delivery (HKObserverQuery in Swift via Pigeon)
-- [ ] Write findings to `docs/decisions/`
+- [x] Request HealthKit permissions
+- [x] Read daily step counts on a real iPhone
+- [x] Verify Apple Watch steps are included without double counting
+- [x] Prototype background delivery (HKObserverQuery in Swift via Pigeon)
+- [x] Write findings to `docs/decisions/`
 
 ## 2. Domain
 - [x] Decide XP formula and level curve (update PRODUCT.md)
