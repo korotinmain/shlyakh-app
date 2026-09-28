@@ -284,6 +284,13 @@ protocol StepsHostApi {
   func dailySteps(fromEpochMs: Int64) async throws -> [NativeDay]
   /// The device's IANA time zone identifier, e.g. `Europe/Kyiv`.
   func timeZoneId() throws -> String
+  /// SPIKE: appends an event (time and app state added natively). Never
+  /// pass step counts, dates or ids.
+  func probeLog(event: String) throws
+  /// SPIKE: the journal, oldest first.
+  func probeJournal() throws -> [String]
+  /// SPIKE: clears the journal.
+  func clearProbeJournal() throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -355,6 +362,51 @@ class StepsHostApiSetup {
       }
     } else {
       timeZoneIdChannel.setMessageHandler(nil)
+    }
+    /// SPIKE: appends an event (time and app state added natively). Never
+    /// pass step counts, dates or ids.
+    let probeLogChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.shlyakh.StepsHostApi.probeLog\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      probeLogChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let eventArg = args[0] as! String
+        do {
+          try api.probeLog(event: eventArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      probeLogChannel.setMessageHandler(nil)
+    }
+    /// SPIKE: the journal, oldest first.
+    let probeJournalChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.shlyakh.StepsHostApi.probeJournal\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      probeJournalChannel.setMessageHandler { _, reply in
+        do {
+          let result = try api.probeJournal()
+          reply(wrapResult(result))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      probeJournalChannel.setMessageHandler(nil)
+    }
+    /// SPIKE: clears the journal.
+    let clearProbeJournalChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.shlyakh.StepsHostApi.clearProbeJournal\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      clearProbeJournalChannel.setMessageHandler { _, reply in
+        do {
+          try api.clearProbeJournal()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      clearProbeJournalChannel.setMessageHandler(nil)
     }
   }
 }

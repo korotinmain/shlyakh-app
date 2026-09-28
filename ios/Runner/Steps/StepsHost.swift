@@ -65,6 +65,11 @@ final class StepsHost: StepsHostApi {
     TimeZone.current.identifier
   }
 
+  // SPIKE: probe journal.
+  func probeLog(event: String) throws { ProbeJournal.log(event) }
+  func probeJournal() throws -> [String] { ProbeJournal.all() }
+  func clearProbeJournal() throws { ProbeJournal.clear() }
+
   // MARK: Errors
 
   private static let unavailable = PigeonError(code: "unavailable", message: nil, details: nil)

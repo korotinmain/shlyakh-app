@@ -40,6 +40,16 @@ abstract class StepsHostApi {
 
   /// The device's IANA time zone identifier, e.g. `Europe/Kyiv`.
   String timeZoneId();
+
+  /// SPIKE: appends an event (time and app state added natively). Never
+  /// pass step counts, dates or ids.
+  void probeLog(String event);
+
+  /// SPIKE: the journal, oldest first.
+  List<String> probeJournal();
+
+  /// SPIKE: clears the journal.
+  void clearProbeJournal();
 }
 
 /// Calls from HealthKit's observer into Dart.

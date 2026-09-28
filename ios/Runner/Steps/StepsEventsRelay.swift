@@ -11,6 +11,8 @@ final class StepsEventsRelay {
   private var events: StepsEventsApiProtocol?
   private var waiting: [OnceCompletion] = []
 
+  var isAttached: Bool { events != nil }  // SPIKE
+
   init(timeout: TimeInterval) {
     self.timeout = timeout
   }
@@ -37,7 +39,12 @@ final class StepsEventsRelay {
       // A failed reply (no Dart handler yet, a Dart error) still ends the
       // wakeup: HealthKit backs off when its completion is never called,
       // and the next launch or foreground syncs anyway.
-      try? await events.onStepsChanged()
+      do {
+        try await events.onStepsChanged()
+        ProbeJournal.log("dart replied")
+      } catch {
+        ProbeJournal.log("dart reply failed")
+      }
       once.fire()
     }
   }

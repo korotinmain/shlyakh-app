@@ -21,10 +21,17 @@ final class StepsObserver {
       // Called on a background queue.
       DispatchQueue.main.async {
         guard let self, error == nil else {
+          ProbeJournal.log("observer error")
           completionHandler()
           return
         }
-        self.relay.stepsChanged(completion: completionHandler)
+        let started = Date()
+        ProbeJournal.log("observer fired, dart attached: \(self.relay.isAttached)")
+        self.relay.stepsChanged {
+          ProbeJournal.log(
+            "completion after \(String(format: "%.1f", Date().timeIntervalSince(started))) s")
+          completionHandler()
+        }
       }
     }
     self.query = query
