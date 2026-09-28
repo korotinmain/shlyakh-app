@@ -1,6 +1,6 @@
 // Stars from total XP (docs/superpowers/specs/2026-09-28-constellation-path-design.md,
 // "Numbers"): the n-th star costs min(25 000, 1 500 × n) XP.
-import 'package:shlyakh/features/path/domain/route.dart';
+import 'package:shlyakh/features/path/domain/sky_route.dart';
 
 const _costStep = 1500;
 const _costCap = 25000;
@@ -45,7 +45,7 @@ typedef PathProgress = ({int starsLit, NextStar? next});
 /// Progress along [route] with [totalXp].
 ///
 /// Throws [ArgumentError] for negative XP.
-PathProgress pathProgress(int totalXp, Route route) {
+PathProgress pathProgress(int totalXp, SkyRoute route) {
   if (totalXp < 0) {
     throw ArgumentError.value(totalXp, 'totalXp', 'must be >= 0');
   }

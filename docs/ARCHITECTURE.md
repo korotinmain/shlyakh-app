@@ -86,7 +86,7 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
 - Time: `clockProvider` is the only source of "now" (ADR 0002).
 - Domain: `features/progress/domain/` holds the XP rules (`dailyXp`,
   `totalXp`). `features/path/domain/` holds the constellation path:
-  `Route` and `Constellation` (`route.dart`; validated, a shared star
+  `SkyRoute` and `Constellation` (`sky_route.dart`; validated, a shared star
   lights once in the first constellation that has it), `starCost`,
   `xpToLight` and `pathProgress` (`star_cost.dart`), `daysToNextStar`
   (`eta.dart`, the pace of the last 14 full days) and `starMoment`
@@ -100,7 +100,7 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   J2000 positions and positions projected to a unit box (north up, east
   left), figure lines, a lighting order that always steps along a line,
   and each constellation's centre and angular span on the sky.
-  `features/path/data/route_asset.dart` parses it into a `Route`;
+  `features/path/data/route_asset.dart` parses it into a `SkyRoute`;
   `routeProvider` (keepAlive) loads it once. The sky-data licences are on
   the licences page.
 - Local storage: `core/database/app_database.dart` (Drift, schema v2,

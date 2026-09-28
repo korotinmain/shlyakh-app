@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:shlyakh/features/path/domain/route.dart';
+import 'package:shlyakh/features/path/domain/sky_route.dart';
 
 /// Path of the bundled route asset.
 const routeAssetPath = 'assets/sky/route.json';
@@ -15,14 +15,14 @@ const _edge = {'Tau', 'Gem', 'Ori'};
 /// Loads the route from [bundle].
 ///
 /// Throws [RouteException] when the asset is malformed.
-Future<Route> loadRouteAsset(AssetBundle bundle) async =>
+Future<SkyRoute> loadRouteAsset(AssetBundle bundle) async =>
     parseRouteAsset(await bundle.loadString(routeAssetPath));
 
 /// The route in [json], the contents of `assets/sky/route.json`.
 ///
 /// Throws [RouteException] naming what failed when a key is missing or has
 /// the wrong type.
-Route parseRouteAsset(String json) {
+SkyRoute parseRouteAsset(String json) {
   final Object? decoded;
   try {
     decoded = jsonDecode(json);
@@ -34,7 +34,7 @@ Route parseRouteAsset(String json) {
   final main = _ids(order['main'], 'route.main');
   final branch = _ids(order['branch'], 'route.branch');
   final constellations = _map(asset['constellations'], 'constellations');
-  return Route(
+  return SkyRoute(
     constellations: [
       for (final id in [...main, ...branch])
         _constellation(id, constellations[id]),
