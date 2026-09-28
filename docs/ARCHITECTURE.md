@@ -58,15 +58,15 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
                                        └── /history HistoryScreen (placeholder)
 ```
 
-- Today screen: `features/today/presentation/`. The theme's palette
-  (`context.palette`) and `todayProvider` (today's steps, XP, star progress on the route, week
-  and approximate distance from `routeProvider` and
-  `StepsRepository.watchDays`) feed the widgets: sky with grain,
-  placeholder hills, glass `TodayCard` with the current star's
-  `ProgressRing`, `ProgressSheet` (collapsed: the current constellation
-  and star; expanded today, week, history link;
-  below the card, under the tab bar) and a status bar that follows the
-  theme's brightness.
+- Today screen: `features/today/presentation/`. `todayProvider` (today's
+  steps, XP, approximate distance, the week, star progress, the current
+  `Constellation` and its `figureStates` from `routeProvider` and
+  `StepsRepository.watchDays`) and the theme's palette feed the zones:
+  sky with its backdrop and grain, `HillsSilhouette`, the glass
+  `TodayCard` with the current star's `ProgressRing`, the
+  `ConstellationFigure` between the card and the collapsed sheet, and
+  `ProgressSheet` (collapsed: the day's XP and the current star;
+  expanded: today, the week, a link to Path; runs under the tab bar).
 - Steps: `features/steps/domain/` holds `DailySteps`, `LocalDate`,
   `JourneyStart`, the sync rules and the `StepsRepository` interface;
   `DriftStepsRepository` implements it.
@@ -89,7 +89,9 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   lights once in the first constellation that has it), `starCost`,
   `xpToLight` and `pathProgress` (`star_cost.dart`), `daysToNextStar`
   (`eta.dart`, the pace of the last 14 full days) and `starMoment`
-  (`star_moment.dart`). All pure functions of daily steps.
+  (`star_moment.dart`) and `figureStates` (`figure_state.dart`: lit,
+  current and ahead stars and solid lines of the current figure). Pure
+  Dart, no Flutter.
 - Design tokens: `core/design/` (`AppPalette`, a light and a dark
   palette as a `ThemeExtension`; member colours, Geologica typography,
   spacing, radii, glass, motion). `app/theme.dart` builds a light and a

@@ -49,6 +49,38 @@ marker on the sky at least 3:1.
 The status bar has light icons in the dark theme and dark icons in the
 light theme.
 
+## Layout
+
+Every screen is zones: a top zone, a flexible zone and a bottom zone,
+plus a reserved strip under the floating tab bar where nothing but glass
+shows. On Today: the card at the top (with the Health hint under it when
+shown); a hills silhouette rises 96 pt above the collapsed sheet and
+runs under it; the current constellation fills the sky between the card
+and the hills, its name just under its lowest star; the sheet runs under the tab bar to the screen edge
+and its content ends above the bar. With large text the card and the
+sheet grow and the constellation zone shrinks, never overlapping them.
+
+## Constellation figure
+
+Drawn in code (`ConstellationFigure`) from the bundled route; the Rive
+art replaces it later with the same states.
+
+- The figure's unit box fits the largest square that leaves 24 pt on
+  each side of its zone (less 48 pt kept for the name), centred. The name
+  sits 16 pt under the lowest star in `footnote`, `onSkyMuted`, sentence
+  case, no letter-spacing.
+- A lit star is a dot of radius `(3.5 − 0.5 × magnitude)` clamped to
+  1.5–3.5 in `star`, with a glow three times that radius in `starGlow`
+  (dark only). A star ahead is a ring of radius 3, stroke 0.8, in
+  `starAhead`.
+- Lines are solid (`starLine`, stroke 1) where neither end lies ahead,
+  so the line reaches the current star; dashed (`aheadLine`, stroke
+  0.8, dash 2 / gap 4) otherwise.
+- The current star's marker: a core of radius 3.2 in `star`, a ring of
+  radius 9 with one gap in `marker` at 60 %, cross spikes of half-length
+  16 at 50 % and a soft disc of radius 16 at 12 %. Static for now; the
+  star moment animates it.
+
 ## Members
 
 Each Спільно member has one of six muted colours, chosen by an FNV-1a hash

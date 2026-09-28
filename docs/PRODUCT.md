@@ -91,6 +91,10 @@ Still valid from design stage A (2026-09-27):
 - **No XP bonuses.** XP is only `dailyXp(steps)`.
 - **No daily goal.** Today's steps are the big number; progress points to
   the next star.
+- **The sky shows the current constellation** with its lit stars, the
+  current star's marker and the stars ahead; the sheet shows the day's
+  contribution ("+6 870 XP сьогодні") and how full the current star is,
+  then the week and a link to Path.
 - **Neutral week:** 7 bars with each day's steps (today highlighted) and
   the week's total. No check marks, no "active days", no weekly goal.
 - **Distance is approximate:** steps × 0.74 m, shown as "≈ 8.5 km". It is
