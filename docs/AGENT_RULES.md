@@ -50,7 +50,7 @@ convenience. If a task seems to require breaking one, stop and ask.
 - Store daily step records as `(user_id, local_date, timezone)`.
 - Never compute day boundaries with `DateTime.now().toUtc()` or by
   truncating UTC timestamps.
-- XP/level tests must cover: DST transitions, a day in a different
+- XP and star progress tests must cover: DST transitions, a day in a different
   timezone (travel), and midnight boundaries.
 
 ## 5. Health data and privacy
@@ -97,7 +97,7 @@ later, when screens stabilize.
 
 ### 8.2 What must be tested
 
-- **Domain (highest priority):** XP formula, level curve, date/day logic,
+- **Domain (highest priority):** XP formula, star cost and path progress, date/day logic,
   entities with behavior, validation. Every rule in `docs/PRODUCT.md` that
   the domain implements has a test that would fail if the rule changed.
 - **Data:** repository implementations against fake data sources: mapping
@@ -129,7 +129,7 @@ later, when screens stabilize.
   → `test/features/x/domain/foo_test.dart`. Shared fakes and builders live
   in `test/helpers/`.
 - **Naming:** `group` per unit or method, `test` names describe behavior:
-  `'returns level 3 when XP equals the level 3 threshold'`, not
+  `'lights the third star when XP equals its cost'`, not
   `'test calculate'`.
 - **Shape:** Arrange / Act / Assert, one behavior per test. Several
   `expect` calls are fine when they check one outcome.

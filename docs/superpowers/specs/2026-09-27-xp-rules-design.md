@@ -1,7 +1,9 @@
 # XP and level rules — design
 
 Date: 2026-09-27
-Status: approved in chat, pending spec review
+Status: daily XP rules in force; the level curve and titles are
+superseded by `2026-09-28-constellation-path-design.md` (stars replace
+levels) and are removed from the code in its plan 2.
 
 ## Goal
 

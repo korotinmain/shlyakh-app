@@ -1,6 +1,6 @@
 # Roadmap
 
-Current stage: **3 — Design**
+Current stage: **3 — Constellation path**
 
 Stages are ordered by risk: the riskiest technical part (HealthKit) is
 validated first, visual polish comes last. No deadlines.
@@ -21,50 +21,43 @@ validated first, visual polish comes last. No deadlines.
 - [x] Write findings to `docs/decisions/`
 
 ## 2. Domain
-- [x] Decide XP formula and level curve (update PRODUCT.md)
-- [x] Choose level names
-- [x] Pure Dart XP/level logic with unit tests
+- [x] Decide XP formula (update PRODUCT.md)
+- [x] Pure Dart XP logic with unit tests
 - [x] Drift schema for daily steps
 - [x] Repository: HealthKit to Drift sync
 
-## 3. Design
-- [x] A. Main screen content decisions (PRODUCT.md "Main screen content")
-- [x] B. Design foundation: sky palettes per time of day, accents,
-      typography with Cyrillic, spacing, radii, glass material;
-      `docs/DESIGN.md` and tokens in `lib/core/`
-- [x] C. Main screen skeleton: live sky, glass card with ring, collapsed /
-      expanded bottom sheet, floating tab bar; placeholder hills
-- [ ] D. Illustration (waits for art): layered hills with atmospheric
-      perspective, grain, parallax, path and member dots, night sky with
-      the Milky Way growing with progress
-- [ ] E. Level-up moment (several levels at once) and history
-- [ ] F. Motion and haptics (walking dots, count-up, level-up haptics);
-      a clearer active tab at night (the night accent is close to the
-      idle label colour)
+## 3. Constellation path
 
-## 4. Main screen
-- [x] Theme and tokens in code (design phase B)
-- [ ] Static landscape (placeholder hills only; the art is design phase D)
-- [x] Progress ring (CustomPainter, design phase C)
-- [x] Bottom sheet with today's stats and level (design phase C)
-- [x] Wired to real data
+Spec: `docs/superpowers/specs/2026-09-28-constellation-path-design.md`.
+It replaces the earlier levels, titles, time-of-day sky and landscape
+(the old level-up work is kept as the `archive/level-up` tag).
 
-## 5. Backend
-- [ ] Supabase project, schema, RLS policies
-- [ ] Auth and registration (gender required)
-- [ ] Спільно: private groups by invitation (any number of members)
-- [ ] Sync daily steps to Supabase
-- [ ] Realtime: Спільно members' dots on the landscape
-- [x] Create `docs/ARCHITECTURE.md` (created early, before stage 2)
+- [x] Today screen skeleton wired to real data (glass card, week, sheet)
+- [x] 1. ADR 0009 and the bundled sky data (`assets/sky/route.json`)
+- [ ] 2. Domain: route, star cost, path progress, ETA, star moment;
+      remove levels and titles
+- [ ] 3. Light and dark themes; remove the time-of-day sky
+- [ ] 4. Today: the current constellation above a hills silhouette
+- [ ] 5. Path: constellation pages with swipe, route strip, Milky Way map
+- [ ] 6. Star moment and the Rive contract (art has no text)
+- [ ] 7. Stories and docs
 
-## 6. Polish
-- [ ] Rive landscape with day/night transition
-- [ ] Micro-animations (flutter_animate)
-- [ ] Level-up notifications
+## 4. Motion and polish
+- [ ] Micro-animations (flutter_animate) and haptics
+- [ ] Constellation engravings (atlas style, later)
+- [ ] Star notifications
 - [ ] Ukrainian + English localization complete
 - [ ] Home screen widget (if in scope)
 
-## 7. Release to our phones
+## 5. Backend
+- [ ] Supabase project, schema, RLS policies
+- [ ] Auth and registration
+- [ ] Спільно: private groups by invitation (any number of members)
+- [ ] Sync daily steps to Supabase
+- [ ] Realtime: Спільно members on the path
+- [x] Create `docs/ARCHITECTURE.md` (created early, before stage 2)
+
+## 6. Release to our phones
 - [ ] TestFlight build
 - [ ] Installed on our family's phones
 

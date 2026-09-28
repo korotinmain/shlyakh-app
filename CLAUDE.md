@@ -1,8 +1,9 @@
 # Shlyakh (Шлях)
 
 Personal walking tracker for iOS built with Flutter. Steps from HealthKit
-(including Apple Watch data) turn into XP, XP raises named levels, and the
-main screen is an illustrated landscape ("postcard") where each user is a dot.
+(including Apple Watch data) turn into XP, and XP lights the stars of real
+constellations along a fixed route through the Milky Way (the "constellation
+path"). There are no levels or titles; progress is the current star.
 Users can walk together in private groups ("Спільно"); no fixed number of
 users or members. Architected like a small SaaS product.
 
@@ -25,7 +26,8 @@ making any change. They override convenience.**
 - Health data: native Swift (HealthKit) exposed to Dart through Pigeon
   (`pigeons/steps_api.dart`); no `health` plugin
 - Backend: Supabase (auth, Postgres with RLS, Realtime)
-- Animation: Rive (landscape), CustomPainter (progress ring), flutter_animate
+- Animation: Rive (constellation art; all text stays in Flutter), CustomPainter,
+  flutter_animate
 - i18n: gen-l10n with ARB files (uk, en)
 - Tests: flutter_test + mocktail
 
@@ -112,7 +114,7 @@ docs/               # product, roadmap, architecture, decisions
 
 - Domain layer is pure Dart: no Flutter, no packages with platform code.
 - No business logic in widgets. Widgets read providers and render.
-- All XP and level logic lives in the domain layer and is covered by tests.
+- All XP and star progress logic lives in the domain layer and is covered by tests.
 - XP is a deterministic function of daily step counts. Never store XP as an
   incrementing counter; it must be recomputable from raw data.
 - Every user-facing string goes through l10n. No hardcoded text in widgets.
