@@ -16,6 +16,10 @@ class JourneyStartTable extends Table {
   /// IANA time zone at the start, e.g. `Europe/Kyiv`.
   TextColumn get timezone => text()();
 
+  /// The last level whose level-up scene the user has seen; only raised
+  /// (docs/superpowers/specs/2026-09-28-level-up-moment-design.md).
+  IntColumn get celebratedLevel => integer().withDefault(const Constant(1))();
+
   @override
   Set<Column<Object>> get primaryKey => {userId};
 
@@ -27,5 +31,6 @@ class JourneyStartTable extends Table {
     "CHECK (user_id <> '')",
     "CHECK (timezone <> '')",
     'CHECK (started_at >= 0)',
+    'CHECK (celebrated_level >= 1)',
   ];
 }

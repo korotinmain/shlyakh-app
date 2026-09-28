@@ -110,8 +110,74 @@ i1.GeneratedColumn<int> _column_4(String aliasedName) =>
       type: i1.DriftSqlType.int,
       $customConstraints: 'NOT NULL',
     );
+
+final class Schema3 extends i0.VersionedSchema {
+  Schema3({required super.database}) : super(version: 3);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    dailySteps,
+    journeyStart,
+  ];
+  late final Shape0 dailySteps = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'daily_steps',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'PRIMARY KEY(user_id, local_date)',
+        'CHECK(steps >= 0)',
+        'CHECK(local_date GLOB \'[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\')',
+        'CHECK(timezone <> \'\')',
+        'CHECK(user_id <> \'\')',
+      ],
+      columns: [_column_0, _column_1, _column_2, _column_3],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 journeyStart = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'journey_start',
+      withoutRowId: false,
+      isStrict: true,
+      tableConstraints: [
+        'PRIMARY KEY(user_id)',
+        'CHECK(user_id <> \'\')',
+        'CHECK(timezone <> \'\')',
+        'CHECK(started_at >= 0)',
+        'CHECK(celebrated_level >= 1)',
+      ],
+      columns: [_column_0, _column_4, _column_2, _column_5],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape2 extends i0.VersionedTable {
+  Shape2({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get userId =>
+      columnsByName['user_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get startedAt =>
+      columnsByName['started_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get timezone =>
+      columnsByName['timezone']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get celebratedLevel =>
+      columnsByName['celebrated_level']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_5(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'celebrated_level',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 1',
+      defaultValue: const i1.CustomExpression('1'),
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -120,6 +186,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from1To2(migrator, schema);
         return 2;
+      case 2:
+        final schema = Schema3(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from2To3(migrator, schema);
+        return 3;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -128,6 +199,7 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) => i0.VersionedSchema.stepByStepHelper(
-  step: migrationSteps(from1To2: from1To2),
+  step: migrationSteps(from1To2: from1To2, from2To3: from2To3),
 );

@@ -18,7 +18,7 @@ class AppDatabase extends _$AppDatabase {
   new(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -26,6 +26,14 @@ class AppDatabase extends _$AppDatabase {
     onUpgrade: stepByStep(
       // v2: the journey start (HealthKit sync).
       from1To2: (m, schema) => m.createTable(schema.journeyStart),
+      // v3: the last celebrated level (level-up scene). The table is
+      // rebuilt: ALTER TABLE cannot add its CHECK constraint.
+      from2To3: (m, schema) => m.alterTable(
+        TableMigration(
+          schema.journeyStart,
+          newColumns: [schema.journeyStart.celebratedLevel],
+        ),
+      ),
     ),
   );
 }

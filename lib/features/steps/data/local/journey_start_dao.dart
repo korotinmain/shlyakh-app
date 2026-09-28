@@ -37,6 +37,21 @@ class JourneyStartDao extends DatabaseAccessor<AppDatabase>
     return true;
   });
 
+  /// The last level whose level-up scene the user has seen, 1 for a new
+  /// journey, null before the journey starts.
+  Stream<int?> watchCelebratedLevel(String userId) =>
+      _byUser(userId).watchSingleOrNull().map((row) => row?.celebratedLevel);
+
+  /// Records that the user has seen the scene for [level]. Only raises the
+  /// stored level, so a late or repeated tap never lowers it; does nothing
+  /// before the journey starts.
+  Future<void> markCelebrated(String userId, int level) => customUpdate(
+    'UPDATE journey_start SET celebrated_level = MAX(celebrated_level, ?) '
+    'WHERE user_id = ?',
+    variables: [Variable.withInt(level), Variable.withString(userId)],
+    updates: {journeyStartTable},
+  );
+
   /// Deletes the user's start (account deletion, AGENT_RULES 5) and
   /// returns how many rows were removed.
   Future<int> deleteForUser(String userId) =>

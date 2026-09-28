@@ -76,4 +76,56 @@ void main() {
       throwsA(isA<SqliteException>()),
     );
   });
+
+  group('celebrated level', () {
+    test('a new start is at level 1', () async {
+      await dao.insertOnce(_start('local', DateTime.utc(2026, 9, 28)));
+
+      expect(await dao.watchCelebratedLevel('local').first, 1);
+    });
+
+    test('markCelebrated raises it', () async {
+      await dao.insertOnce(_start('local', DateTime.utc(2026, 9, 28)));
+
+      await dao.markCelebrated('local', 4);
+
+      expect(await dao.watchCelebratedLevel('local').first, 4);
+    });
+
+    test('markCelebrated never lowers it', () async {
+      await dao.insertOnce(_start('local', DateTime.utc(2026, 9, 28)));
+      await dao.markCelebrated('local', 4);
+
+      await dao.markCelebrated('local', 2);
+
+      expect(await dao.watchCelebratedLevel('local').first, 4);
+    });
+
+    test('another user is untouched', () async {
+      await dao.insertOnce(_start('local', DateTime.utc(2026, 9, 28)));
+      await dao.insertOnce(_start('other', DateTime.utc(2026, 9, 28)));
+
+      await dao.markCelebrated('local', 4);
+
+      expect(await dao.watchCelebratedLevel('other').first, 1);
+    });
+
+    test('there is none before the journey starts', () async {
+      await dao.markCelebrated('local', 4);
+
+      expect(await dao.watchCelebratedLevel('local').first, isNull);
+    });
+
+    test('the database rejects a level below 1', () async {
+      await dao.insertOnce(_start('local', DateTime.utc(2026, 9, 28)));
+
+      await expectLater(
+        db.customStatement(
+          'UPDATE journey_start SET celebrated_level = 0 '
+          "WHERE user_id = 'local'",
+        ),
+        throwsA(isA<SqliteException>()),
+      );
+    });
+  });
 }
