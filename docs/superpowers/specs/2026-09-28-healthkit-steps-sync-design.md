@@ -77,8 +77,9 @@ closed, offline and without an account.
 
 - `healthkit/health_kit_steps_source.dart` — `HealthKitStepsSource`: wraps
   `StepsHostApi`; maps known `PlatformException` codes to `Failure`
-  (`unavailable` → `HealthUnavailable`, `locked` → `HealthDataLocked`);
-  unknown codes are rethrown (ADR 0005). Returns `DailySteps` with the
+  (`unavailable` → `HealthUnavailable`, `locked` → `HealthDataLocked`,
+  `healthkit` → `UnexpectedFailure`); undocumented codes are rethrown
+  (ADR 0005). Returns `DailySteps` with the
   current user id and time zone.
 - `local/journey_start_table.dart` and `JourneyStartDao`: table
   `journey_start (user_id TEXT PK, started_at INTEGER UTC ms, timezone
@@ -154,7 +155,8 @@ closed, offline and without an account.
 | Read access denied | Not detectable; days are 0; the hint appears after 24 hours |
 | Query while the device is locked | New `HealthDataLocked`; the sync ends, stored days stay, the next trigger retries |
 | Drift error | `StorageFailure` (existing) |
-| Unknown native error code | Not caught: a bug, reaches the unhandled error handler |
+| Other HealthKit error (`healthkit`) | `UnexpectedFailure`; the sync ends like `HealthDataLocked` |
+| Undocumented native error code | Not caught: a bug, reaches the unhandled error handler |
 
 A failed sync is never shown as a full-screen error: the UI reads Drift,
 at worst slightly stale. Log events (ADR 0006): `stepsSyncCompleted`

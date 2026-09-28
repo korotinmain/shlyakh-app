@@ -94,14 +94,24 @@ void main() {
     });
   });
 
-  test('an unknown code is rethrown', () async {
+  test('a HealthKit error maps to UnexpectedFailure', () async {
+    final error = PlatformException(code: 'healthkit', details: 3);
+    when(() => api.dailySteps(any())).thenThrow(error);
+
+    await expectLater(
+      source.dailySteps(userId: 'local', from: DateTime.utc(2026, 9, 28)),
+      throwsA(isA<UnexpectedFailure>().having((f) => f.cause, 'cause', error)),
+    );
+  });
+
+  test('an undocumented code is rethrown', () async {
     when(() => api.dailySteps(any()))
-        .thenThrow(PlatformException(code: 'healthkit', details: 3));
+        .thenThrow(PlatformException(code: 'channel-error'));
 
     await expectLater(
       source.dailySteps(userId: 'local', from: DateTime.utc(2026, 9, 28)),
       throwsA(
-        isA<PlatformException>().having((e) => e.code, 'code', 'healthkit'),
+        isA<PlatformException>().having((e) => e.code, 'code', 'channel-error'),
       ),
     );
   });

@@ -6,8 +6,8 @@ import 'package:shlyakh/features/steps/domain/local_date.dart';
 
 /// HealthKit through the native `StepsHostApi` (ADR 0007).
 ///
-/// Known native error codes become [Failure]s; any other code is a bug and
-/// is rethrown (ADR 0005).
+/// The native error codes become [Failure]s (ADR 0005); an undocumented
+/// code (e.g. Pigeon's `channel-error`) is a setup bug and is rethrown.
 final class HealthKitStepsSource {
   new(this._api);
 
@@ -51,6 +51,7 @@ final class HealthKitStepsSource {
       final failure = switch (e.code) {
         'unavailable' => HealthUnavailable(cause: e),
         'locked' => HealthDataLocked(cause: e),
+        'healthkit' => UnexpectedFailure(cause: e),
         _ => null,
       };
       if (failure == null) rethrow;

@@ -146,7 +146,8 @@ Decided by the stage 1 spike (ADR 0007):
   through Pigeon.
 - **[built]** Native errors reach Dart as codes only, never messages:
   `unavailable` → `HealthUnavailable`, `locked` (device locked) →
-  `HealthDataLocked`, `healthkit` (with HealthKit's code) is rethrown.
+  `HealthDataLocked`, `healthkit` (with HealthKit's code) →
+  `UnexpectedFailure`; an undocumented code is a bug and is rethrown.
 - **[built]** Entitlements: `com.apple.developer.healthkit` and
   `…healthkit.background-delivery`. Not `…healthkit.access` (health
   records), which a Personal Team cannot sign.
@@ -154,8 +155,13 @@ Decided by the stage 1 spike (ADR 0007):
   while new steps arrive, and not at all while none do. Data refreshes on
   app launch, on return to the foreground and on an observer callback;
   other members' steps can be up to about an hour old.
-- **[open]** Whether Dart gets enough time in a background wakeup to read
-  HealthKit and write to Drift; checked when the sync is built.
+- **[open]** Whether Dart runs at all in a background wakeup, and for long
+  enough to read HealthKit and write to Drift. Risk: with the scene
+  lifecycle the Flutter engine is created when a scene connects, and a
+  HealthKit background relaunch connects none, so `onStepsChanged` may
+  never reach Dart (the wakeup then ends by the 20 s timeout). Checked on
+  the device before the sync (PR 2) relies on it; fallbacks are a
+  headless engine for background launches or reading the totals natively.
 
 ## 5. Cross-cutting concerns
 
