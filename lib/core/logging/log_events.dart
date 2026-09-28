@@ -64,3 +64,22 @@ abstract class LogEvent {
 
   Map<String, LogValue> get fields;
 }
+
+/// A steps sync from HealthKit finished (docs/superpowers/specs/
+/// 2026-09-28-healthkit-steps-sync-design.md). Only how long it took and
+/// how many days were written; never steps or dates.
+final class StepsSyncCompleted extends LogEvent {
+  const new({required this.duration, required this.daysWritten});
+
+  final Duration duration;
+  final int daysWritten;
+
+  @override
+  String get name => 'steps_sync_completed';
+
+  @override
+  Map<String, LogValue> get fields => {
+    'duration': LogValue.duration(duration),
+    'days_written': LogValue.count(daysWritten),
+  };
+}
