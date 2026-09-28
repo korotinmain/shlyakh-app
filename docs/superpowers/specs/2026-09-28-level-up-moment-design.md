@@ -101,6 +101,24 @@ the way" are joined with ", ".
   and dash from tokens (new trail tokens in `lib/core/design/`).
 - Art slot: `Trail` takes an optional `backgroundFor(chapter)` builder,
   unused now; phase D fills it with chapter art.
+- Look (`docs/design/level_up_sprites_draft.svg`, the developer's
+  draft), drawn in code, colours from the current sky's accent (decided:
+  "B", not a fixed gold):
+  - passed node: accent disc raised on a darker "shade" disc offset
+    down, a thin light inner ring and a light highlight arc; level number
+    in dark text;
+  - current node: larger, white centre inside an accent ring on its
+    shade, a two-step halo of the accent at low opacity;
+  - upcoming node: translucent white disc with a dashed white outline,
+    dimmed number;
+  - chapter start: a small flag (pole and a two-tone accent pennant) with
+    a ground shadow next to the first node of a chapter;
+  - line: white round dots along a smooth curve through the node centres;
+  - "you are here": a dark pill with a caret pointing at the current node;
+  - "Continue": a pill button in the accent raised on its shade.
+  The shade is the accent darker in OkLCh (a lightness step token); halo
+  and upcoming-node opacities, dot size and spacing, node sizes and the
+  raise offset are tokens in `lib/core/design/trail_tokens.dart`.
 
 ### Presentation
 
