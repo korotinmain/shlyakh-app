@@ -1,5 +1,6 @@
 // Dart <-> Swift bridge for HealthKit steps (ADR 0007).
-// Regenerate with: dart run pigeon --input pigeons/steps_api.dart
+// Regenerate with: dart run pigeon --input pigeons/steps_api.dart, then
+// dart format lib/features/steps/data/healthkit/steps_api.g.dart
 // The Dart output is not committed, the Swift output is (ADR 0001).
 import 'package:pigeon/pigeon.dart';
 
