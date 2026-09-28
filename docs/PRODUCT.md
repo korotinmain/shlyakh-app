@@ -141,6 +141,8 @@ Decided 2026-09-27 (design stage A):
 - The bottom sheet discloses progressively: collapsed shows the title,
   level and a thin progress bar; expanded shows today, the week and
   history.
+- **Distance is approximate:** steps × 0.74 m, shown as "≈ 8.5 km". It is
+  not read from HealthKit and never affects XP.
 
 ## Open questions
 
