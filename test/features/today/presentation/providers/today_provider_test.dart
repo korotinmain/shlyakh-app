@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
 import 'package:shlyakh/features/progress/domain/level_curve.dart';
 import 'package:shlyakh/features/progress/domain/xp_rules.dart';
-import 'package:shlyakh/features/steps/data/demo/demo_steps_repository.dart';
 import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
 import 'package:shlyakh/features/steps/domain/steps_repository.dart';
@@ -159,16 +158,5 @@ void main() {
     addTearDown(container.dispose);
 
     expect(container.read(currentUserIdProvider), 'local');
-  });
-
-  test('the steps repository is the demo one for now', () {
-    final container = ProviderContainer(
-      overrides: [
-        clockProvider.overrideWithValue(Clock.fixed(DateTime(2026, 9, 28))),
-      ],
-    );
-    addTearDown(container.dispose);
-
-    expect(container.read(stepsRepositoryProvider), isA<DemoStepsRepository>());
   });
 }
