@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 /// Colours of Спільно members (docs/DESIGN.md): coral, sage, sky,
-/// lavender, sand, rose. Muted so each stays visible on all seven skies.
+/// lavender, sand, rose. Muted so each stays visible in both themes.
 const List<int> memberColors = [
   0xFFE8927C,
   0xFF8DB596,

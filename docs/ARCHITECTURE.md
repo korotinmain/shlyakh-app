@@ -153,7 +153,7 @@ flowchart LR
   SB -->|Realtime| MEMBERS[Спільно members' positions]
   XP --> P[presentation/providers]
   MEMBERS --> P
-  P --> UI[widgets: postcard, ring, bottom sheet]
+  P --> UI[widgets: constellation, ring, bottom sheet]
 ```
 
 Invariants the flow must keep (details in `docs/AGENT_RULES.md`):
