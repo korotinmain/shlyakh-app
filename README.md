@@ -1,17 +1,27 @@
-# shlyakh
+# Shlyakh (Шлях)
 
-A new Flutter project.
+A personal walking tracker for iOS, built with Flutter. Daily steps from
+HealthKit, Apple Watch included, turn into XP, and XP lights the stars of
+real constellations along a fixed route through the Milky Way.
 
-## Getting Started
+- Product scope and non-goals: [docs/PRODUCT.md](docs/PRODUCT.md)
+- Current stage: [docs/ROADMAP.md](docs/ROADMAP.md)
+- Layers and data flow: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- Visual design: [docs/DESIGN.md](docs/DESIGN.md)
+- Decisions: [docs/decisions/](docs/decisions/)
+- Commands, stack and rules: [CLAUDE.md](CLAUDE.md) and
+  [docs/AGENT_RULES.md](docs/AGENT_RULES.md)
 
-This project is a starting point for a Flutter application.
+## Getting started
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+dart run pigeon --input pigeons/steps_api.dart
+dart run build_runner build --delete-conflicting-outputs
+TZ=Europe/Kyiv flutter test
+flutter run
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Steps come from HealthKit, so run on a real iPhone.
+[ADR 0007](docs/decisions/0007-healthkit-steps-and-background-delivery.md)
+covers what a Personal Team can sign.

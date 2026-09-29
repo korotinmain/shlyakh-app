@@ -136,7 +136,7 @@ centred, and scrolls vertically, opening on the current constellation.
 Each Спільно member has one of six muted colours, chosen by an FNV-1a hash
 of their user id (the same on every device): coral `#E8927C`, sage
 `#8DB596`, sky `#7FA7D9`, lavender `#A99BD3`, sand `#D9B26F`, rose
-`#D98BA9`.
+`#D98BA9`. Built with Спільно (stage 5).
 
 ## Typography
 

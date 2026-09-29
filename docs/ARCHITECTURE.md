@@ -103,8 +103,8 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   days) and `skyMapLayout` / `galacticEquator` (`sky_map.dart`: the
   chart geometry). Pure Dart, no Flutter.
 - Design tokens: `core/design/` (`AppPalette`, a light and a dark
-  palette as a `ThemeExtension`; member colours, Geologica typography,
-  spacing, radii, glass, motion). `app/theme.dart` builds a light and a
+  palette as a `ThemeExtension`; Geologica typography, spacing, radii,
+  glass, motion). `app/theme.dart` builds a light and a
   dark `ThemeData` from them; `App` follows the system appearance
   (`ThemeMode.system`).
 - Sky data: `assets/sky/route.json`, built by `tool/sky/build_route.dart`
@@ -222,7 +222,7 @@ Decided by the stage 1 spike (ADR 0007):
 | Models | freezed + json_serializable | [decided] |
 | Local storage | Drift: one `AppDatabase` in `core/database/`, tables per feature, migrations from schema v1 | [built] |
 | Backend | Supabase: auth, Postgres with RLS on every table, Realtime | [decided] |
-| Design tokens | `lib/core/design/`: light and dark palettes, member colours, Geologica type scale, spacing, radii, matte glass, motion (`docs/DESIGN.md`) | [built] |
+| Design tokens | `lib/core/design/`: light and dark palettes, Geologica type scale, spacing, radii, matte glass, motion (`docs/DESIGN.md`) | [built] |
 | Error handling | sealed `Failure` thrown by repositories, `AsyncValue.error`, `failureMessage` in the UI; unhandled errors to the logger (ADR 0005) | [built] |
 | Logging | `AppLogger` with typed `LogEvent`s only; failures and errors by type, never by message; debug builds only (ADR 0006) | [built] |
 
