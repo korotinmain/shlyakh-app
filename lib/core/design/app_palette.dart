@@ -32,6 +32,11 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     required this.starAhead,
     required this.aheadLine,
     required this.marker,
+    required this.done,
+    required this.doneLine,
+    required this.doneGlow,
+    required this.seal,
+    required this.onSeal,
   });
 
   /// The night sky with a gold accent.
@@ -54,6 +59,11 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     starAhead: Color(0x73C8D2F0),
     aheadLine: Color(0x4DC8D2F0),
     marker: Color(0xFFFFE9B8),
+    done: Color(0xFFF3D9A0),
+    doneLine: Color(0xE6F7E2B4),
+    doneGlow: Color(0x4DF3D9A0),
+    seal: Color(0xFFEBC57F),
+    onSeal: Color(0xFF2A1D08),
   );
 
   /// An ink star chart on a pale sky.
@@ -76,6 +86,11 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     starAhead: Color(0x613D4F9A),
     aheadLine: Color(0x403D4F9A),
     marker: Color(0xFF3D4F9A),
+    done: Color(0xFF8A5E0B),
+    doneLine: Color(0xCC8A5E0B),
+    doneGlow: Color(0x008A5E0B),
+    seal: Color(0xFF8A5E0B),
+    onSeal: Color(0xFFFFFFFF),
   );
 
   final Brightness brightness;
@@ -111,6 +126,21 @@ final class AppPalette extends ThemeExtension<AppPalette> {
   /// The current star's marker.
   final Color marker;
 
+  /// A completed constellation: its stars and its "Complete" label.
+  final Color done;
+
+  /// A completed constellation's lines.
+  final Color doneLine;
+
+  /// The glow around its stars (none in the light theme).
+  final Color doneGlow;
+
+  /// The "Completed on a date" seal.
+  final Color seal;
+
+  /// Text on the seal.
+  final Color onSeal;
+
   @override
   AppPalette copyWith({
     Brightness? brightness,
@@ -131,6 +161,11 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     Color? starAhead,
     Color? aheadLine,
     Color? marker,
+    Color? done,
+    Color? doneLine,
+    Color? doneGlow,
+    Color? seal,
+    Color? onSeal,
   }) => AppPalette(
     brightness: brightness ?? this.brightness,
     sky: sky ?? this.sky,
@@ -150,6 +185,11 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     starAhead: starAhead ?? this.starAhead,
     aheadLine: aheadLine ?? this.aheadLine,
     marker: marker ?? this.marker,
+    done: done ?? this.done,
+    doneLine: doneLine ?? this.doneLine,
+    doneGlow: doneGlow ?? this.doneGlow,
+    seal: seal ?? this.seal,
+    onSeal: onSeal ?? this.onSeal,
   );
 
   /// Colours blend; brightness and backdrop switch halfway.
@@ -180,6 +220,11 @@ final class AppPalette extends ThemeExtension<AppPalette> {
       starAhead: mix(starAhead, other.starAhead),
       aheadLine: mix(aheadLine, other.aheadLine),
       marker: mix(marker, other.marker),
+      done: mix(done, other.done),
+      doneLine: mix(doneLine, other.doneLine),
+      doneGlow: mix(doneGlow, other.doneGlow),
+      seal: mix(seal, other.seal),
+      onSeal: mix(onSeal, other.onSeal),
     );
   }
 }

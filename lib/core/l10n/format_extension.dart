@@ -19,6 +19,10 @@ extension FormatX on BuildContext {
   String formatLongDate(DateTime date) =>
       DateFormat.MMMMEEEEd(_locale).format(date);
 
+  /// Day and month: `September 24`, `24 вересня`.
+  String formatDayMonth(DateTime date) =>
+      DateFormat.MMMMd(_locale).format(date);
+
   /// Short weekday: `Mon`, `пн`.
   String formatShortWeekday(DateTime date) =>
       DateFormat.E(_locale).format(date);

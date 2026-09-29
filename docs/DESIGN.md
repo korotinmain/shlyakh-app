@@ -39,13 +39,19 @@ two palettes.
 | `starAhead` | `#C8D2F0` at 45 % | `#3D4F9A` at 38 % |
 | `aheadLine` | `#C8D2F0` at 30 % | `#3D4F9A` at 25 % |
 | `marker` | `#FFE9B8` | `#3D4F9A` |
+| `done` | `#F3D9A0` | `#8A5E0B` |
+| `doneLine` | `#F7E2B4` at 90 % | `#8A5E0B` at 80 % |
+| `doneGlow` | `#F3D9A0` at 30 % | none |
+| `seal` | `#EBC57F` | `#8A5E0B` |
+| `onSeal` | `#2A1D08` | `#FFFFFF` |
 | grain | 12 % | 6 % |
 | backdrop | violet nebula (`#6E5AA8` at 32 %, fading) | star-chart grid (24 pt, ink at 5 %, top two thirds) |
 
 Contrast (WCAG 2, pinned by `test/core/design/app_palette_test.dart`):
-text on every sky colour, on the accent and on glass over the sky is at
-least 4.5:1; the accent on glass (ring, bar, active tab) and the stars and the
-marker on the sky at least 3:1.
+text on every sky colour, on the accent, on glass over the sky and on
+the seal is at least 4.5:1; the accent on glass (ring, bar, active tab),
+the stars, the marker and the gold of completed constellations on the
+sky at least 3:1.
 The status bar has light icons in the dark theme and dark icons in the
 light theme.
 
