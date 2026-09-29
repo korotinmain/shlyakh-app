@@ -220,7 +220,7 @@ Decided by the stage 1 spike (ADR 0007):
 | Time | `Clock` injected (constructor in domain, `clockProvider` in UI) | [built] |
 | Localization | gen-l10n, every user-facing string in ARB | [built] |
 | Navigation | go_router behind `routerProvider` | [built] |
-| Models | freezed + json_serializable | [decided] |
+| Models | Dart records and final classes; freezed + json_serializable removed as unused, revisit with Supabase DTOs | [built] |
 | Local storage | Drift: one `AppDatabase` in `core/database/`, tables per feature, migrations from schema v1 | [built] |
 | Backend | Supabase: auth, Postgres with RLS on every table, Realtime | [decided] |
 | Design tokens | `lib/core/design/`: light and dark palettes, member colours, Geologica type scale, spacing, radii, matte glass, motion (`docs/DESIGN.md`) | [built] |
