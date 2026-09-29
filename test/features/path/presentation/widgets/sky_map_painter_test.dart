@@ -19,10 +19,31 @@ void main() {
       final inAur = aur.stars.firstWhere((s) => s.hip == 25428);
       final inTau = tau.stars.firstWhere((s) => s.hip == 25428);
 
-      expect(mapStarPoint(layout, inAur), mapStarPoint(layout, inTau));
-      final p = mapPoint(layout, inAur.ra, inAur.dec);
-      expect(mapStarPoint(layout, inAur), Offset(p.x, p.y));
+      expect(
+        mapStarPoint(layout, route, inAur),
+        mapStarPoint(layout, route, inTau),
+      );
     });
+
+    for (final id in ['Cas', 'Cep', 'Cyg', 'Ori']) {
+      test('keeps the true proportions of $id near its centre', () {
+        final layout = skyMapLayout(route, width: 390, lastVisible: 15);
+        final c = route.constellations[index(id)];
+        // Only the stars it owns: a shared star is placed from its owner.
+        final own = [for (final i in route.ownOrder(index(id))) c.stars[i]];
+        final drawn = [for (final s in own) mapStarPoint(layout, route, s)];
+        double spread(Iterable<double> v) =>
+            v.reduce((a, b) => a > b ? a : b) -
+            v.reduce((a, b) => a < b ? a : b);
+        // The chart turns north to the right and east upwards.
+        final drawnRatio =
+            spread(drawn.map((p) => p.dx)) / spread(drawn.map((p) => p.dy));
+        final trueRatio =
+            spread(own.map((s) => s.y)) / spread(own.map((s) => s.x));
+
+        expect(drawnRatio, closeTo(trueRatio, trueRatio * 0.15));
+      });
+    }
   });
 
   group('mapLabelTop', () {
@@ -30,10 +51,10 @@ void main() {
       final layout = skyMapLayout(route, width: 390, lastVisible: 2);
       final cyg = route.constellations[index('Cyg')];
       final lowest = cyg.stars
-          .map((s) => mapStarPoint(layout, s).dy)
+          .map((s) => mapStarPoint(layout, route, s).dy)
           .reduce((a, b) => a > b ? a : b);
 
-      expect(mapLabelTop(layout, cyg), lowest + mapLabelGap);
+      expect(mapLabelTop(layout, route, cyg), lowest + mapLabelGap);
     });
   });
 

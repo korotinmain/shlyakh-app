@@ -215,7 +215,7 @@ class _ChartState extends State<_Chart> {
               )];
           final rect = Rect.fromLTWH(
             at.x - _labelWidth / 2,
-            mapLabelTop(layout, page.constellation),
+            mapLabelTop(layout, view.route, page.constellation),
             _labelWidth,
             text.height,
           );

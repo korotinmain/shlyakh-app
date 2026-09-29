@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
@@ -14,11 +15,30 @@ const double _bandWidthDeg = 20;
 const double _bandOpacity = 0.12;
 const double _bandBlurSigma = 12;
 
-/// Where [star] lands on the chart: at its own RA and Dec, so a star in
-/// two figures (Elnath) is one point and every figure has its true size.
-Offset mapStarPoint(SkyMapLayout layout, SkyPoint star) {
-  final p = mapPoint(layout, star.ra, star.dec);
-  return Offset(p.x, p.y);
+/// Where [star] lands on the chart: its constellation sits at its place
+/// on the chart, and the star at its true offset from that centre (a
+/// gnomonic projection, so shapes keep their proportions near the pole). A
+/// star in two figures is placed from its owner, so Elnath is one point.
+Offset mapStarPoint(SkyMapLayout layout, SkyRoute route, SkyPoint star) {
+  final owner = route.ownerOf(star.hip);
+  final centre = route.constellations[owner].centre;
+  final at = layout.constellations[owner];
+  // Gnomonic projection around the centre, in degrees: true shapes.
+  const toRad = math.pi / 180;
+  final dRa = (star.ra - centre.ra) * toRad;
+  final dec = star.dec * toRad;
+  final dec0 = centre.dec * toRad;
+  final cosC =
+      math.sin(dec0) * math.sin(dec) +
+      math.cos(dec0) * math.cos(dec) * math.cos(dRa);
+  final east = math.cos(dec) * math.sin(dRa) / cosC / toRad;
+  final north =
+      (math.cos(dec0) * math.sin(dec) -
+          math.sin(dec0) * math.cos(dec) * math.cos(dRa)) /
+      cosC /
+      toRad;
+  // North to the right, east upwards, as on the chart.
+  return Offset(at.x + north * layout.pxPerDeg, at.y - east * layout.pxPerDeg);
 }
 
 /// Gap between a constellation's lowest star and its name, and between
@@ -27,9 +47,13 @@ const double mapLabelGap = 6;
 
 /// Where the name of [constellation] starts: just under its lowest drawn
 /// star.
-double mapLabelTop(SkyMapLayout layout, Constellation constellation) =>
+double mapLabelTop(
+  SkyMapLayout layout,
+  SkyRoute route,
+  Constellation constellation,
+) =>
     constellation.stars
-        .map((star) => mapStarPoint(layout, star).dy)
+        .map((star) => mapStarPoint(layout, route, star).dy)
         .reduce((a, b) => a > b ? a : b) +
     mapLabelGap;
 
@@ -100,7 +124,7 @@ class SkyMapPainter extends CustomPainter {
         done: page.state == PageState.done,
         points: [
           for (final star in page.constellation.stars)
-            mapStarPoint(layout, star),
+            mapStarPoint(layout, view.route, star),
         ],
       );
     }
