@@ -85,6 +85,21 @@ class _PagesState extends State<_Pages> {
     super.dispose();
   }
 
+  /// When a new star moves the current constellation while the tab is
+  /// open, follow it if the old current page was the one on screen.
+  @override
+  void didUpdateWidget(_Pages oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final was = oldWidget.view.currentPage;
+    final now = widget.view.currentPage;
+    if (now == was || !_controller.hasClients) return;
+    if ((_controller.page ?? was.toDouble()).round() == was) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _controller.hasClients) _open(now);
+      });
+    }
+  }
+
   void _open(int page) => _controller.animateToPage(
     page,
     duration: AppMotion.normal,

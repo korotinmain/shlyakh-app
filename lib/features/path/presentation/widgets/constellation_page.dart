@@ -11,9 +11,9 @@ import 'package:shlyakh/features/path/presentation/widgets/path_info_card.dart';
 import 'package:shlyakh/features/path/presentation/widgets/route_strip.dart';
 import 'package:shlyakh/features/today/presentation/widgets/constellation_figure.dart';
 
-/// Below this height the page scrolls and the figure gets a fixed zone.
-const double _minFillHeight = 520;
-const double _scrollFigureHeight = 220;
+/// The figure's zone never gets smaller than this; with very large text
+/// the page then scrolls.
+const double _minFigureHeight = 220;
 
 /// One constellation of the Path tab, in zones: the header at the top,
 /// the figure in the middle, the info card and the route strip at the
@@ -69,30 +69,32 @@ class ConstellationPage extends StatelessWidget {
         AppSpacing.screen,
         FloatingTabBar.bottomClearance(context),
       ),
+      // At least the screen tall, taller when the text needs it: the
+      // figure takes what the header and the bottom leave, at least
+      // _minFigureHeight, and the card and strip stay at the bottom.
       child: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxHeight >= _minFillHeight) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                header,
-                Expanded(child: figure),
-                bottom,
-              ],
-            );
-          }
-          // Very large text: the page scrolls, the figure keeps a zone.
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                header,
-                SizedBox(height: _scrollFigureHeight, child: figure),
-                bottom,
-              ],
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: IntrinsicHeight(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  header,
+                  Expanded(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minHeight: _minFigureHeight,
+                      ),
+                      child: figure,
+                    ),
+                  ),
+                  bottom,
+                ],
+              ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

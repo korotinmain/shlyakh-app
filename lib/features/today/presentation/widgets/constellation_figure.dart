@@ -91,6 +91,18 @@ class ConstellationFigure extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.palette;
     final name = constellationName(context.l10n, constellation.id);
+    // Without a name there is nothing to lay out: no LayoutBuilder, so the
+    // figure can sit under intrinsic sizing (a scrolling page).
+    if (!showName) {
+      return Semantics(
+        label: name,
+        excludeSemantics: true,
+        child: CustomPaint(
+          painter: _FigurePainter(constellation, figure, palette, done: done),
+          size: Size.infinite,
+        ),
+      );
+    }
     return Semantics(
       label: name,
       excludeSemantics: true,
@@ -101,7 +113,6 @@ class ConstellationFigure extends StatelessWidget {
             painter: _FigurePainter(constellation, figure, palette, done: done),
             size: Size.infinite,
           );
-          if (!showName) return painter;
           final figureHeight = constraints.maxHeight - _nameSpace;
           final side =
               math.min(constraints.maxWidth, figureHeight) - 2 * _padding;
