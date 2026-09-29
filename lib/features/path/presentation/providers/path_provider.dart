@@ -11,6 +11,7 @@ import 'package:shlyakh/features/path/presentation/providers/route_provider.dart
 import 'package:shlyakh/features/progress/domain/xp_rules.dart';
 import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
+import 'package:shlyakh/features/steps/presentation/providers/current_date_provider.dart';
 import 'package:shlyakh/features/today/presentation/providers/current_user_provider.dart';
 import 'package:shlyakh/features/today/presentation/providers/steps_repository_provider.dart';
 
@@ -23,7 +24,9 @@ Stream<PathView> path(Ref ref) async* {
   final repository = ref.watch(stepsRepositoryProvider);
   final userId = ref.watch(currentUserIdProvider);
   final route = await ref.watch(routeProvider.future);
-  // "Today" is read per emission, like on the Today tab.
+  // Rebuilt at midnight; "today" is also read per emission, so new data
+  // after a time zone change lands on the right day.
+  ref.watch(currentDateProvider);
   yield* repository
       .watchDays(userId: userId)
       .map(

@@ -180,4 +180,33 @@ void main() {
 
     expect(container.read(currentUserIdProvider), 'local');
   });
+
+  testWidgets('moves to the new day at midnight without new data', (
+    tester,
+  ) async {
+    var now = DateTime(2026, 9, 28, 23, 59);
+    final container = ProviderContainer(
+      overrides: [
+        clockProvider.overrideWithValue(Clock(() => now)),
+        routeProvider.overrideWith((ref) async => testRoute()),
+        stepsRepositoryProvider.overrideWithValue(
+          _FakeRepository([_day('2026-09-28', 6870)]),
+        ),
+      ],
+    );
+    final today = container.listen(todayProvider, (_, _) {});
+    await tester.pump();
+    expect(today.read().value?.steps, 6870);
+
+    now = DateTime(2026, 9, 29, 0, 1);
+    await tester.pump(const Duration(minutes: 2));
+    await tester.pump();
+
+    final view = today.read().value;
+    expect(view?.steps, 0);
+    expect(view?.week.singleWhere((d) => d.isToday).date, _d('2026-09-29'));
+    // Disposing cancels the next midnight's timer before the pending
+    // timers check.
+    container.dispose();
+  });
 }

@@ -89,6 +89,9 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   `runApp`, syncs on HealthKit background wakeups. All share the one
   keepAlive `stepsSyncProvider`. `healthAccessHintProvider` shows a hint
   on Today a day after the start with no steps (ADR 0008).
+  `currentDateProvider` is today's local date and changes at local
+  midnight; `todayProvider` and `pathProvider` watch it, so an open app
+  moves to the new day without new steps.
 
 - Navigation: `routerProvider` (keepAlive) returns a `GoRouter`, so the
   router can later depend on auth state and be overridden in tests.
