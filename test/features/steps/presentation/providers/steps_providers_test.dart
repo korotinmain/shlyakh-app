@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/core/database/app_database.dart';
+import 'package:shlyakh/core/error/failure.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
 import 'package:shlyakh/features/steps/presentation/providers/steps_providers.dart';
 import 'package:shlyakh/features/today/presentation/providers/steps_repository_provider.dart';
@@ -42,6 +43,15 @@ void main() {
     await pumpEventQueue();
 
     expect(started.read().value?.startedAt, testJourneyStart);
+  });
+
+  test('journeyStart fails with StorageFailure on a storage error', () async {
+    await db.customStatement('DROP TABLE journey_start');
+    final started = container.listen(journeyStartProvider, (_, _) {});
+    addTearDown(started.close);
+    await pumpEventQueue();
+
+    expect(started.read().error, isA<StorageFailure>());
   });
 
   test('stepsRepository reads Drift', () async {

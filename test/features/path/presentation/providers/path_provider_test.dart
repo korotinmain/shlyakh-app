@@ -111,4 +111,31 @@ void main() {
       expect(view.progress.starsLit, 0);
     });
   });
+
+  testWidgets('an ETA appears at midnight once the week of history is full', (
+    tester,
+  ) async {
+    var now = DateTime(2026, 9, 28, 23, 59);
+    final container = ProviderContainer(
+      overrides: [
+        clockProvider.overrideWithValue(Clock(() => now)),
+        routeProvider.overrideWith((ref) async => testRoute()),
+        stepsRepositoryProvider.overrideWithValue(
+          _Repository([..._days(6, 7000), _day('2026-09-28', 7000)]),
+        ),
+      ],
+    );
+    final path = container.listen(pathProvider, (_, _) {});
+    await tester.pump();
+    expect(path.read().value?.etaDays, isNull);
+
+    now = DateTime(2026, 9, 29, 0, 1);
+    await tester.pump(const Duration(minutes: 2));
+    await tester.pump();
+
+    expect(path.read().value?.etaDays, isNotNull);
+    // Disposing cancels the next midnight's timer before the pending
+    // timers check.
+    container.dispose();
+  });
 }

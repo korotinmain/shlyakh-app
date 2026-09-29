@@ -50,7 +50,7 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
                └── UncontrolledProviderScope
                      └── App (MaterialApp.router, theme, l10n delegates)
                            └── routerProvider (go_router, redirect on the journey start)
-                                 ├── /               LaunchScreen (the theme's sky, while the start loads)
+                                 ├── /               LaunchScreen (the sky while the start loads; the failure if it fails)
                                  ├── /health-access  HealthAccessScreen (until the journey starts)
                                  └── AppShell (tabs + FloatingTabBar)
                                        ├── /today   TodayScreen
@@ -75,8 +75,10 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   `ProgressSheet` (collapsed: the day's XP and the current star;
   expanded: today, the week, a link to Path; runs under the tab bar).
 - Steps: `features/steps/domain/` holds `DailySteps`, `LocalDate`,
-  `JourneyStart`, the sync rules and the `StepsRepository` interface;
-  `DriftStepsRepository` implements it.
+  `JourneyStart`, the sync rules and the `StepsRepository` and
+  `JourneyRepository` interfaces; `DriftStepsRepository` and
+  `DriftJourneyRepository` implement them and turn SQLite errors into
+  `StorageFailure` (`core/database/storage_errors.dart`, ADR 0005).
 - Health access and triggers: `features/steps/presentation/`. Until a
   journey start exists the router redirects to `/health-access`
   (`HealthAccessScreen`); "Allow" (`HealthAccess.allow`) shows the
@@ -86,6 +88,9 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   `runApp`, syncs on HealthKit background wakeups. All share the one
   keepAlive `stepsSyncProvider`. `healthAccessHintProvider` shows a hint
   on Today a day after the start with no steps (ADR 0008).
+  `currentDateProvider` is today's local date and changes at local
+  midnight; `todayProvider` and `pathProvider` watch it, so an open app
+  moves to the new day without new steps.
 
 - Navigation: `routerProvider` (keepAlive) returns a `GoRouter`, so the
   router can later depend on auth state and be overridden in tests.
@@ -133,8 +138,7 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   changed days and keeps days counted in another time zone. Failures are
   logged, never thrown (`StepsSyncCompleted` on success); SQLite errors,
   also wrapped in `DriftRemoteException` by the background isolate,
-  become `StorageFailure`.
-  `DriftStepsRepository` serves `StepsRepository` from Drift.
+  become `StorageFailure` (`guardStorage`).
 - Constellation names: `features/path/presentation/providers/constellation_name.dart`
   maps an IAU id to its ARB string (uk, en).
 - Localization: gen-l10n, `en` template and fallback, `uk` translation,
@@ -148,7 +152,7 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   (`StepsDays`, `OnceCompletion`) have XCTest in `RunnerTests`, run
   locally only (CI is Linux). `HealthKitStepsSource` in
   `features/steps/data/healthkit/` wraps the host API and maps its error
-  codes to failures. Nothing in the app calls it yet.
+  codes to failures; `StepsSync` and `HealthAccess` use it.
 
 ## 3. Target data flow [decided]
 
