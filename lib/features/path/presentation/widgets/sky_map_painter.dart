@@ -22,6 +22,17 @@ Offset mapStarPoint(SkyPoint star, MapPlacement at) {
   return Offset(at.x - v, at.y + u);
 }
 
+/// Gap between a constellation's lowest star and its name, pixels.
+const double mapLabelGap = 6;
+
+/// Where the name of [constellation] placed at [at] starts: just under its
+/// lowest drawn star, so neighbours' names do not stack under empty boxes.
+double mapLabelTop(Constellation constellation, MapPlacement at) =>
+    constellation.stars
+        .map((star) => mapStarPoint(star, at).dy)
+        .reduce((a, b) => a > b ? a : b) +
+    mapLabelGap;
+
 /// The Milky Way chart: the band fading into the fog past the next
 /// constellation, and the figures of the visible pages.
 class SkyMapPainter extends CustomPainter {

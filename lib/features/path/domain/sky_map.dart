@@ -20,6 +20,10 @@ const _raOrigin = 260;
 /// Margin around the chart, pixels.
 const double _margin = 24;
 
+/// The closest zoom: early on, when only two small constellations are out
+/// of the fog, the chart does not blow them up.
+const double _maxPxPerDeg = 8;
+
 /// Band samples: every 2° of galactic longitude, and how far past the
 /// visible constellations the band runs.
 const _bandStep = 2;
@@ -43,13 +47,14 @@ const _bandPastVisible = 20;
 typedef MapPlacement = ({double x, double y, double side});
 
 /// The chart for a width: its scale, its height, one placement per route
-/// constellation and the band's centre line. `decMin` and `raTop` (RA
-/// unwrapped from 260°) anchor [mapPoint].
+/// constellation and the band's centre line. `decMin`, `left` (its x)
+/// and `raTop` (RA unwrapped from 260°) anchor [mapPoint].
 typedef SkyMapLayout = ({
   double width,
   double height,
   double pxPerDeg,
   double decMin,
+  double left,
   double raTop,
   List<MapPlacement> constellations,
   List<({double x, double y})> band,
@@ -57,36 +62,44 @@ typedef SkyMapLayout = ({
 
 double _unwrap(double ra) => (ra - _raOrigin) % 360;
 
-/// The chart of [route] fitted to [width]; the band covers the stretch of
-/// constellations `0 … lastVisible` and 20° beyond either end, so with the
-/// branch open it reaches the galactic centre.
+/// The chart of [route] fitted to [width] around constellations
+/// `0 … lastVisible` (the ones out of the fog), with 20° of sky beyond
+/// either end for the band, so with the branch open it reaches the
+/// galactic centre. Constellations further on get placements outside it.
 SkyMapLayout skyMapLayout(
   SkyRoute route, {
   required double width,
   required int lastVisible,
 }) {
   final all = route.constellations;
+  final visible = all.take(lastVisible + 1);
   double lo(Constellation c, double v) => v - c.spanDeg / 2;
   double hi(Constellation c, double v) => v + c.spanDeg / 2;
-  final decMin = all.map((c) => lo(c, c.centre.dec)).reduce(math.min);
-  final decMax = all.map((c) => hi(c, c.centre.dec)).reduce(math.max);
-  final raBottom = all.map((c) => lo(c, _unwrap(c.centre.ra))).reduce(math.min);
-  final raTop = all.map((c) => hi(c, _unwrap(c.centre.ra))).reduce(math.max);
-  final pxPerDeg = (width - 2 * _margin) / (decMax - decMin);
+  // The chart covers what is out of the fog, so it fills the width early
+  // on and zooms out as the route goes on.
+  final decMin = visible.map((c) => lo(c, c.centre.dec)).reduce(math.min);
+  final decMax = visible.map((c) => hi(c, c.centre.dec)).reduce(math.max);
+  final raBottom =
+      visible.map((c) => lo(c, _unwrap(c.centre.ra))).reduce(math.min) -
+      _bandPastVisible;
+  final raTop =
+      visible.map((c) => hi(c, _unwrap(c.centre.ra))).reduce(math.max) +
+      _bandPastVisible;
+  final pxPerDeg = math.min(
+    _maxPxPerDeg,
+    (width - 2 * _margin) / (decMax - decMin),
+  );
+  // Centre the visible declinations when the zoom cap leaves room.
+  final left = (width - (decMax - decMin) * pxPerDeg) / 2;
   final height = (raTop - raBottom) * pxPerDeg + 2 * _margin;
 
   ({double x, double y}) at(double unwrappedRa, double dec) => (
-    x: _margin + (dec - decMin) * pxPerDeg,
+    x: left + (dec - decMin) * pxPerDeg,
     y: _margin + (raTop - unwrappedRa) * pxPerDeg,
   );
 
-  final visible = all.take(lastVisible + 1);
-  final bandLo =
-      visible.map((c) => lo(c, _unwrap(c.centre.ra))).reduce(math.min) -
-      _bandPastVisible;
-  final bandHi =
-      visible.map((c) => hi(c, _unwrap(c.centre.ra))).reduce(math.max) +
-      _bandPastVisible;
+  final bandLo = raBottom;
+  final bandHi = raTop;
   final band = <({double x, double y})>[];
   // Over this range of longitude the unwrapped RA grows with l.
   for (var l = -90; l <= 270; l += _bandStep) {
@@ -100,6 +113,7 @@ SkyMapLayout skyMapLayout(
     height: height,
     pxPerDeg: pxPerDeg,
     decMin: decMin,
+    left: left,
     raTop: raTop,
     constellations: [
       for (final c in all)
@@ -115,6 +129,6 @@ SkyMapLayout skyMapLayout(
 
 /// The chart position of the sky point [ra], [dec] (degrees).
 ({double x, double y}) mapPoint(SkyMapLayout layout, double ra, double dec) => (
-  x: _margin + (dec - layout.decMin) * layout.pxPerDeg,
+  x: layout.left + (dec - layout.decMin) * layout.pxPerDeg,
   y: _margin + (layout.raTop - _unwrap(ra)) * layout.pxPerDeg,
 );

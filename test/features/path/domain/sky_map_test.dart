@@ -42,7 +42,7 @@ void main() {
       expect(before.y - after.y, closeTo(20 * layout.pxPerDeg, 1e-9));
     });
 
-    test('places every constellation inside the chart width', () {
+    test('places every visible constellation inside the chart', () {
       for (final p in layout.constellations) {
         expect(p.x, inInclusiveRange(0, 390));
         expect(p.y, inInclusiveRange(0, layout.height));
@@ -69,6 +69,57 @@ void main() {
       expect(layout.width, 390);
       expect(layout.pxPerDeg, greaterThan(0));
       expect(layout.height, greaterThan(layout.width));
+    });
+  });
+
+  group('skyMapLayout early on', () {
+    final route = testRoute();
+
+    test('fits the visible constellations to the width', () {
+      final early = skyMapLayout(route, width: 390, lastVisible: 2);
+      final all = skyMapLayout(route, width: 390, lastVisible: 15);
+
+      expect(early.pxPerDeg, greaterThan(all.pxPerDeg));
+      for (final p in early.constellations.take(3)) {
+        expect(p.x - p.side / 2, greaterThanOrEqualTo(0));
+        expect(p.x + p.side / 2, lessThanOrEqualTo(390));
+      }
+    });
+
+    test('zooms in at most 8 px a degree and centres the rest', () {
+      final first = skyMapLayout(route, width: 390, lastVisible: 1);
+
+      expect(first.pxPerDeg, 8);
+      final xs = [
+        for (final p in first.constellations.take(2)) ...[
+          p.x - p.side / 2,
+          p.x + p.side / 2,
+        ],
+      ];
+      final left = xs.reduce((a, b) => a < b ? a : b);
+      final right = xs.reduce((a, b) => a > b ? a : b);
+      expect(left - 0, closeTo(390 - right, 1e-6));
+    });
+
+    test('mapPoint agrees with the placements at any zoom', () {
+      for (final last in [1, 15]) {
+        final layout = skyMapLayout(route, width: 390, lastVisible: last);
+        final vul = route.constellations[1];
+        final p = mapPoint(layout, vul.centre.ra, vul.centre.dec);
+
+        expect(p.x, closeTo(layout.constellations[1].x, 1e-9));
+        expect(p.y, closeTo(layout.constellations[1].y, 1e-9));
+      }
+    });
+
+    test('grows the chart only to the visible stretch', () {
+      final early = skyMapLayout(route, width: 390, lastVisible: 2);
+      final later = skyMapLayout(route, width: 390, lastVisible: 8);
+
+      expect(
+        early.height / early.pxPerDeg,
+        lessThan(later.height / later.pxPerDeg),
+      );
     });
   });
 

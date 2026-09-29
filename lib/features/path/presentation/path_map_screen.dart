@@ -9,16 +9,15 @@ import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
 import 'package:shlyakh/features/path/domain/path_pages.dart';
 import 'package:shlyakh/features/path/domain/sky_map.dart';
+import 'package:shlyakh/features/path/domain/sky_route.dart';
 import 'package:shlyakh/features/path/presentation/providers/constellation_name.dart';
 import 'package:shlyakh/features/path/presentation/providers/path_provider.dart';
 import 'package:shlyakh/features/path/presentation/providers/path_view.dart';
 import 'package:shlyakh/features/path/presentation/widgets/sky_map_painter.dart';
 import 'package:shlyakh/features/today/presentation/widgets/sky_background.dart';
 
-/// Width of a constellation's name label on the map, and its gap below
-/// the figure, in logical pixels.
+/// Width of a constellation's name label on the map, in logical pixels.
 const double _labelWidth = 140;
-const double _labelGap = AppSpacing.xxs;
 
 /// The Milky Way map: the band on a star chart, the completed
 /// constellations in gold, the current one with its marker, the next one,
@@ -166,6 +165,7 @@ class _ChartState extends State<_Chart> {
                 ),
                 for (final page in view.pages)
                   _label(
+                    page.constellation,
                     layout.constellations[view.route.constellations.indexOf(
                       page.constellation,
                     )],
@@ -182,13 +182,14 @@ class _ChartState extends State<_Chart> {
   }
 
   Widget _label(
+    Constellation constellation,
     MapPlacement at,
     String name,
     bool current,
     AppPalette palette,
   ) => Positioned(
     left: at.x - _labelWidth / 2,
-    top: at.y + at.side / 2 + _labelGap,
+    top: mapLabelTop(constellation, at),
     width: _labelWidth,
     child: Text(
       name,
