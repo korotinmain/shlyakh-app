@@ -30,6 +30,45 @@ void main() {
     });
   });
 
+  group('Path plurals in Ukrainian', () {
+    for (final (days, text) in [
+      (1, '≈ 1 день у твоєму темпі'),
+      (3, '≈ 3 дні у твоєму темпі'),
+      (5, '≈ 5 днів у твоєму темпі'),
+      (21, '≈ 21 день у твоєму темпі'),
+    ]) {
+      test('ETA of $days days', () => expect(uk.pathEta(days), text));
+    }
+    for (final (count, text) in [
+      (0, "Перше сузір'я попереду"),
+      (1, "Складено 1 сузір'я"),
+      (3, "Складено 3 сузір'я"),
+      (5, "Складено 5 сузір'їв"),
+    ]) {
+      test('$count complete', () => expect(uk.pathCompletedCount(count), text));
+    }
+    for (final (count, text) in [
+      (1, '1 зоря'),
+      (4, '4 зорі'),
+      (23, '23 зорі'),
+      (25, '25 зір'),
+    ]) {
+      test('$count stars', () => expect(uk.pathStarCount(count), text));
+    }
+  });
+
+  group('Path plurals in English', () {
+    test('ETA', () {
+      expect(en.pathEta(1), '≈ 1 day at your pace');
+      expect(en.pathEta(4), '≈ 4 days at your pace');
+    });
+    test('complete', () {
+      expect(en.pathCompletedCount(0), 'Your first constellation is ahead');
+      expect(en.pathCompletedCount(1), '1 constellation complete');
+      expect(en.pathCompletedCount(5), '5 constellations complete');
+    });
+  });
+
   group('English steps plural', () {
     test('1 → step', () => expect(en.stepsUnit(1), 'step'));
     test('2 → steps', () => expect(en.stepsUnit(2), 'steps'));

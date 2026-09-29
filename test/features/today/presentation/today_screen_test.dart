@@ -8,6 +8,7 @@ import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/error/failure.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
+import 'package:shlyakh/features/path/presentation/path_screen.dart';
 import 'package:shlyakh/features/path/presentation/providers/route_provider.dart';
 import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
@@ -362,7 +363,7 @@ void main() {
     await tester.tap(find.text('The whole path →'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Your path is coming soon'), findsOneWidget);
+    expect(find.byType(PathScreen), findsOneWidget);
   });
 
   testWidgets('a week with no steps renders', (tester) async {

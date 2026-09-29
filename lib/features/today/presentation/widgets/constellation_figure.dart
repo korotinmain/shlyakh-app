@@ -69,14 +69,23 @@ Rect figureBounds(List<SkyPoint> stars, Rect zone) {
 /// Core radius of a star of visual magnitude [mag]: brighter is larger.
 double _coreRadius(double mag) => (3.5 - 0.5 * mag).clamp(1.5, 3.5);
 
-/// The current constellation on the sky: lit stars, the current star's
-/// marker, rings for the stars ahead, solid lines behind and dashed lines
-/// ahead, with its name just under the lowest star.
+/// A constellation on the sky: lit stars, the current star's marker,
+/// rings for the stars ahead, solid lines behind and dashed lines ahead,
+/// with its name just under the lowest star. A [done] constellation is
+/// drawn in gold; [showName] false leaves the name to the caller.
 class ConstellationFigure extends StatelessWidget {
-  const new({required this.constellation, required this.figure, super.key});
+  const new({
+    required this.constellation,
+    required this.figure,
+    this.done = false,
+    this.showName = true,
+    super.key,
+  });
 
   final Constellation constellation;
   final FigureStates figure;
+  final bool done;
+  final bool showName;
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +98,10 @@ class ConstellationFigure extends StatelessWidget {
         builder: (context, constraints) {
           if (constraints.maxHeight <= 0) return const SizedBox.shrink();
           final painter = CustomPaint(
-            painter: _FigurePainter(constellation, figure, palette),
+            painter: _FigurePainter(constellation, figure, palette, done: done),
             size: Size.infinite,
           );
+          if (!showName) return painter;
           final figureHeight = constraints.maxHeight - _nameSpace;
           final side =
               math.min(constraints.maxWidth, figureHeight) - 2 * _padding;
@@ -130,11 +140,12 @@ class ConstellationFigure extends StatelessWidget {
 }
 
 class _FigurePainter extends CustomPainter {
-  new(this.constellation, this.figure, this.palette);
+  new(this.constellation, this.figure, this.palette, {required this.done});
 
   final Constellation constellation;
   final FigureStates figure;
   final AppPalette palette;
+  final bool done;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -149,7 +160,7 @@ class _FigurePainter extends CustomPainter {
       ..strokeWidth = _dashedStroke
       ..style = PaintingStyle.stroke;
     final solid = Paint()
-      ..color = palette.starLine
+      ..color = done ? palette.doneLine : palette.starLine
       ..strokeWidth = _solidStroke
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
@@ -162,8 +173,8 @@ class _FigurePainter extends CustomPainter {
       if (figure.solidLines[i]) canvas.drawLine(points[a], points[b], solid);
     }
 
-    final glow = Paint()..color = palette.starGlow;
-    final core = Paint()..color = palette.star;
+    final glow = Paint()..color = done ? palette.doneGlow : palette.starGlow;
+    final core = Paint()..color = done ? palette.done : palette.star;
     final ahead = Paint()
       ..color = palette.starAhead
       ..strokeWidth = _aheadStroke
@@ -243,5 +254,6 @@ class _FigurePainter extends CustomPainter {
   bool shouldRepaint(_FigurePainter oldDelegate) =>
       !identical(oldDelegate.constellation, constellation) ||
       !identical(oldDelegate.figure, figure) ||
-      !identical(oldDelegate.palette, palette);
+      !identical(oldDelegate.palette, palette) ||
+      oldDelegate.done != done;
 }

@@ -135,9 +135,57 @@
       }
     }
   },
-  "pathPlaceholder": "Your path is coming soon",
-  "@pathPlaceholder": {
-    "description": "Placeholder of the Path tab"
+  "pathNowHere": "You are here",
+  "@pathNowHere": {
+    "description": "Kicker above the current constellation on the Path tab"
+  },
+  "pathDone": "Complete",
+  "@pathDone": {
+    "description": "Kicker above a completed constellation on the Path tab"
+  },
+  "pathAhead": "Ahead",
+  "@pathAhead": {
+    "description": "Kicker above the next, still locked constellation on the Path tab"
+  },
+  "pathCompletedCount": "{count, plural, =0{Your first constellation is ahead} one{{count} constellation complete} other{{count} constellations complete}}",
+  "@pathCompletedCount": {
+    "description": "How many constellations are complete; no total is shown",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStarCount": "{count, plural, one{{count} star} other{{count} stars}}",
+  "@pathStarCount": {
+    "description": "A constellation's number of stars",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pathEta": "≈ {days, plural, one{{days} day} other{{days} days}} at your pace",
+  "@pathEta": {
+    "description": "Days to the next star at the pace of the last two weeks",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "pathSeal": "Completed {date}",
+  "@pathSeal": {
+    "description": "Seal on a completed constellation; date is the day and month",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "pathOpensLater": "Opens once the current constellation is complete",
+  "@pathOpensLater": {
+    "description": "On the page of the next, still locked constellation"
   },
   "historyPlaceholder": "History is coming soon",
   "@historyPlaceholder": {
