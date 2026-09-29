@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shlyakh/app/router.dart';
 import 'package:shlyakh/core/design/app_motion.dart';
 import 'package:shlyakh/core/design/app_palette.dart';
 import 'package:shlyakh/core/design/app_spacing.dart';
 import 'package:shlyakh/core/design/app_typography.dart';
+import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/error/failure_message.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
 import 'package:shlyakh/features/path/presentation/providers/path_provider.dart';
@@ -35,7 +38,26 @@ class PathScreen extends ConsumerWidget {
               ),
             ),
           ),
-          AsyncValue(:final value?) => _Pages(view: value),
+          AsyncValue(:final value?) => SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    AppSpacing.screen,
+                    AppSpacing.s,
+                    AppSpacing.screen,
+                    0,
+                  ),
+                  child: Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: _MapButton(),
+                  ),
+                ),
+                Expanded(child: _Pages(view: value)),
+              ],
+            ),
+          ),
           _ => const SizedBox.shrink(),
         },
       ],
@@ -75,5 +97,41 @@ class _PagesState extends State<_Pages> {
     itemCount: widget.view.pages.length,
     itemBuilder: (context, i) =>
         ConstellationPage(index: i, view: widget.view, onOpen: _open),
+  );
+}
+
+class _MapButton extends StatelessWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    child: GestureDetector(
+      onTap: () => context.go(AppRoutes.pathMap),
+      child: GlassPanel(
+        shape: const StadiumBorder(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.s,
+            vertical: AppSpacing.xs,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.map_outlined, size: AppSpacing.m),
+              const SizedBox(width: AppSpacing.xxs),
+              Flexible(
+                child: Text(
+                  context.l10n.pathMapLink,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.footnote,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
   );
 }

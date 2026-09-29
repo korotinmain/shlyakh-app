@@ -62,40 +62,37 @@ class ConstellationPage extends StatelessWidget {
         ),
       ],
     );
-    return SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.screen,
-          AppSpacing.m,
-          AppSpacing.screen,
-          FloatingTabBar.bottomClearance(context),
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxHeight >= _minFillHeight) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  header,
-                  Expanded(child: figure),
-                  bottom,
-                ],
-              );
-            }
-            // Very large text: the page scrolls, the figure keeps a zone.
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  header,
-                  SizedBox(height: _scrollFigureHeight, child: figure),
-                  bottom,
-                ],
-              ),
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.screen,
+        AppSpacing.m,
+        AppSpacing.screen,
+        FloatingTabBar.bottomClearance(context),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxHeight >= _minFillHeight) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                header,
+                Expanded(child: figure),
+                bottom,
+              ],
             );
-          },
-        ),
+          }
+          // Very large text: the page scrolls, the figure keeps a zone.
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                header,
+                SizedBox(height: _scrollFigureHeight, child: figure),
+                bottom,
+              ],
+            ),
+          );
+        },
       ),
     );
   }

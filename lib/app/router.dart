@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shlyakh/app/app_shell.dart';
 import 'package:shlyakh/app/launch_screen.dart';
 import 'package:shlyakh/features/history/presentation/history_screen.dart';
+import 'package:shlyakh/features/path/presentation/path_map_screen.dart';
 import 'package:shlyakh/features/path/presentation/path_screen.dart';
 import 'package:shlyakh/features/steps/domain/journey_start.dart';
 import 'package:shlyakh/features/steps/presentation/health_access_screen.dart';
@@ -18,6 +19,7 @@ abstract final class AppRoutes {
   static const launch = '/';
   static const today = '/today';
   static const path = '/path';
+  static const pathMap = '/path/map';
   static const history = '/history';
   static const healthAccess = '/health-access';
 }
@@ -82,7 +84,13 @@ final List<RouteBase> _routes = [
       ),
       StatefulShellBranch(
         routes: [
-          GoRoute(path: AppRoutes.path, builder: (_, _) => const PathScreen()),
+          GoRoute(
+            path: AppRoutes.path,
+            builder: (_, _) => const PathScreen(),
+            routes: [
+              GoRoute(path: 'map', builder: (_, _) => const PathMapScreen()),
+            ],
+          ),
         ],
       ),
       StatefulShellBranch(

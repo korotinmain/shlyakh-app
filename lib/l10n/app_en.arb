@@ -187,6 +187,36 @@
   "@pathOpensLater": {
     "description": "On the page of the next, still locked constellation"
   },
+  "pathMapLink": "Map of the path",
+  "@pathMapLink": {
+    "description": "Button on the Path tab that opens the Milky Way map"
+  },
+  "pathMapKicker": "The Milky Way",
+  "@pathMapKicker": {
+    "description": "Kicker at the top of the map"
+  },
+  "pathLitStars": "{count, plural, one{{count} star lit} other{{count} stars lit}}",
+  "@pathLitStars": {
+    "description": "Stars lit so far; no total is shown",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pathMapSubtitle": "{lit} · further on, in the fog",
+  "@pathMapSubtitle": {
+    "description": "Map subtitle while part of the route is still ahead; lit is pathLitStars",
+    "placeholders": {
+      "lit": {
+        "type": "String"
+      }
+    }
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Label of a back button"
+  },
   "historyPlaceholder": "History is coming soon",
   "@historyPlaceholder": {
     "description": "Placeholder of the History tab"

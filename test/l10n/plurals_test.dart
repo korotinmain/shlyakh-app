@@ -57,6 +57,17 @@ void main() {
     }
   });
 
+  group('Lit stars in Ukrainian', () {
+    for (final (count, text) in [
+      (1, 'Засвічено 1 зорю'),
+      (4, 'Засвічено 4 зорі'),
+      (27, 'Засвічено 27 зір'),
+      (21, 'Засвічено 21 зорю'),
+    ]) {
+      test('$count', () => expect(uk.pathLitStars(count), text));
+    }
+  });
+
   group('Path plurals in English', () {
     test('ETA', () {
       expect(en.pathEta(1), '≈ 1 day at your pace');
