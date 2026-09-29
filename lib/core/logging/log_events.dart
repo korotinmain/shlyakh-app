@@ -2,8 +2,7 @@
 //
 // All events live in this file so every field is reviewed in one place.
 // Fields are LogValues only: no free-form strings, and never steps, XP,
-// dates or ids (AGENT_RULES 5). The first events arrive with the
-// HealthKit repository.
+// dates or ids (AGENT_RULES 5).
 
 /// A value that is safe to log.
 sealed class LogValue {

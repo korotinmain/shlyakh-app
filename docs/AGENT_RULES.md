@@ -85,8 +85,8 @@ convenience. If a task seems to require breaking one, stop and ask.
 
 ## 8. Testing
 
-Current scope: unit tests. Widget, golden and integration tests are added
-later, when screens stabilize.
+Current scope: unit and widget tests. Golden and integration tests are
+added later, when screens stabilize.
 
 ### 8.1 Definition of done
 

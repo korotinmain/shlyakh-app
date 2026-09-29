@@ -14,9 +14,7 @@ Finder _tab(String label) => find.descendant(
 );
 
 void main() {
-  testWidgets('the tab bar switches between Today, Path and History', (
-    tester,
-  ) async {
+  testWidgets('the tab bar switches between Today and Path', (tester) async {
     await pumpApp(
       tester,
       overrides: [
@@ -31,14 +29,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(PathScreen), findsOneWidget);
 
-    await tester.tap(_tab('History'));
-    await tester.pumpAndSettle();
-    expect(find.text('History is coming soon'), findsOneWidget);
-    expect(find.byType(PathScreen), findsNothing);
-
     await tester.tap(_tab('Today'));
     await tester.pumpAndSettle();
-    expect(find.text('History is coming soon'), findsNothing);
+    expect(find.byType(PathScreen), findsNothing);
+    expect(_tab('History'), findsNothing);
   });
 
   for (final (brightness, icons) in [

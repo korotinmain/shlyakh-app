@@ -136,7 +136,7 @@ centred, and scrolls vertically, opening on the current constellation.
 Each Спільно member has one of six muted colours, chosen by an FNV-1a hash
 of their user id (the same on every device): coral `#E8927C`, sage
 `#8DB596`, sky `#7FA7D9`, lavender `#A99BD3`, sand `#D9B26F`, rose
-`#D98BA9`.
+`#D98BA9`. Built with Спільно (stage 5).
 
 ## Typography
 
@@ -148,7 +148,7 @@ pin the axis themselves.
 |---|---|---|
 | `hero` | 44 / 700, −2% | the day's big number |
 | `display` | 30 / 700, −2% | section numbers |
-| `title` | 22 / 700, −2% | level titles |
+| `title` | 22 / 700, −2% | screen and constellation titles |
 | `headline` | 17 / 500 | labels, list titles |
 | `body` | 15 / 400 | text |
 | `footnote` | 13 / 400 | secondary text |

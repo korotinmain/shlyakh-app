@@ -5,7 +5,7 @@ import 'package:shlyakh/core/design/app_typography.dart';
 import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
 
-/// The floating glass tab bar: Today, Path, History.
+/// The floating glass tab bar: Today, Path.
 class FloatingTabBar extends StatelessWidget {
   const new({required this.index, required this.onSelect, super.key});
 
@@ -33,7 +33,6 @@ class FloatingTabBar extends StatelessWidget {
     final tabs = [
       (Icons.wb_sunny_outlined, l10n.tabToday),
       (Icons.route_outlined, l10n.tabPath),
-      (Icons.history, l10n.tabHistory),
     ];
     final idle = palette.onGlass;
     return MediaQuery.withNoTextScaling(
