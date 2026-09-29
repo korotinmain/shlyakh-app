@@ -26,6 +26,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     required this.grainOpacity,
     required this.backdrop,
     required this.backdropTint,
+    required this.star,
+    required this.starGlow,
+    required this.starLine,
+    required this.starAhead,
+    required this.aheadLine,
+    required this.marker,
   });
 
   /// The night sky with a gold accent.
@@ -42,6 +48,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     grainOpacity: 0.12,
     backdrop: Backdrop.nebula,
     backdropTint: Color(0x526E5AA8),
+    star: Color(0xFFFFFFFF),
+    starGlow: Color(0x38F3E3BE),
+    starLine: Color(0xCCF3E3BE),
+    starAhead: Color(0x73C8D2F0),
+    aheadLine: Color(0x4DC8D2F0),
+    marker: Color(0xFFFFE9B8),
   );
 
   /// An ink star chart on a pale sky.
@@ -58,6 +70,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     grainOpacity: 0.06,
     backdrop: Backdrop.chart,
     backdropTint: Color(0x0D3D4F9A),
+    star: Color(0xFF3D4F9A),
+    starGlow: Color(0x003D4F9A),
+    starLine: Color(0xB33D4F9A),
+    starAhead: Color(0x613D4F9A),
+    aheadLine: Color(0x403D4F9A),
+    marker: Color(0xFF3D4F9A),
   );
 
   final Brightness brightness;
@@ -75,6 +93,24 @@ final class AppPalette extends ThemeExtension<AppPalette> {
   /// Colour of the backdrop: the nebula's centre, or the chart grid's ink.
   final Color backdropTint;
 
+  /// A lit star of the figure.
+  final Color star;
+
+  /// The soft glow around a lit star (none in the light theme).
+  final Color starGlow;
+
+  /// A figure line behind the current star.
+  final Color starLine;
+
+  /// The ring of a star ahead.
+  final Color starAhead;
+
+  /// A dashed figure line ahead.
+  final Color aheadLine;
+
+  /// The current star's marker.
+  final Color marker;
+
   @override
   AppPalette copyWith({
     Brightness? brightness,
@@ -89,6 +125,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     double? grainOpacity,
     Backdrop? backdrop,
     Color? backdropTint,
+    Color? star,
+    Color? starGlow,
+    Color? starLine,
+    Color? starAhead,
+    Color? aheadLine,
+    Color? marker,
   }) => AppPalette(
     brightness: brightness ?? this.brightness,
     sky: sky ?? this.sky,
@@ -102,6 +144,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     grainOpacity: grainOpacity ?? this.grainOpacity,
     backdrop: backdrop ?? this.backdrop,
     backdropTint: backdropTint ?? this.backdropTint,
+    star: star ?? this.star,
+    starGlow: starGlow ?? this.starGlow,
+    starLine: starLine ?? this.starLine,
+    starAhead: starAhead ?? this.starAhead,
+    aheadLine: aheadLine ?? this.aheadLine,
+    marker: marker ?? this.marker,
   );
 
   /// Colours blend; brightness and backdrop switch halfway.
@@ -126,6 +174,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
       grainOpacity: grainOpacity + (other.grainOpacity - grainOpacity) * t,
       backdrop: late ? other.backdrop : backdrop,
       backdropTint: mix(backdropTint, other.backdropTint),
+      star: mix(star, other.star),
+      starGlow: mix(starGlow, other.starGlow),
+      starLine: mix(starLine, other.starLine),
+      starAhead: mix(starAhead, other.starAhead),
+      aheadLine: mix(aheadLine, other.aheadLine),
+      marker: mix(marker, other.marker),
     );
   }
 }

@@ -22,11 +22,10 @@ void main() {
       test('$count → $word', () => expect(uk.stepsUnit(count), word));
     }
 
-    test('reaches the caption and the week total', () {
-      expect(
-        uk.todayStepsCaption(21, 'понеділок, 28 вересня'),
-        'крок сьогодні · понеділок, 28 вересня',
-      );
+    test('reaches the steps label and the week total', () {
+      expect(uk.todayStepsLabel(21), 'крок сьогодні');
+      expect(uk.todayStepsLabel(3), 'кроки сьогодні');
+      expect(uk.todayStepsLabel(6870), 'кроків сьогодні');
       expect(uk.weekTotal(5, '5'), 'Разом 5 кроків');
     });
   });
@@ -34,11 +33,9 @@ void main() {
   group('English steps plural', () {
     test('1 → step', () => expect(en.stepsUnit(1), 'step'));
     test('2 → steps', () => expect(en.stepsUnit(2), 'steps'));
-    test('reaches the caption and the week total', () {
-      expect(
-        en.todayStepsCaption(1, 'Monday, September 28'),
-        'step today · Monday, September 28',
-      );
+    test('reaches the steps label and the week total', () {
+      expect(en.todayStepsLabel(1), 'step today');
+      expect(en.todayStepsLabel(6870), 'steps today');
       expect(en.weekTotal(2, '2'), '2 steps in total');
     });
   });

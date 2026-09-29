@@ -2,6 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
+import 'package:shlyakh/features/path/domain/figure_state.dart';
 import 'package:shlyakh/features/path/presentation/providers/route_provider.dart';
 import 'package:shlyakh/features/progress/domain/xp_rules.dart';
 import 'package:shlyakh/features/steps/domain/daily_steps.dart';
@@ -132,15 +133,17 @@ void main() {
       ]);
 
       expect(view.progress.starsLit, 4);
-      expect(view.constellationId, 'Vul');
+      expect(view.constellation.id, 'Vul');
       expect(view.starPercent, 24);
+      expect(view.figure.stars.first, StarState.current);
+      expect(view.figure.constellationIndex, 1);
     });
 
     test('starts at the first star of Sagitta with no days', () async {
       final view = await _view(DateTime(2026, 9, 28, 12), const []);
 
       expect(view.progress.starsLit, 0);
-      expect(view.constellationId, 'Sge');
+      expect(view.constellation.id, 'Sge');
       expect(view.starPercent, 0);
       expect(view.steps, 0);
       expect(view.weekSteps, 0);
@@ -157,8 +160,9 @@ void main() {
 
       expect(view.progress.starsLit, 177);
       expect(view.progress.next, isNull);
-      expect(view.constellationId, 'Sgr');
+      expect(view.constellation.id, 'Sgr');
       expect(view.starPercent, 100);
+      expect(view.figure.stars, everyElement(StarState.lit));
     });
   });
 

@@ -40,17 +40,27 @@
   "@tabHistory": {
     "description": "Label of the History tab"
   },
-  "todayStepsCaption": "{count, plural, one{step} other{steps}} today · {date}",
-  "@todayStepsCaption": {
-    "description": "Caption under today's step count; count picks the plural of \"step\", date is the formatted weekday and date",
+  "todayStepsLabel": "{count, plural, one{step} other{steps}} today",
+  "@todayStepsLabel": {
+    "description": "Label under the big number of today's steps on the Today card",
     "placeholders": {
       "count": {
         "type": "int"
-      },
-      "date": {
+      }
+    }
+  },
+  "todayContribution": "+{xp} XP today",
+  "@todayContribution": {
+    "description": "XP today's steps add to the path; xp is a formatted number",
+    "placeholders": {
+      "xp": {
         "type": "String"
       }
     }
+  },
+  "pathLink": "The whole path →",
+  "@pathLink": {
+    "description": "Link from the Today sheet to the Path tab"
   },
   "percentValue": "{value}%",
   "@percentValue": {
@@ -60,10 +70,6 @@
         "type": "int"
       }
     }
-  },
-  "nowHere": "You are here",
-  "@nowHere": {
-    "description": "Label above the current constellation on the Today sheet"
   },
   "starFilled": "Star {percent} full",
   "@starFilled": {
@@ -128,10 +134,6 @@
         "type": "String"
       }
     }
-  },
-  "historyLink": "All history →",
-  "@historyLink": {
-    "description": "Link from the sheet to the History tab"
   },
   "pathPlaceholder": "Your path is coming soon",
   "@pathPlaceholder": {
