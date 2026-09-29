@@ -36,10 +36,6 @@
   "@tabPath": {
     "description": "Label of the Path tab"
   },
-  "tabHistory": "History",
-  "@tabHistory": {
-    "description": "Label of the History tab"
-  },
   "todayStepsLabel": "{count, plural, one{step} other{steps}} today",
   "@todayStepsLabel": {
     "description": "Label under the big number of today's steps on the Today card",
@@ -216,10 +212,6 @@
   "back": "Back",
   "@back": {
     "description": "Label of a back button"
-  },
-  "historyPlaceholder": "History is coming soon",
-  "@historyPlaceholder": {
-    "description": "Placeholder of the History tab"
   },
   "healthAccessTitle": "Every step counts",
   "@healthAccessTitle": {

@@ -54,9 +54,8 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
                                  ├── /health-access  HealthAccessScreen (until the journey starts)
                                  └── AppShell (tabs + FloatingTabBar)
                                        ├── /today   TodayScreen
-                                       ├── /path    PathScreen (constellation pages)
-                                       │     └── map  PathMapScreen (the Milky Way map)
-                                       └── /history HistoryScreen (placeholder)
+                                       └── /path    PathScreen (constellation pages)
+                                             └── map  PathMapScreen (the Milky Way map)
 ```
 
 - Path tab: `features/path/presentation/`. `pathProvider` (the route,
