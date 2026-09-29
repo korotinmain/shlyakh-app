@@ -148,7 +148,7 @@ pin the axis themselves.
 |---|---|---|
 | `hero` | 44 / 700, −2% | the day's big number |
 | `display` | 30 / 700, −2% | section numbers |
-| `title` | 22 / 700, −2% | level titles |
+| `title` | 22 / 700, −2% | screen and constellation titles |
 | `headline` | 17 / 500 | labels, list titles |
 | `body` | 15 / 400 | text |
 | `footnote` | 13 / 400 | secondary text |

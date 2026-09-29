@@ -17,7 +17,7 @@ void main() {
       ('domain', 'lib/features/steps/domain/xp.dart', Layer.domain),
       (
         'nested domain',
-        'lib/features/steps/domain/rules/level.dart',
+        'lib/features/steps/domain/rules/star.dart',
         Layer.domain,
       ),
       ('data', 'lib/features/steps/data/steps_repository.dart', Layer.data),

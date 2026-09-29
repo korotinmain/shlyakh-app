@@ -13,9 +13,9 @@ implemented, **[open]** not decided yet.
 
 ```
 lib/
-├── main.dart             ProviderScope(child: App())
+├── main.dart             UncontrolledProviderScope(container, App())
 ├── app/                  bootstrap: App, routerProvider, theme
-├── core/                 shared utilities (l10n extension, clockProvider)
+├── core/                 shared: database, design tokens, errors, l10n, logging, clock
 ├── features/<feature>/
 │   ├── domain/           pure Dart: entities, rules (XP, stars), repository interfaces
 │   ├── data/             repository implementations, data sources
@@ -215,7 +215,7 @@ Decided by the stage 1 spike (ADR 0007):
 
 | Concern | Approach | Status |
 |---|---|---|
-| Dependency injection | Riverpod (`riverpod_generator`); `ProviderScope` at the root, overrides in tests | [built] |
+| Dependency injection | Riverpod (`riverpod_generator`); `UncontrolledProviderScope` at the root, overrides in tests | [built] |
 | Time | `Clock` injected (constructor in domain, `clockProvider` in UI) | [built] |
 | Localization | gen-l10n, every user-facing string in ARB | [built] |
 | Navigation | go_router behind `routerProvider` | [built] |
