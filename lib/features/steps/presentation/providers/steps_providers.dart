@@ -2,9 +2,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shlyakh/core/database/app_database_provider.dart';
 import 'package:shlyakh/core/logging/logger_provider.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
+import 'package:shlyakh/features/steps/data/drift_journey_repository.dart';
 import 'package:shlyakh/features/steps/data/healthkit/health_kit_steps_source.dart';
 import 'package:shlyakh/features/steps/data/healthkit/steps_api.g.dart';
 import 'package:shlyakh/features/steps/data/sync/steps_sync.dart';
+import 'package:shlyakh/features/steps/domain/journey_repository.dart';
 import 'package:shlyakh/features/steps/domain/journey_start.dart';
 import 'package:shlyakh/features/today/presentation/providers/current_user_provider.dart';
 
@@ -33,9 +35,13 @@ StepsSync stepsSync(Ref ref) {
   );
 }
 
+/// Journey starts in Drift.
+@Riverpod(keepAlive: true)
+JourneyRepository journeyRepository(Ref ref) =>
+    DriftJourneyRepository(ref.watch(appDatabaseProvider).journeyStartDao);
+
 /// The current user's journey start; null until they allow Health access.
 @Riverpod(keepAlive: true)
 Stream<JourneyStart?> journeyStart(Ref ref) => ref
-    .watch(appDatabaseProvider)
-    .journeyStartDao
-    .watch(ref.watch(currentUserIdProvider));
+    .watch(journeyRepositoryProvider)
+    .watchStart(ref.watch(currentUserIdProvider));

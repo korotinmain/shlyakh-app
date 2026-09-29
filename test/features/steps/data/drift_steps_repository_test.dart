@@ -1,6 +1,7 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/core/database/app_database.dart';
+import 'package:shlyakh/core/error/failure.dart';
 import 'package:shlyakh/features/steps/data/drift_steps_repository.dart';
 import 'package:shlyakh/features/steps/domain/daily_steps.dart';
 import 'package:shlyakh/features/steps/domain/local_date.dart';
@@ -57,5 +58,14 @@ void main() {
     final values = await emitted;
     expect(values.first, isEmpty);
     expect(values.last, [_day('2026-09-28', 6870)]);
+  });
+
+  test('a storage error becomes StorageFailure', () async {
+    await db.customStatement('DROP TABLE daily_steps');
+
+    expect(
+      repository.watchDays(userId: 'local'),
+      emitsError(isA<StorageFailure>()),
+    );
   });
 }

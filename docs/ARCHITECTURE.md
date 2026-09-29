@@ -76,8 +76,10 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   `ProgressSheet` (collapsed: the day's XP and the current star;
   expanded: today, the week, a link to Path; runs under the tab bar).
 - Steps: `features/steps/domain/` holds `DailySteps`, `LocalDate`,
-  `JourneyStart`, the sync rules and the `StepsRepository` interface;
-  `DriftStepsRepository` implements it.
+  `JourneyStart`, the sync rules and the `StepsRepository` and
+  `JourneyRepository` interfaces; `DriftStepsRepository` and
+  `DriftJourneyRepository` implement them and turn SQLite errors into
+  `StorageFailure` (`core/database/storage_errors.dart`, ADR 0005).
 - Health access and triggers: `features/steps/presentation/`. Until a
   journey start exists the router redirects to `/health-access`
   (`HealthAccessScreen`); "Allow" (`HealthAccess.allow`) shows the
@@ -134,8 +136,7 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   changed days and keeps days counted in another time zone. Failures are
   logged, never thrown (`StepsSyncCompleted` on success); SQLite errors,
   also wrapped in `DriftRemoteException` by the background isolate,
-  become `StorageFailure`.
-  `DriftStepsRepository` serves `StepsRepository` from Drift.
+  become `StorageFailure` (`guardStorage`).
 - Constellation names: `features/path/presentation/providers/constellation_name.dart`
   maps an IAU id to its ARB string (uk, en).
 - Localization: gen-l10n, `en` template and fallback, `uk` translation,
@@ -149,7 +150,7 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   (`StepsDays`, `OnceCompletion`) have XCTest in `RunnerTests`, run
   locally only (CI is Linux). `HealthKitStepsSource` in
   `features/steps/data/healthkit/` wraps the host API and maps its error
-  codes to failures. Nothing in the app calls it yet.
+  codes to failures; `StepsSync` and `HealthAccess` use it.
 
 ## 3. Target data flow [decided]
 

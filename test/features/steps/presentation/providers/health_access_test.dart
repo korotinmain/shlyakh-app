@@ -99,4 +99,12 @@ void main() {
 
     expect(await container.read(healthAvailableProvider.future), isFalse);
   });
+
+  test('a failing database write shows StorageFailure', () async {
+    await db.customStatement('DROP TABLE journey_start');
+
+    await allow();
+
+    expect(container.read(healthAccessProvider).error, isA<StorageFailure>());
+  });
 }

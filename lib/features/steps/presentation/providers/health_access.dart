@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shlyakh/core/database/app_database_provider.dart';
 import 'package:shlyakh/core/error/failure.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
 import 'package:shlyakh/features/steps/presentation/providers/steps_providers.dart';
@@ -36,7 +35,7 @@ class HealthAccess extends _$HealthAccess {
       final source = ref.read(healthKitStepsSourceProvider);
       if (!await source.isAvailable()) throw const HealthUnavailable();
       await source.requestAccess();
-      await ref.read(appDatabaseProvider).journeyStartDao.insertOnce((
+      await ref.read(journeyRepositoryProvider).start((
         userId: ref.read(currentUserIdProvider),
         startedAt: tappedAt,
         timezone: await source.timeZoneId(),
