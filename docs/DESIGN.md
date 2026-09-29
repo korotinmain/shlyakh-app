@@ -118,13 +118,17 @@ A star chart of the stretch out of the fog: plate carrée in J2000, turned
 plus 20° of sky at either end, zoomed in at most 8 px a degree and
 centred, and scrolls vertically, opening on the current constellation.
 
-- Each visible constellation is drawn in its true shape at its place:
-  its unit box turned like the chart, sized by its angular span; done in
-  gold, the current one with its marker, the next one as rings. Its name
-  sits just under its lowest star.
+- Each visible constellation is drawn star by star at its own RA and
+  Dec, so shared stars (Elnath) are one point; done in gold, the current
+  one with its marker, the next one as rings. The chart stretches shapes
+  east–west at high declination (Cassiopeia, Cepheus), as a plate carrée
+  does. Each name sits just under its lowest star, and names that would
+  overlap are pushed down.
 - The band is the galactic equator (J2000 pole α 192.85948°, δ
-  27.12825°), 20° wide in `onSkyMuted` at 12 % with a blur, fading out
-  above the last visible constellation into the fog.
+  27.12825°), 20° wide in `onSkyMuted` at 12 % with a blur. It fades into
+  the fog from the last visible constellation onwards, in the route's
+  direction (up on the main route, down on the branch); with the whole
+  route lit it does not fade.
 
 ## Members
 

@@ -9,7 +9,6 @@ import 'package:shlyakh/core/design/glass_panel.dart';
 import 'package:shlyakh/core/l10n/l10n_extension.dart';
 import 'package:shlyakh/features/path/domain/path_pages.dart';
 import 'package:shlyakh/features/path/domain/sky_map.dart';
-import 'package:shlyakh/features/path/domain/sky_route.dart';
 import 'package:shlyakh/features/path/presentation/providers/constellation_name.dart';
 import 'package:shlyakh/features/path/presentation/providers/path_provider.dart';
 import 'package:shlyakh/features/path/presentation/providers/path_view.dart';
@@ -163,15 +162,14 @@ class _ChartState extends State<_Chart> {
                     ),
                   ),
                 ),
-                for (final page in view.pages)
-                  _label(
-                    page.constellation,
-                    layout.constellations[view.route.constellations.indexOf(
-                      page.constellation,
-                    )],
-                    constellationName(l10n, page.constellation.id),
-                    page.state == PageState.current,
-                    palette,
+                for (final (page, rect) in _labels(context, view, layout))
+                  Positioned.fromRect(
+                    rect: rect,
+                    child: Text(
+                      constellationName(l10n, page.constellation.id),
+                      textAlign: TextAlign.center,
+                      style: _labelStyle(palette, page.state),
+                    ),
                   ),
               ],
             ),
@@ -181,23 +179,51 @@ class _ChartState extends State<_Chart> {
     );
   }
 
-  Widget _label(
-    Constellation constellation,
-    MapPlacement at,
-    String name,
-    bool current,
-    AppPalette palette,
-  ) => Positioned(
-    left: at.x - _labelWidth / 2,
-    top: mapLabelTop(constellation, at),
-    width: _labelWidth,
-    child: Text(
-      name,
-      textAlign: TextAlign.center,
-      style: AppTypography.footnote.copyWith(
-        color: current ? palette.onSky : palette.onSkyMuted,
-        fontWeight: current ? FontWeight.w600 : null,
-      ),
-    ),
-  );
+  TextStyle _labelStyle(AppPalette palette, PageState state) {
+    final current = state == PageState.current;
+    return AppTypography.footnote.copyWith(
+      color: current ? palette.onSky : palette.onSkyMuted,
+      fontWeight: current ? FontWeight.w600 : null,
+    );
+  }
+
+  /// Each visible page with its name's box: centred under the figure, just
+  /// below its lowest star, measured at the current text size and pushed
+  /// apart where names would overlap.
+  List<(PathPageView, Rect)> _labels(
+    BuildContext context,
+    PathView view,
+    SkyMapLayout layout,
+  ) {
+    final l10n = context.l10n;
+    final palette = context.palette;
+    final scaler = MediaQuery.textScalerOf(context);
+    final rects = [
+      for (final page in view.pages)
+        () {
+          final text = TextPainter(
+            text: TextSpan(
+              text: constellationName(l10n, page.constellation.id),
+              style: _labelStyle(palette, page.state),
+            ),
+            textDirection: Directionality.of(context),
+            textScaler: scaler,
+          )..layout(maxWidth: _labelWidth);
+          final at =
+              layout.constellations[view.route.constellations.indexOf(
+                page.constellation,
+              )];
+          final rect = Rect.fromLTWH(
+            at.x - _labelWidth / 2,
+            mapLabelTop(layout, page.constellation),
+            _labelWidth,
+            text.height,
+          );
+          text.dispose();
+          return rect;
+        }(),
+    ];
+    final placed = placeLabels(rects);
+    return [for (final (i, page) in view.pages.indexed) (page, placed[i])];
+  }
 }
