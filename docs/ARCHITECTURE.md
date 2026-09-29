@@ -50,7 +50,7 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
                └── UncontrolledProviderScope
                      └── App (MaterialApp.router, theme, l10n delegates)
                            └── routerProvider (go_router, redirect on the journey start)
-                                 ├── /               LaunchScreen (the theme's sky, while the start loads)
+                                 ├── /               LaunchScreen (the sky while the start loads; the failure if it fails)
                                  ├── /health-access  HealthAccessScreen (until the journey starts)
                                  └── AppShell (tabs + FloatingTabBar)
                                        ├── /today   TodayScreen

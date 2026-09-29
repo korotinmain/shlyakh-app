@@ -27,7 +27,8 @@ abstract final class AppRoutes {
 /// Where to send [location] for the journey state: the access screen until
 /// the journey starts, Today once it has. While it loads the app stays on
 /// the launch route, which shows only the sky, so a new user never sees
-/// the Today shell before the access screen.
+/// the Today shell before the access screen; if it fails to load, the
+/// launch route shows the failure.
 String? healthAccessRedirect(
   AsyncValue<JourneyStart?> journey,
   String location,
