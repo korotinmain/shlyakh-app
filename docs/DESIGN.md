@@ -90,6 +90,42 @@ art replaces it later with the same states.
   16 at 50 % and a soft disc of radius 16 at 12 %. Static for now; the
   star moment animates it.
 
+## Path pages
+
+One page per constellation, swiped horizontally: the completed ones, the
+current one and the next one; the rest stay in the fog. The tab opens on
+the current page. Zones: a "Map of the path" pill at the top right, then
+the header, the figure in the flexible middle, and the info card and the
+route strip at the bottom, above the tab bar. Below 520 pt of page height
+(very large text) the page scrolls and the figure keeps a 220 pt zone.
+
+| Page | Header (kicker · subtitle) | Card |
+|---|---|---|
+| current | "You are here" · constellations complete (no total) | XP to the next star, a bar, "≈ N days at your pace" (hidden with less than 7 days of history) |
+| done | "Complete" in `done` · its stars | the seal "✓ Completed <day month>" in `seal` / `onSeal` |
+| ahead | "Ahead" · its stars | a lock and "Opens once the current constellation is complete" |
+
+A done figure is drawn in gold (`done`, `doneLine`, `doneGlow`) with no
+marker. The route strip shows the previous, this (bold) and the next
+name over a dashed line; a missing neighbour is a faint dot, and tapping
+a name opens that page.
+
+## Map
+
+A star chart of the stretch out of the fog: plate carrée in J2000, turned
+90° clockwise so north is to the right and right ascension grows upwards
+(a rotation, never a mirror). It fits the visible constellations' span
+plus 20° of sky at either end, zoomed in at most 8 px a degree and
+centred, and scrolls vertically, opening on the current constellation.
+
+- Each visible constellation is drawn in its true shape at its place:
+  its unit box turned like the chart, sized by its angular span; done in
+  gold, the current one with its marker, the next one as rings. Its name
+  sits just under its lowest star.
+- The band is the galactic equator (J2000 pole α 192.85948°, δ
+  27.12825°), 20° wide in `onSkyMuted` at 12 % with a blur, fading out
+  above the last visible constellation into the fog.
+
 ## Members
 
 Each Спільно member has one of six muted colours, chosen by an FNV-1a hash

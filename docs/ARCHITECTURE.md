@@ -54,10 +54,18 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
                                  ├── /health-access  HealthAccessScreen (until the journey starts)
                                  └── AppShell (tabs + FloatingTabBar)
                                        ├── /today   TodayScreen
-                                       ├── /path    PathScreen (placeholder)
+                                       ├── /path    PathScreen (constellation pages)
+                                       │     └── map  PathMapScreen (the Milky Way map)
                                        └── /history HistoryScreen (placeholder)
 ```
 
+- Path tab: `features/path/presentation/`. `pathProvider` (the route,
+  the progress, one `PathPageView` per page with its figure states and
+  completion date, the completed count and the ETA) feeds `PathScreen`,
+  a `PageView` of `ConstellationPage`s (header, `ConstellationFigure`
+  with a gold `done` style, `PathInfoCard`, `RouteStrip`), and
+  `PathMapScreen` (`/path/map`), a scrolling `SkyMapPainter` chart.
+  Both share `paintFigure` with Today.
 - Today screen: `features/today/presentation/`. `todayProvider` (today's
   steps, XP, approximate distance, the week, star progress, the current
   `Constellation` and its `figureStates` from `routeProvider` and
@@ -89,9 +97,12 @@ main.dart ── ProviderContainer (logger, error handlers, StepsEventsHandler)
   lights once in the first constellation that has it), `starCost`,
   `xpToLight` and `pathProgress` (`star_cost.dart`), `daysToNextStar`
   (`eta.dart`, the pace of the last 14 full days) and `starMoment`
-  (`star_moment.dart`) and `figureStates` (`figure_state.dart`: lit,
-  current and ahead stars and solid lines of the current figure). Pure
-  Dart, no Flutter.
+  (`star_moment.dart`), `figureStates` / `figureStatesFor`
+  (`figure_state.dart`: lit, current and ahead stars and solid lines of
+  any constellation), `pathPages` (`path_pages.dart`: done, current and
+  the next page), `completionDates` (`completion_dates.dart`, from the
+  days) and `skyMapLayout` / `galacticEquator` (`sky_map.dart`: the
+  chart geometry). Pure Dart, no Flutter.
 - Design tokens: `core/design/` (`AppPalette`, a light and a dark
   palette as a `ThemeExtension`; member colours, Geologica typography,
   spacing, radii, glass, motion). `app/theme.dart` builds a light and a
