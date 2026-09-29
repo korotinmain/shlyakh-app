@@ -21,7 +21,7 @@ making any change. They override convenience.**
 - Flutter (iOS first), Dart with sound null safety
 - State / DI: Riverpod (code generation via `riverpod_generator`)
 - Navigation: go_router
-- Models: freezed + json_serializable
+- Models: Dart records and final classes (no freezed; revisit with Supabase DTOs)
 - Local storage: Drift (SQLite)
 - Health data: native Swift (HealthKit) exposed to Dart through Pigeon
   (`pigeons/steps_api.dart`); no `health` plugin
@@ -34,7 +34,7 @@ making any change. They override convenience.**
 ## Library versions
 
 Dependencies are newer than most model training data: Riverpod 3,
-go_router 18, freezed 3, pigeon 29, Dart 3.13 (e.g. the
+go_router 18, drift 2, pigeon 29, Dart 3.13 (e.g. the
 `new(...)` constructor syntax that `very_good_analysis` enforces). Do not
 write API calls from memory. Check the exact version in `pubspec.lock`,
 then read the signatures in the package source (`~/.pub-cache/hosted/pub.dev/`
