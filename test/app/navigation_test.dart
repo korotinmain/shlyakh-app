@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shlyakh/app/floating_tab_bar.dart';
 import 'package:shlyakh/core/time/clock_provider.dart';
+import 'package:shlyakh/features/path/presentation/path_screen.dart';
 
 import '../helpers/pump_app.dart';
 
@@ -24,16 +25,16 @@ void main() {
     );
 
     expect(_tab('Today'), findsOneWidget);
-    expect(find.text('Your path is coming soon'), findsNothing);
+    expect(find.byType(PathScreen), findsNothing);
 
     await tester.tap(_tab('Path'));
     await tester.pumpAndSettle();
-    expect(find.text('Your path is coming soon'), findsOneWidget);
+    expect(find.byType(PathScreen), findsOneWidget);
 
     await tester.tap(_tab('History'));
     await tester.pumpAndSettle();
     expect(find.text('History is coming soon'), findsOneWidget);
-    expect(find.text('Your path is coming soon'), findsNothing);
+    expect(find.byType(PathScreen), findsNothing);
 
     await tester.tap(_tab('Today'));
     await tester.pumpAndSettle();
@@ -62,7 +63,7 @@ void main() {
         final region = tester.widget<AnnotatedRegion<SystemUiOverlayStyle>>(
           find
               .ancestor(
-                of: find.text('Your path is coming soon'),
+                of: find.byType(PathScreen),
                 matching: find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
               )
               .first,

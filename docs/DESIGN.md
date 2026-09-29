@@ -39,13 +39,19 @@ two palettes.
 | `starAhead` | `#C8D2F0` at 45 % | `#3D4F9A` at 38 % |
 | `aheadLine` | `#C8D2F0` at 30 % | `#3D4F9A` at 25 % |
 | `marker` | `#FFE9B8` | `#3D4F9A` |
+| `done` | `#F3D9A0` | `#8A5E0B` |
+| `doneLine` | `#F7E2B4` at 90 % | `#8A5E0B` at 80 % |
+| `doneGlow` | `#F3D9A0` at 30 % | none |
+| `seal` | `#EBC57F` | `#8A5E0B` |
+| `onSeal` | `#2A1D08` | `#FFFFFF` |
 | grain | 12 % | 6 % |
 | backdrop | violet nebula (`#6E5AA8` at 32 %, fading) | star-chart grid (24 pt, ink at 5 %, top two thirds) |
 
 Contrast (WCAG 2, pinned by `test/core/design/app_palette_test.dart`):
-text on every sky colour, on the accent and on glass over the sky is at
-least 4.5:1; the accent on glass (ring, bar, active tab) and the stars and the
-marker on the sky at least 3:1.
+text on every sky colour, on the accent, on glass over the sky and on
+the seal is at least 4.5:1; the accent on glass (ring, bar, active tab),
+the stars, the marker and the gold of completed constellations on the
+sky at least 3:1.
 The status bar has light icons in the dark theme and dark icons in the
 light theme.
 
@@ -83,6 +89,47 @@ art replaces it later with the same states.
   radius 9 with one gap in `marker` at 60 %, cross spikes of half-length
   16 at 50 % and a soft disc of radius 16 at 12 %. Static for now; the
   star moment animates it.
+
+## Path pages
+
+One page per constellation, swiped horizontally: the completed ones, the
+current one and the next one; the rest stay in the fog. The tab opens on
+the current page. Zones: a "Map of the path" pill at the top right, then
+the header, the figure in the flexible middle, and the info card and the
+route strip at the bottom, above the tab bar. Below 520 pt of page height
+(very large text) the page scrolls and the figure keeps a 220 pt zone.
+
+| Page | Header (kicker · subtitle) | Card |
+|---|---|---|
+| current | "You are here" · constellations complete (no total) | XP to the next star, a bar, "≈ N days at your pace" (hidden with less than 7 days of history) |
+| done | "Complete" in `done` · its stars | the seal "✓ Completed <day month>" in `seal` / `onSeal` |
+| ahead | "Ahead" · its stars | a lock and "Opens once the current constellation is complete" |
+
+A done figure is drawn in gold (`done`, `doneLine`, `doneGlow`) with no
+marker. The route strip shows the previous, this (bold) and the next
+name over a dashed line; a missing neighbour is a faint dot, and tapping
+a name opens that page.
+
+## Map
+
+A star chart of the stretch out of the fog: plate carrée in J2000, turned
+90° clockwise so north is to the right and right ascension grows upwards
+(a rotation, never a mirror). It fits the visible constellations' span
+plus 20° of sky at either end, zoomed in at most 8 px a degree and
+centred, and scrolls vertically, opening on the current constellation.
+
+- Each visible constellation sits at its place on the chart, and its
+  stars at their true offsets from its centre (a gnomonic projection,
+  turned like the chart), so shapes keep their proportions even near the
+  pole. A shared star is placed from its owner, so Elnath is one point.
+  Done in gold, the current one with its marker, the next one as rings.
+  Each name sits just under its lowest star; names that would overlap
+  are pushed down.
+- The band is the galactic equator (J2000 pole α 192.85948°, δ
+  27.12825°), 20° wide in `onSkyMuted` at 12 % with a blur. It fades into
+  the fog from the last visible constellation onwards, in the route's
+  direction (up on the main route, down on the branch); with the whole
+  route lit it does not fade.
 
 ## Members
 

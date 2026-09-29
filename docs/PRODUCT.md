@@ -102,6 +102,18 @@ Still valid from design stage A (2026-09-27):
 
 Layout, the Path tab, stories and the ETA: the constellation path spec.
 
+## Path tab content
+
+- One page per constellation out of the fog: the completed ones (gold,
+  "Складено 27 вересня", recomputed from the steps), the current one
+  (XP to the next star, the bar, "≈ 2 дні у твоєму темпі") and the next
+  one (locked). No page beyond the next; no denominators.
+- A strip of neighbouring constellations under each page.
+- The map: the Milky Way band on a real star chart with the visible
+  constellations at their places, fog beyond.
+- Stories, star names on the figures and the moving shine on completed
+  constellations come later (plans 6–7).
+
 ## Open questions
 
 - Home screen widget: in scope for v1 or later?

@@ -18,29 +18,41 @@ typedef FigureStates = ({
 
 /// The figure of the constellation holding the next star, or of the last
 /// constellation, fully lit, once every star is lit.
-FigureStates figureStates(SkyRoute route, PathProgress progress) {
-  final next = progress.next;
-  final index = next?.constellationIndex ?? route.constellations.length - 1;
-  final constellation = route.constellations[index];
-  final own = route.ownOrder(index);
+FigureStates figureStates(SkyRoute route, PathProgress progress) =>
+    figureStatesFor(
+      route,
+      progress,
+      progress.next?.constellationIndex ?? route.constellations.length - 1,
+    );
+
+/// The figure of the constellation at [constellationIndex] with
+/// [progress]: a star is lit once the route has lit it (in any
+/// constellation that owns it), current when it is the next star of this
+/// constellation, and ahead otherwise.
+FigureStates figureStatesFor(
+  SkyRoute route,
+  PathProgress progress,
+  int constellationIndex,
+) {
+  final routeIndexOf = {
+    for (final (i, star) in route.stars.indexed) star.hip: i,
+  };
+  final isCurrent = progress.next?.constellationIndex == constellationIndex;
+  final constellation = route.constellations[constellationIndex];
   final stars = [
-    for (var i = 0; i < constellation.stars.length; i++)
-      _state(own.indexOf(i), next?.starInConstellation),
+    for (final star in constellation.stars)
+      switch (routeIndexOf[star.hip]!) {
+        final i when i < progress.starsLit => StarState.lit,
+        final i when isCurrent && i == progress.starsLit => StarState.current,
+        _ => StarState.ahead,
+      },
   ];
   return (
-    constellationIndex: index,
+    constellationIndex: constellationIndex,
     stars: List.unmodifiable(stars),
     solidLines: List.unmodifiable([
       for (final (a, b) in constellation.lines)
         stars[a] != StarState.ahead && stars[b] != StarState.ahead,
     ]),
   );
-}
-
-/// [position] among the constellation's own stars (-1 when an earlier
-/// constellation lit it) against the next star's position (null when the
-/// whole route is lit).
-StarState _state(int position, int? next) {
-  if (position < 0 || next == null || position < next) return StarState.lit;
-  return position == next ? StarState.current : StarState.ahead;
 }

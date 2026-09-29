@@ -69,19 +69,40 @@ Rect figureBounds(List<SkyPoint> stars, Rect zone) {
 /// Core radius of a star of visual magnitude [mag]: brighter is larger.
 double _coreRadius(double mag) => (3.5 - 0.5 * mag).clamp(1.5, 3.5);
 
-/// The current constellation on the sky: lit stars, the current star's
-/// marker, rings for the stars ahead, solid lines behind and dashed lines
-/// ahead, with its name just under the lowest star.
+/// A constellation on the sky: lit stars, the current star's marker,
+/// rings for the stars ahead, solid lines behind and dashed lines ahead,
+/// with its name just under the lowest star. A [done] constellation is
+/// drawn in gold; [showName] false leaves the name to the caller.
 class ConstellationFigure extends StatelessWidget {
-  const new({required this.constellation, required this.figure, super.key});
+  const new({
+    required this.constellation,
+    required this.figure,
+    this.done = false,
+    this.showName = true,
+    super.key,
+  });
 
   final Constellation constellation;
   final FigureStates figure;
+  final bool done;
+  final bool showName;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
     final name = constellationName(context.l10n, constellation.id);
+    // Without a name there is nothing to lay out: no LayoutBuilder, so the
+    // figure can sit under intrinsic sizing (a scrolling page).
+    if (!showName) {
+      return Semantics(
+        label: name,
+        excludeSemantics: true,
+        child: CustomPaint(
+          painter: _FigurePainter(constellation, figure, palette, done: done),
+          size: Size.infinite,
+        ),
+      );
+    }
     return Semantics(
       label: name,
       excludeSemantics: true,
@@ -89,7 +110,7 @@ class ConstellationFigure extends StatelessWidget {
         builder: (context, constraints) {
           if (constraints.maxHeight <= 0) return const SizedBox.shrink();
           final painter = CustomPaint(
-            painter: _FigurePainter(constellation, figure, palette),
+            painter: _FigurePainter(constellation, figure, palette, done: done),
             size: Size.infinite,
           );
           final figureHeight = constraints.maxHeight - _nameSpace;
@@ -129,119 +150,138 @@ class ConstellationFigure extends StatelessWidget {
   }
 }
 
+/// Draws [constellation] with [figure]'s states at [points] (one per star,
+/// in canvas coordinates): dashed lines, solid lines, glows, lit cores,
+/// rings ahead, then the current star's marker. [done] draws it in gold.
+void paintFigure(
+  Canvas canvas, {
+  required Constellation constellation,
+  required FigureStates figure,
+  required AppPalette palette,
+  required List<Offset> points,
+  bool done = false,
+}) {
+  final dashed = Paint()
+    ..color = palette.aheadLine
+    ..strokeWidth = _dashedStroke
+    ..style = PaintingStyle.stroke;
+  final solid = Paint()
+    ..color = done ? palette.doneLine : palette.starLine
+    ..strokeWidth = _solidStroke
+    ..strokeCap = StrokeCap.round
+    ..style = PaintingStyle.stroke;
+  for (final (i, (a, b)) in constellation.lines.indexed) {
+    if (!figure.solidLines[i]) {
+      _dashedLine(canvas, points[a], points[b], dashed);
+    }
+  }
+  for (final (i, (a, b)) in constellation.lines.indexed) {
+    if (figure.solidLines[i]) canvas.drawLine(points[a], points[b], solid);
+  }
+
+  final glow = Paint()..color = done ? palette.doneGlow : palette.starGlow;
+  final core = Paint()..color = done ? palette.done : palette.star;
+  final ahead = Paint()
+    ..color = palette.starAhead
+    ..strokeWidth = _aheadStroke
+    ..style = PaintingStyle.stroke;
+  for (final (i, state) in figure.stars.indexed) {
+    final radius = _coreRadius(constellation.stars[i].mag);
+    if (state == StarState.lit) {
+      canvas.drawCircle(points[i], radius * _glowFactor, glow);
+    }
+  }
+  for (final (i, state) in figure.stars.indexed) {
+    final radius = _coreRadius(constellation.stars[i].mag);
+    switch (state) {
+      case StarState.lit:
+        canvas.drawCircle(points[i], radius, core);
+      case StarState.ahead:
+        canvas.drawCircle(points[i], _aheadRadius, ahead);
+      case StarState.current:
+        break;
+    }
+  }
+  for (final (i, state) in figure.stars.indexed) {
+    if (state == StarState.current) _marker(canvas, points[i], palette);
+  }
+}
+
+void _marker(Canvas canvas, Offset at, AppPalette palette) {
+  final marker = palette.marker;
+  canvas.drawCircle(
+    at,
+    _markerDisc,
+    Paint()..color = marker.withValues(alpha: _markerDiscAlpha),
+  );
+  final spike = Paint()
+    ..color = marker.withValues(alpha: _markerSpikeAlpha)
+    ..strokeWidth = _markerSpikeStroke;
+  canvas
+    ..drawLine(
+      at.translate(-_markerSpike, 0),
+      at.translate(_markerSpike, 0),
+      spike,
+    )
+    ..drawLine(
+      at.translate(0, -_markerSpike),
+      at.translate(0, _markerSpike),
+      spike,
+    );
+  // The ring with one gap: an arc covering dash / (dash + gap) of it.
+  const sweep =
+      2 * math.pi * _markerRingDash / (_markerRingDash + _markerRingGap);
+  canvas
+    ..drawArc(
+      Rect.fromCircle(center: at, radius: _markerRing),
+      -math.pi / 2,
+      sweep,
+      false,
+      Paint()
+        ..color = marker.withValues(alpha: _markerRingAlpha)
+        ..strokeWidth = _markerRingStroke
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke,
+    )
+    ..drawCircle(at, _markerCore, Paint()..color = palette.star);
+}
+
+void _dashedLine(Canvas canvas, Offset from, Offset to, Paint paint) {
+  final length = (to - from).distance;
+  if (length == 0) return;
+  final step = (to - from) / length;
+  for (var d = 0.0; d < length; d += _dash + _gap) {
+    final end = math.min(d + _dash, length);
+    canvas.drawLine(from + step * d, from + step * end, paint);
+  }
+}
+
 class _FigurePainter extends CustomPainter {
-  new(this.constellation, this.figure, this.palette);
+  new(this.constellation, this.figure, this.palette, {required this.done});
 
   final Constellation constellation;
   final FigureStates figure;
   final AppPalette palette;
+  final bool done;
 
   @override
   void paint(Canvas canvas, Size size) {
     final zone = Offset.zero & size;
     if (math.min(size.width, size.height) - 2 * _padding <= 0) return;
-    final points = [
-      for (final star in constellation.stars) figurePoint(star, zone),
-    ];
-
-    final dashed = Paint()
-      ..color = palette.aheadLine
-      ..strokeWidth = _dashedStroke
-      ..style = PaintingStyle.stroke;
-    final solid = Paint()
-      ..color = palette.starLine
-      ..strokeWidth = _solidStroke
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-    for (final (i, (a, b)) in constellation.lines.indexed) {
-      if (!figure.solidLines[i]) {
-        _dashedLine(canvas, points[a], points[b], dashed);
-      }
-    }
-    for (final (i, (a, b)) in constellation.lines.indexed) {
-      if (figure.solidLines[i]) canvas.drawLine(points[a], points[b], solid);
-    }
-
-    final glow = Paint()..color = palette.starGlow;
-    final core = Paint()..color = palette.star;
-    final ahead = Paint()
-      ..color = palette.starAhead
-      ..strokeWidth = _aheadStroke
-      ..style = PaintingStyle.stroke;
-    for (final (i, state) in figure.stars.indexed) {
-      final radius = _coreRadius(constellation.stars[i].mag);
-      if (state == StarState.lit) {
-        canvas.drawCircle(points[i], radius * _glowFactor, glow);
-      }
-    }
-    for (final (i, state) in figure.stars.indexed) {
-      final radius = _coreRadius(constellation.stars[i].mag);
-      switch (state) {
-        case StarState.lit:
-          canvas.drawCircle(points[i], radius, core);
-        case StarState.ahead:
-          canvas.drawCircle(points[i], _aheadRadius, ahead);
-        case StarState.current:
-          break;
-      }
-    }
-    for (final (i, state) in figure.stars.indexed) {
-      if (state == StarState.current) _marker(canvas, points[i]);
-    }
-  }
-
-  void _marker(Canvas canvas, Offset at) {
-    final marker = palette.marker;
-    canvas.drawCircle(
-      at,
-      _markerDisc,
-      Paint()..color = marker.withValues(alpha: _markerDiscAlpha),
+    paintFigure(
+      canvas,
+      constellation: constellation,
+      figure: figure,
+      palette: palette,
+      done: done,
+      points: [for (final star in constellation.stars) figurePoint(star, zone)],
     );
-    final spike = Paint()
-      ..color = marker.withValues(alpha: _markerSpikeAlpha)
-      ..strokeWidth = _markerSpikeStroke;
-    canvas
-      ..drawLine(
-        at.translate(-_markerSpike, 0),
-        at.translate(_markerSpike, 0),
-        spike,
-      )
-      ..drawLine(
-        at.translate(0, -_markerSpike),
-        at.translate(0, _markerSpike),
-        spike,
-      );
-    // The ring with one gap: an arc covering dash / (dash + gap) of it.
-    const sweep =
-        2 * math.pi * _markerRingDash / (_markerRingDash + _markerRingGap);
-    canvas
-      ..drawArc(
-        Rect.fromCircle(center: at, radius: _markerRing),
-        -math.pi / 2,
-        sweep,
-        false,
-        Paint()
-          ..color = marker.withValues(alpha: _markerRingAlpha)
-          ..strokeWidth = _markerRingStroke
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-      )
-      ..drawCircle(at, _markerCore, Paint()..color = palette.star);
-  }
-
-  void _dashedLine(Canvas canvas, Offset from, Offset to, Paint paint) {
-    final length = (to - from).distance;
-    if (length == 0) return;
-    final step = (to - from) / length;
-    for (var d = 0.0; d < length; d += _dash + _gap) {
-      final end = math.min(d + _dash, length);
-      canvas.drawLine(from + step * d, from + step * end, paint);
-    }
   }
 
   @override
   bool shouldRepaint(_FigurePainter oldDelegate) =>
       !identical(oldDelegate.constellation, constellation) ||
       !identical(oldDelegate.figure, figure) ||
-      !identical(oldDelegate.palette, palette);
+      !identical(oldDelegate.palette, palette) ||
+      oldDelegate.done != done;
 }

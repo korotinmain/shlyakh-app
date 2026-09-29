@@ -55,6 +55,34 @@ void main() {
       expect((f.stars[1], f.stars[2]), (_ahead, _ahead));
     });
 
+    group('figureStatesFor any constellation', () {
+      FigureStates at(int xp, int index) =>
+          figureStatesFor(route, pathProgress(xp, route), index);
+
+      test('lights every star of a completed constellation', () {
+        expect(at(9000, 0).stars, [_lit, _lit, _lit]);
+        expect(at(9000, 0).solidLines, [true, true]);
+      });
+
+      test('matches figureStates on the current constellation', () {
+        expect(at(9000, 1).stars, [_lit, _current]);
+      });
+
+      test('keeps constellations ahead unlit', () {
+        expect(at(0, 1).stars, [_ahead, _ahead]);
+        expect(at(0, 2).stars, [_ahead]);
+        expect(at(0, 1).solidLines, [false]);
+      });
+
+      test('shows a shared star lit only once its owner lit it', () {
+        // 4 500 XP: A's first two stars; hip 3 (A's third, shared with B)
+        // is not lit yet.
+        expect(at(4500, 1).stars, [_ahead, _ahead]);
+        // 9 000 XP would make B current; at 8 999 A is not finished.
+        expect(at(8999, 1).stars, [_ahead, _ahead]);
+      });
+    });
+
     group('on the bundled route', () {
       final sky = testRoute();
 
@@ -73,6 +101,28 @@ void main() {
           hasLength(next.starInConstellation + shared),
         );
       });
+
+      test(
+        'shows Elnath lit in Taurus ahead exactly when Auriga lights it',
+        () {
+          final aur = sky.constellations.indexWhere((c) => c.id == 'Aur');
+          final tau = sky.constellations.indexWhere((c) => c.id == 'Tau');
+          final elnathInTau = sky.constellations[tau].stars.indexWhere(
+            (s) => s.hip == 25428,
+          );
+          final elnathOnRoute = sky.stars.indexWhere((s) => s.hip == 25428);
+          expect(sky.stars[elnathOnRoute].constellationIndex, aur);
+
+          StarState elnathAt(int lit) => figureStatesFor(
+            sky,
+            pathProgress(xpToLight(lit), sky),
+            tau,
+          ).stars[elnathInTau];
+
+          expect(elnathAt(elnathOnRoute), _ahead);
+          expect(elnathAt(elnathOnRoute + 1), _lit);
+        },
+      );
 
       test('shows Elnath lit when Taurus begins', () {
         final taurus = sky.constellations.indexWhere((c) => c.id == 'Tau');

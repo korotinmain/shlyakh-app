@@ -36,6 +36,11 @@ void main() {
       expect(_dark.starAhead, const Color(0x73C8D2F0));
       expect(_dark.aheadLine, const Color(0x4DC8D2F0));
       expect(_dark.marker, const Color(0xFFFFE9B8));
+      expect(_dark.done, const Color(0xFFF3D9A0));
+      expect(_dark.doneLine, const Color(0xE6F7E2B4));
+      expect(_dark.doneGlow, const Color(0x4DF3D9A0));
+      expect(_dark.seal, const Color(0xFFEBC57F));
+      expect(_dark.onSeal, const Color(0xFF2A1D08));
     });
   });
 
@@ -67,6 +72,11 @@ void main() {
       expect(_light.starAhead, const Color(0x613D4F9A));
       expect(_light.aheadLine, const Color(0x403D4F9A));
       expect(_light.marker, const Color(0xFF3D4F9A));
+      expect(_light.done, const Color(0xFF8A5E0B));
+      expect(_light.doneLine, const Color(0xCC8A5E0B));
+      expect(_light.doneGlow, const Color(0x008A5E0B));
+      expect(_light.seal, const Color(0xFF8A5E0B));
+      expect(_light.onSeal, const Color(0xFFFFFFFF));
     });
   });
 
@@ -110,6 +120,16 @@ void main() {
         }
       });
 
+      test('gold on every sky colour, and text on the seal', () {
+        for (final sky in palette.sky) {
+          expect(contrastRatio(palette.done, sky), greaterThanOrEqualTo(3));
+        }
+        expect(
+          contrastRatio(palette.onSeal, palette.seal),
+          greaterThanOrEqualTo(4.5),
+        );
+      });
+
       test('the accent on glass', () {
         expect(
           contrastRatio(palette.accent, over(palette.glass, palette.sky.first)),
@@ -150,6 +170,11 @@ void main() {
         Color.lerp(_dark.aheadLine, _light.aheadLine, 0.5),
       );
       expect(half.marker, Color.lerp(_dark.marker, _light.marker, 0.5));
+      expect(half.done, Color.lerp(_dark.done, _light.done, 0.5));
+      expect(half.doneLine, Color.lerp(_dark.doneLine, _light.doneLine, 0.5));
+      expect(half.doneGlow, Color.lerp(_dark.doneGlow, _light.doneGlow, 0.5));
+      expect(half.seal, Color.lerp(_dark.seal, _light.seal, 0.5));
+      expect(half.onSeal, Color.lerp(_dark.onSeal, _light.onSeal, 0.5));
       expect(half.brightness, Brightness.light);
       expect(half.backdrop, Backdrop.chart);
       expect(_dark.lerp(_light, 0.49).backdrop, Backdrop.nebula);
@@ -167,6 +192,11 @@ void main() {
     expect(copy.sky, _dark.sky);
     expect(copy.onGlass, _dark.onGlass);
     expect(copy.star, _dark.star);
+    expect(copy.done, _dark.done);
+    expect(
+      _dark.copyWith(seal: const Color(0xFF000000)).seal,
+      const Color(0xFF000000),
+    );
     expect(_dark.copyWith(star: const Color(0xFF000000)).marker, _dark.marker);
     expect(
       _dark.copyWith(star: const Color(0xFF000000)).star,
